@@ -5,9 +5,9 @@ import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
 import 'primereact/resources/themes/saga-blue/theme.css';
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
+import './Components.css'
 import PrimeReact from 'primereact/api';
 
-import Navbar from './components/Navbar'
 import Menubar from './components/Menubar'
 import PageNotFound from './pages/PageNotFound'
 import RegistrarCliente from './pages/RegistrarCliente'
