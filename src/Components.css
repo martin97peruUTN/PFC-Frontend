@@ -1,0 +1,75 @@
+@import url("Colors.css");
+
+body {
+    background-color: var(--light);
+}
+
+/*Buttons*/
+.btn-primary {
+    background-color: var(--primary) !important;
+    border-color: var(--dark)
+}
+.btn-primary:hover{
+    background-color: var(--light) !important;
+    border-color: var(--primary) !important;
+}
+
+/*Menubar*/
+.p-menubar {
+    background-color: var(--primary) !important;
+}
+.p-menu-list {
+    background: var(--primary) !important;
+}
+.p-submenu-list {
+    background: var(--primary) !important;
+}
+.p-menuitem {
+    background-color: var(--primary) !important;
+}
+.p-menuitem:active {
+    background-color: var(--dark) !important;
+}
+.p-menuitem-text, .p-menuitem-icon, .p-submenu-icon {
+    color: var(--text-primary) !important;
+}
+
+/*NavBar (ya no se usa)*/
+.dropdown-menu {
+    background-color: var(--primary) !important;
+    padding: 0;
+    border-radius: 5px;
+}
+.dropdown-item>.nav-link {
+    color: var(--text-primary) !important;
+}
+.dropdown-item:first-child {
+    border-radius: 5px 5px 0 0;
+}
+.dropdown-item:last-child {
+    border-radius: 0 0 5px 5px;
+}
+.dropdown-item:hover {
+    background-color: var(--light) !important;
+}
+
+.navbar {
+    background-color: var(--primary) !important;
+}
+
+.nav-link, .navbar-brand {
+    color: var(--text-primary) !important;
+    border-radius: 5px;
+}
+
+.dropdown-toggle:hover {
+    background-color: var(--light) !important;
+}
+
+.navbar-btn {
+    background-color: var(--dark);
+    color: var(--text-primary) !important
+}
+.navbar-btn:hover {
+    background-color: var(--light) !important;
+}
