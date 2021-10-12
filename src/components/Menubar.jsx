@@ -11,12 +11,28 @@ const Menubar = () => {
             url: '/'
         },
         {
+            label: 'Remates',
+            icon: 'pi pi-fw pi-book',
+            items: [
+                {
+                    label: 'Nuevo',
+                    icon: 'pi pi-fw pi-calendar-plus',
+                    url: '/remate'
+                },
+                {
+                    label: 'Listado',
+                    icon: 'pi pi-fw pi-calendar',
+                    url: '/remate-listado'
+                }
+            ]
+        },
+        {
             label: 'Clientes',
             icon: 'pi pi-fw pi-users',
             items: [
                 {
                     label: 'Nuevo',
-                    icon: 'pi pi-fw pi-plus',
+                    icon: 'pi pi-fw pi-user-plus',
                     url: '/cliente'
                 },
                 {
@@ -27,72 +43,34 @@ const Menubar = () => {
             ]
         },
         {
-            label: 'Obras',
-            icon: 'pi pi-fw pi-directions',
-            items: [
-                {
-                    label: 'Nueva',
-                    icon: 'pi pi-fw pi-plus',
-                    url: '/obra'
-                },
-                {
-                    label: 'Listado',
-                    icon: 'pi pi-fw pi-list',
-                    url: '/obra-listado'
-                }
-            ]
-        },
-        {
-            label: 'Productos',
+            label: 'Administracion',
             icon: 'pi pi-fw pi-briefcase',
             items: [
                 {
-                    label: 'Alta',
-                    icon: 'pi pi-fw pi-plus',
-                    url: '/producto'
+                    label: 'Perfil',
+                    icon: 'pi pi-fw pi-user',
+                    url: '/perfil'
                 },
                 {
-                    label: 'Listado',
-                    icon: 'pi pi-fw pi-list',
-                    url: '/producto-listado'
-                }
-            ]
-        },
-        {
-            label: 'Pedidos',
-            icon: 'pi pi-fw pi-shopping-cart',
-            items: [
-                {
-                    label: 'Nuevo',
-                    icon: 'pi pi-fw pi-plus',
-                    url: '/pedido'
+                    label: 'Localidades',
+                    icon: 'pi pi-fw pi-map',
+                    url: '/localidades'
                 },
                 {
-                    label: 'Listado',
-                    icon: 'pi pi-fw pi-list',
-                    url: '/pedido-listado'
-                }
-            ]
-        },
-        {
-            label: 'Pagos',
-            icon: 'pi pi-fw pi-dollar',
-            items: [
-                {
-                    label: 'Registrar',
-                    icon: 'pi pi-fw pi-plus',
-                    url: '/pago'
+                    label: 'Categorias',
+                    icon: 'pi pi-fw pi-th-large',
+                    url: '/categorias'
                 },
                 {
-                    label: 'Listado',
-                    icon: 'pi pi-fw pi-list',
-                    url: '/pago-listado'
+                    label: 'Usuarios',
+                    icon: 'pi pi-fw pi-id-card',
+                    url: '/usuarios'
                 }
             ]
-        },
+        }
     ];
 
-    const end = <Button className="btn-primary" label="Salir" icon="pi pi-power-off"/>;
+    const end = <Button className="btn-primary" label="Salir" icon="pi pi-sign-out"/>;
 
     return (
         <MenubarPrime className="sticky top-0 z-5" model={items} end={end} />
