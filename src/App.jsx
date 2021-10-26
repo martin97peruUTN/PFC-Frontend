@@ -29,7 +29,7 @@ function App() {
   return (
     <Router>
       <div className="App">
-        <Menubar className=""/>
+        <Menubar/>
         <div className="mx-1 my-3 sm:mx-6">
           <Switch>
             <Route exact path="/" component={HomePage} />

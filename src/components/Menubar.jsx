@@ -20,9 +20,9 @@ const Menubar = () => {
                     url: '/remate'
                 },
                 {
-                    label: 'Listado',
+                    label: 'Historial',
                     icon: 'pi pi-fw pi-calendar',
-                    url: '/remate-listado'
+                    url: '/remate-historial'
                 }
             ]
         },

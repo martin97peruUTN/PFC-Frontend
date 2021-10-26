@@ -63,7 +63,7 @@ const RegistrarMaterial = ({history}) => {
     return (
         <Card title='Registrar un nuevo material'
         footer={
-            <div className="d-flex justify-content-between">
+            <div className="flex justify-content-between">
                 <Button className="p-button-danger" onClick={(event)=> handleCancel(event)} label="Cancelar"></Button>
                 <Button type="submit" className="btn btn-primary" onClick={(event)=>handleSubmit(event)} icon="pi pi-check" label="Guardar" loading={loading}></Button>
             </div>
