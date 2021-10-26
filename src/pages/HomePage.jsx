@@ -5,8 +5,7 @@ const HomePage = () => {
     return (
         <div>
             <Card>
-                <h1 className="display-4">BIENVENIDO</h1>
-                
+                <h1>BIENVENIDO</h1>
             </Card>
         </div>
     )
