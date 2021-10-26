@@ -6,7 +6,6 @@ import 'primereact/resources/themes/saga-blue/theme.css';
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
 import PrimeReact from 'primereact/api';
-
 import './Components.css'
 
 import Menubar from './components/Menubar'
