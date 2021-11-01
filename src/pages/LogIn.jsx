@@ -31,8 +31,10 @@ const LogIn = () => {
         event.preventDefault();
         if(validForm()){
             setLoading(true);
-            publicFetch.post('login', {
-                username,
+            //TODO cambiar por login o lo que decidamos
+            publicFetch.post('authenticate', {
+                //TODO sacar email si hace falta
+                email: username,
                 password
             })
             .then(res => {

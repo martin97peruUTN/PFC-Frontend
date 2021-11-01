@@ -1,6 +1,6 @@
 //Codigo tomado del tutorial de Ryan Chenkie: https://github.com/chenkie/orbit
 
-import React, { createContext, useState } from 'react';
+import React, { createContext, useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import * as constants from '../util/constants'
 

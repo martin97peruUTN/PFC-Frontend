@@ -1,9 +1,13 @@
-import React from 'react'
+import React, {useContext} from 'react'
 import { Menubar as MenubarPrime } from 'primereact/menubar';
 import {Button} from 'primereact/button';
+import { AuthContext } from './../context/AuthContext';
 
 const Menubar = () => {
     //TODO conditional display
+
+    const authContext = useContext(AuthContext);
+
     const items = [
         {
             label: 'Inicio',
@@ -70,7 +74,7 @@ const Menubar = () => {
         }
     ];
 
-    const end = <Button className="btn-primary" label="Salir" icon="pi pi-sign-out"/>;
+    const end = <Button className="btn-primary" label="Salir" icon="pi pi-sign-out" onClick={() => authContext.logout()} />;
 
     return (
         <MenubarPrime className="sticky top-0 z-5" model={items} end={end} />
