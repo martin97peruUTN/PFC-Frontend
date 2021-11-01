@@ -1,17 +1,18 @@
-import React, {useState, useRef} from 'react'
-import axios from 'axios';
+import React, {useState, useRef, useContext} from 'react'
 import { useHistory } from "react-router-dom";
+import { publicFetch } from './../util/fetch';
+import { AuthContext } from './../context/AuthContext';
 
 import { InputText } from 'primereact/inputtext';
 import { Password } from 'primereact/password';
 import { Button } from 'primereact/button'
 import { Toast } from 'primereact/toast';
 
-import {urlBase} from '../Url'
 import Card from '../components/cards/Card'
 
 const LogIn = () => {
 
+    const authContext = useContext(AuthContext);
     let history = useHistory();
     const toast = useRef(null);
     const showToast = (severity, summary, message) => {
@@ -30,13 +31,13 @@ const LogIn = () => {
         event.preventDefault();
         if(validForm()){
             setLoading(true);
-            axios.post(`${urlBase}/log-in`, {
+            publicFetch.post('login', {
                 username,
                 password
             })
             .then(res => {
                 console.log(res.data)
-                localStorage.setItem('token', res.data.token)
+                authContext.setAuthState(res.data);
                 history.push('/')
             })
             .catch(err => {
@@ -51,7 +52,7 @@ const LogIn = () => {
 
     return (
         <Card 
-            title='Ingrese su usuario y contraseña'
+            title='Ingrese a su cuenta'
             footer={
                 <div className="flex justify-content-center">
                     <Button label='Ingresar' className="btn btn-primary" icon="pi pi-sign-in" onClick={e => submit(e)} loading={loading}></Button>

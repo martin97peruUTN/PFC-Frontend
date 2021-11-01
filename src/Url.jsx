@@ -1,1 +1,0 @@
-export const urlBase = 'http://localhost:9011'
