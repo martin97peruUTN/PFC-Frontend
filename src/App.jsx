@@ -11,10 +11,13 @@ import './Components.css'
 import Menubar from './components/Menubar'
 import HomePage from "./pages/HomePage";
 import PageNotFound from './pages/PageNotFound'
+import LogIn from "./pages/LogIn";
 
 function App() {
 
   PrimeReact.ripple = true;
+
+
 
   return (
     <Router>
@@ -23,6 +26,7 @@ function App() {
         <div className="mx-1 my-3 sm:mx-6">
           <Switch>
             <Route exact path="/" component={HomePage} />
+            <Route exact path="/log-in" component={LogIn} />
             {/*
             <Route exact path="/cliente" component={RegistrarCliente} />
             <Route exact path="/cliente-listado" component={ListadoClientes} />
