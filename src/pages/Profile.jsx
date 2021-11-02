@@ -56,6 +56,7 @@ const Perfil = () => {
             user: user,
         }).then((res) => {
             showToast('success','Exito','Se actualizo el usuario, intentelo mas tarde')
+            //TODO definir si deslogueamos al usuario o si actualizamos el localStorage
             setTimeout(() => {
                 history.push('/')
             }, 3000);

@@ -27,6 +27,7 @@ const PasswordChange = () => {
 
     const handleSubmit = () => {
         setLoadingAccept(true);
+        
     }
 
     const confirm = () => {
