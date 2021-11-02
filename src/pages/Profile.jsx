@@ -5,6 +5,7 @@ import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { Toast } from 'primereact/toast';
 import { ProgressSpinner } from 'primereact/progressspinner';
+import { confirmDialog } from 'primereact/confirmdialog';
 
 import { FetchContext } from '../context/FetchContext';
 
@@ -47,8 +48,7 @@ const Perfil = () => {
         history.push('/password-change')
     }
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
+    const handleSubmit = () => {
         setLoadingAccept(true)
         //TODO corregir esta ruta
         fetchContext.authAxios.post('/user/update', {
@@ -63,6 +63,24 @@ const Perfil = () => {
             showToast('error','Error','No se pudo actualizar el usuario')
             setLoadingAccept(false)
         })
+    }
+
+    const confirm = () => {
+        //TODO ver si deben definirse mas condiciones
+        if(user.length > 0 && name.length > 0 && user.length < 20){
+            confirmDialog({
+                message: '¿Esta seguro de que desea proceder?',
+                header: 'Actualizar informacion de usuario',
+                icon: 'pi pi-exclamation-circle',
+                accept: () => handleSubmit()
+            });
+        }else{
+            if(user.length >= 20){
+                showToast('warn','Cuidado','El nombre de usuario debe tener menos de 20 caracteres')
+            }else{
+                showToast('warn','Cuidado','Complete los campo del formulario')
+            }
+        }
     }
 
     return (
@@ -81,7 +99,7 @@ const Perfil = () => {
                     <Button className="p-button-danger" onClick={()=> history.goBack()} label="Cancelar"></Button>
                     <div className="flex justify-content-between">
                         <Button className="btn btn-primary mr-2" icon="pi pi-pencil" onClick={(event)=> handlePasswordChange(event)} label="Cambiar contraseña"></Button>
-                        <Button className="btn btn-primary" icon="pi pi-check" onClick={(event)=> handleSubmit(event)} label="Guardar" loading={loadingAccept}></Button>
+                        <Button className="btn btn-primary" icon="pi pi-check" onClick={()=> confirm()} label="Guardar" loading={loadingAccept}></Button>
                     </div>
                 </div>
             }
@@ -92,7 +110,7 @@ const Perfil = () => {
             </span>
             <br/>
             <span className="p-float-label">
-                <InputText id="user" className='w-full' onChange={e => setUser(e.target.value)} disabled={!edit}/>
+                <InputText id="user" className='w-full' keyfilter="email" onChange={e => setUser(e.target.value)} disabled={!edit}/>
                 <label htmlFor="user">Usuario</label>
             </span>
             <br/>

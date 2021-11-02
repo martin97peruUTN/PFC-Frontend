@@ -30,12 +30,28 @@ const PasswordChange = () => {
     }
 
     const confirm = () => {
-        confirmDialog({
-            message: '¿Esta seguro de que desea proceder?',
-            header: 'Cambio de contraseña',
-            icon: 'pi pi-exclamation-triangle',
-            accept: () => handleSubmit()
-        });
+        if(currentPassword === '' || newPassword === '' || newPasswordConfirm === '') {
+            showToast('warn', 'Cuidado', 'Complete todos los campos');
+        }else{
+            if(newPassword.length < 8 || newPasswordConfirm.length < 8) {
+                showToast('warn', 'Cuidado', 'La nueva contraseña debe tener al menos 8 caracteres');
+            }else{
+                if(newPassword !== newPasswordConfirm){
+                    showToast('warn', 'Cuidado', 'Los campos de la nueva contraseñas no coinciden');
+                }else{
+                    if(currentPassword === newPassword){
+                        showToast('warn', 'Cuidado', 'La nueva contraseña no puede ser igual a la anterior');
+                    }else{
+                        confirmDialog({
+                            message: '¿Esta seguro de que desea proceder?',
+                            header: 'Cambio de contraseña',
+                            icon: 'pi pi-exclamation-circle',
+                            accept: () => handleSubmit()
+                        });
+                    }
+                }
+            }
+        }
     }
 
     return (
