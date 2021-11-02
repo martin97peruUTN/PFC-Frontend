@@ -10,7 +10,6 @@ const { Provider } = AuthContext;
 const AuthProvider = ({ children }) => {
     const history = useHistory();
 
-    //TODO meter esto en un useEffect
     const token = localStorage.getItem('token');
     const userInfo = localStorage.getItem('userInfo');
     const expiresAt = localStorage.getItem('expiresAt');

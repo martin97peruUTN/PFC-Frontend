@@ -17,6 +17,8 @@ import AppShell from './AppShell'
 import HomePage from "./pages/HomePage";
 import PageNotFound from './pages/PageNotFound'
 import LogIn from "./pages/LogIn";
+import Profile from "./pages/Profile";
+import PasswordChange from "./pages/PasswordChange";
 
 const UnauthenticatedRoutes = () => (
   <div className="mx-3 my-7 sm:mx-6">
@@ -106,8 +108,12 @@ function App() {
       </AuthenticatedRoute>
 
       <AuthenticatedRoute exact path="/perfil">
-        <HomePage />
+        <Profile />
       </AuthenticatedRoute>
+      <AuthenticatedRoute exact path="/password-change">
+        <PasswordChange/>
+      </AuthenticatedRoute>
+      
       <ConsigneeRoute exact path="/localidades">
         <HomePage />
       </ConsigneeRoute>
