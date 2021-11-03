@@ -7,6 +7,7 @@ import { InputText } from 'primereact/inputtext';
 import { Password } from 'primereact/password';
 import { Button } from 'primereact/button'
 import { Toast } from 'primereact/toast';
+import { ReactComponent as BusinessLogo } from '../assets/images/BusinessLogo.svg';
 
 import Card from '../components/cards/Card'
 
@@ -51,6 +52,11 @@ const LogIn = () => {
     }
 
     return (
+        <>
+        <div className="flex justify-content-center">
+            <BusinessLogo/>
+        </div>
+        <br/>
         <Card 
             title='Ingrese a su cuenta'
             footer={
@@ -70,6 +76,7 @@ const LogIn = () => {
                 <label htmlFor="password">Contraseña</label>
             </span>
         </Card>
+        </>
     )
 }
 
