@@ -31,10 +31,8 @@ const LogIn = () => {
         event.preventDefault();
         if(validForm()){
             setLoading(true);
-            //TODO cambiar por login o lo que decidamos
-            publicFetch.post('authenticate', {
-                //TODO sacar email si hace falta
-                email: username,
+            publicFetch.post('/login', {
+                username,
                 password
             })
             .then(res => {
@@ -43,7 +41,7 @@ const LogIn = () => {
                 history.push('/')
             })
             .catch(err => {
-                showToast('error', 'Error', 'No se pudo conectar con el servidor')
+                showToast('error', 'Error', 'Credenciales invalidas')
                 setLoading(false);
                 console.log(err)
             })

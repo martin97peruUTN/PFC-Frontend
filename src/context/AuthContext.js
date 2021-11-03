@@ -71,7 +71,8 @@ const AuthProvider = ({ children }) => {
                 isAuthenticated,
                 isAdmin,
                 isConsignee,
-                isAssistant
+                isAssistant,
+                getUserInfo: () => authState.userInfo
             }}
         >
             {children}

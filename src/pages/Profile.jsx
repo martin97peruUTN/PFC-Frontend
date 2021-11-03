@@ -7,12 +7,14 @@ import { Toast } from 'primereact/toast';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { confirmDialog } from 'primereact/confirmdialog';
 
+import { AuthContext } from '../context/AuthContext';
 import { FetchContext } from '../context/FetchContext';
 
 import Card from '../components/cards/Card'
 
-const Perfil = () => {
+const Profile = () => {
 
+    const authContext = useContext(AuthContext)
     const fetchContext = useContext(FetchContext)
     const history = useHistory();
     const toast = useRef(null);
@@ -29,19 +31,26 @@ const Perfil = () => {
     const [role, setRole] = useState('')
 
     useEffect(() => {
-        /*setLoadingStart(true)
-        TODO corregir esta ruta
-        fetchContext.authAxios.get('/user/info').then((res) => {
-            setUser(res.data.user);
-            setName(res.data.name);
-            setRole(res.data.role);
-            setLoadingStart(false)
-        }).catch((err) => {
-            showToast('error','Error','No se pudo cargar el perfil, intentelo mas tarde')
-            setTimeout(() => {
-                history.goBack()
-            }, 3000);
-        })*/
+        setLoadingStart(true)
+        setUser(authContext.getUserInfo().username)
+        setName(authContext.getUserInfo().name)
+        let rol = ''
+        switch (authContext.getUserInfo().role) {
+            case "assistant":
+                rol = "Asistente"
+                break;
+            case "consignee":
+                rol = "Consignatario"
+                break;
+            case "admin":
+                rol = "Administrador"
+                break;
+            default:
+                rol = "Error en el rol"
+                break;
+        }
+        setRole(rol)
+        setLoadingStart(false)
     }, [])
 
     const handlePasswordChange = () => {
@@ -106,17 +115,17 @@ const Perfil = () => {
             }
         >
             <span className="p-float-label">
-                <InputText id="name" className='w-full' onChange={e => setName(e.target.value)} disabled={!edit}/>
+                <InputText id="name" className='w-full' value={name} onChange={e => setName(e.target.value)} disabled={!edit}/>
                 <label htmlFor="name">Nombre</label>
             </span>
             <br/>
             <span className="p-float-label">
-                <InputText id="user" className='w-full' keyfilter="email" onChange={e => setUser(e.target.value)} disabled={!edit}/>
+                <InputText id="user" className='w-full' keyfilter="email" value={user} onChange={e => setUser(e.target.value)} disabled={!edit}/>
                 <label htmlFor="user">Usuario</label>
             </span>
             <br/>
             <span className="p-float-label">
-                <InputText id="role" className='w-full' disabled/>
+                <InputText id="role" value={role} className='w-full' disabled/>
                 <label htmlFor="role">{!edit ? 'Rol' : 'Rol (no editable)'}</label>
             </span>
             <br/>
@@ -127,4 +136,4 @@ const Perfil = () => {
     )
 }
 
-export default Perfil
+export default Profile

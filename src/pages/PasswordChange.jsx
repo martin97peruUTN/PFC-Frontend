@@ -27,7 +27,18 @@ const PasswordChange = () => {
 
     const handleSubmit = () => {
         setLoadingAccept(true);
-        
+        //TODO cambiar esta ruta si hace falta
+        fetchContext.post('/api/user/password-change', {
+            currentPassword: currentPassword,
+            newPassword: newPassword
+        }).then(response => {
+            showToast('success', 'Exito', 'La Contraseña ha sido cambiada');
+            setTimeout(() => {
+                history.goBack();
+            }, 3000);
+        }).catch(error => {
+            showToast('error', 'Error', error.message);
+        })
     }
 
     const confirm = () => {
