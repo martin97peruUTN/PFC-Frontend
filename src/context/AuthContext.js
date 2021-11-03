@@ -2,6 +2,7 @@
 
 import React, { createContext, useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
+import jwt_decode from "jwt-decode";
 import * as constants from '../util/constants'
 
 const AuthContext = createContext();
@@ -20,17 +21,26 @@ const AuthProvider = ({ children }) => {
         userInfo: userInfo ? JSON.parse(userInfo) : {}
     });
 
-    const setAuthInfo = ({ token, userInfo, expiresAt }) => {
-        localStorage.setItem('token', token);
-        localStorage.setItem('userInfo', JSON.stringify(userInfo));
-        localStorage.setItem('expiresAt', expiresAt);
-
+    const setAuthInfo = (data) => {
+        localStorage.setItem('token', data.access_token);
+        const decodedToken = jwt_decode(data.access_token);
+        //console.log(decode);
+        localStorage.setItem('expiresAt', decodedToken.exp);
+        const incomingUserInfo = {
+            name: decodedToken.sub,
+            username: decodedToken.username,
+            id: decodedToken.uid,
+            role: decodedToken.rol[0].authority
+        }
+        //console.log(incomingUserInfo);
+        localStorage.setItem('userInfo', JSON.stringify(incomingUserInfo));
+        
         setAuthState({
-            token,
-            userInfo,
-            expiresAt
+            token: data.access_token,
+            userInfo: incomingUserInfo,
+            expiresAt: decodedToken.exp
         });
-    };
+    }
 
     const logout = () => {
         localStorage.removeItem('token');

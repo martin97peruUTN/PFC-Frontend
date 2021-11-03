@@ -1,3 +1,3 @@
-export const ADMIN_ROLE = 'admin'
-export const CONSIGNEE_ROLE = 'consignee'
-export const ASSISTANT_ROLE = 'assistant'
+export const ADMIN_ROLE = 'Administrador'
+export const CONSIGNEE_ROLE = 'Consignatario'
+export const ASSISTANT_ROLE = 'Asistente'

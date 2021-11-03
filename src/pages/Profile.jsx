@@ -32,24 +32,10 @@ const Profile = () => {
 
     useEffect(() => {
         setLoadingStart(true)
+        console.log(authContext.getUserInfo())
         setUser(authContext.getUserInfo().username)
         setName(authContext.getUserInfo().name)
-        let rol = ''
-        switch (authContext.getUserInfo().role) {
-            case "assistant":
-                rol = "Asistente"
-                break;
-            case "consignee":
-                rol = "Consignatario"
-                break;
-            case "admin":
-                rol = "Administrador"
-                break;
-            default:
-                rol = "Error en el rol"
-                break;
-        }
-        setRole(rol)
+        setRole(authContext.getUserInfo().role)
         setLoadingStart(false)
     }, [])
 
