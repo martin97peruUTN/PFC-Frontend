@@ -1,19 +1,22 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import { useHistory } from "react-router-dom";
+
 import Img from '../assets/images/PageNotFound.png';
+import { Button } from 'primereact/button'
 
 const PageNotFound = () => {
     let history = useHistory();
-    useEffect(() => {
-        setTimeout(() => {
-            history.push('/')
-        }, 2000);
-    }, [])
 
     return (
-        <div className="flex justify-content-center">
-            <img src={Img} alt="Logo" />
-        </div>
+        <>
+            <div className="flex justify-content-center">
+                <img src={Img} alt="Logo" />
+            </div>
+            <br/>
+            <div className="flex justify-content-center">
+                <Button label='Volver' className="btn btn-primary" icon="pi pi-arrow-left" onClick={() => history.push('/')}></Button>
+            </div>
+        </>
     )
 }
 
