@@ -52,29 +52,32 @@ const LogIn = () => {
 
     return (
         <>
-        <div className="flex justify-content-center">
-            <BusinessLogo/>
-        </div>
-        <br/>
-        <Card 
-            title='Ingrese a su cuenta'
-            footer={
-                <div className="flex justify-content-center">
-                    <Button label='Ingresar' className="btn btn-primary" icon="pi pi-sign-in" onClick={e => submit(e)} loading={loading}></Button>
-                </div>
-            }
-        >   
-            <Toast ref={toast}/>
-            <span className="p-float-label">
-                <InputText id="user" className='w-full' onChange={e => setUsername(e.target.value)} />
-                <label htmlFor="user">Usuario</label>
-            </span>
+            <style>{
+                'body { background: no-repeat fixed url("https://img5.goodfon.com/wallpaper/nbig/e/b2/korovy-stado-priroda-lug.jpg"); background-size:cover}'
+            }</style>
+            <div className="flex justify-content-center">
+                <BusinessLogo/>
+            </div>
             <br/>
-            <span className="p-float-label">
-                <Password id="password" className='w-full' inputClassName='w-full' feedback={false} toggleMask onChange={e => setPassword(e.target.value)} />
-                <label htmlFor="password">Contraseña</label>
-            </span>
-        </Card>
+            <Card 
+                title='Ingrese a su cuenta'
+                footer={
+                    <div className="flex justify-content-center">
+                        <Button label='Ingresar' className="btn btn-primary" icon="pi pi-sign-in" onClick={e => submit(e)} loading={loading}></Button>
+                    </div>
+                }
+            >   
+                <Toast ref={toast}/>
+                <span className="p-float-label">
+                    <InputText id="user" className='w-full' onChange={e => setUsername(e.target.value)} />
+                    <label htmlFor="user">Usuario</label>
+                </span>
+                <br/>
+                <span className="p-float-label">
+                    <Password id="password" className='w-full' inputClassName='w-full' feedback={false} toggleMask onChange={e => setPassword(e.target.value)} />
+                    <label htmlFor="password">Contraseña</label>
+                </span>
+            </Card>
         </>
     )
 }
