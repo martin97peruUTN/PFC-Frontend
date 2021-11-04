@@ -45,10 +45,10 @@ const Profile = () => {
     const handleSubmit = () => {
         setLoadingAccept(true)
         //Mando a guardar solo si cambio algo, sino hago history.goBack()
-        if(name!=authContext.getUserInfo().name || user!=authContext.getUserInfo().username){
+        if(name!==authContext.getUserInfo().name || user!==authContext.getUserInfo().username){
             fetchContext.authAxios.patch(`/usuario/${authContext.getUserInfo().id}`, {
-                name: name!=authContext.getUserInfo().name? name : null,
-                user: user!=authContext.getUserInfo().username? user : null,
+                name: name!==authContext.getUserInfo().name? name : null,
+                user: user!==authContext.getUserInfo().username? user : null,
             }).then((res) => {
                 showToast('success','Exito','Se actualizo el usuario!')
                 //Actualizo el token y toda la info del usuario

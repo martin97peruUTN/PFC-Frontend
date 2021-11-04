@@ -43,8 +43,13 @@ const LogIn = () => {
                 history.push('/')
             })
             .catch(err => {
-                showToast('error', 'Error', 'Credenciales invalidas')
-                setLoading(false);
+                if(err.response.status === 500){
+                    showToast('error', 'Error', 'No se puedo conectar con el servidor')
+                    setLoading(false);
+                }else{
+                    showToast('error', 'Error', 'Credenciales invalidas')
+                    setLoading(false);
+                }
             })
         }else{
             showToast('warn', 'Error', 'Complete los campos vacios!')
