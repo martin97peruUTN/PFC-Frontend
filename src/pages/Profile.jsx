@@ -32,7 +32,6 @@ const Profile = () => {
 
     useEffect(() => {
         setLoadingStart(true)
-        console.log(authContext.getUserInfo())
         setUser(authContext.getUserInfo().username)
         setName(authContext.getUserInfo().name)
         setRole(authContext.getUserInfo().role)
@@ -61,9 +60,9 @@ const Profile = () => {
         })
     }
 
+    //Se dispara al presionar el boton Guardar
     const confirm = () => {
-        //TODO ver si deben definirse mas condiciones
-        if(user.length > 0 && name.length > 0 && user.length < 20){
+        if(user.length > 0 && name.length > 0 && user.length <= 20){
             confirmDialog({
                 message: '¿Esta seguro de que desea proceder?',
                 header: 'Actualizar informacion de usuario',
@@ -71,8 +70,8 @@ const Profile = () => {
                 accept: () => handleSubmit()
             });
         }else{
-            if(user.length >= 20){
-                showToast('warn','Cuidado','El nombre de usuario debe tener menos de 20 caracteres')
+            if(user.length > 20){
+                showToast('warn','Cuidado','El usuario debe tener como maximo 20 caracteres')
             }else{
                 showToast('warn','Cuidado','Complete los campo del formulario')
             }

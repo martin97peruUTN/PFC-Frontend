@@ -8,12 +8,16 @@ const FetchContext = createContext();
 const { Provider } = FetchContext;
 
 const FetchProvider = ({ children }) => {
+
+    //Usado para cualquier ruta que requiera autenticacion
+
     const authContext = useContext(AuthContext);
 
     const authAxios = axios.create({
         baseURL: process.env.REACT_APP_API_URL
     });
 
+    //intercepto y agrego el token
     authAxios.interceptors.request.use(
         config => {
             config.headers.Authorization = `Bearer ${authContext.authState.token}`;
@@ -29,11 +33,6 @@ const FetchProvider = ({ children }) => {
             return response;
         },
         error => {
-            const code =
-                error && error.response ? error.response.status : 0;
-            if (code === 401 || code === 403) {
-                console.log('error code', code);
-            }
             return Promise.reject(error);
         }
     );

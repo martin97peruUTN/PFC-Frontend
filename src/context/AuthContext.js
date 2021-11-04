@@ -8,6 +8,8 @@ import * as constants from '../util/constants'
 const AuthContext = createContext();
 const { Provider } = AuthContext;
 
+//Encargado de almacenar la info del user al loguearse y proveerla a los componentes que lo requieran
+
 const AuthProvider = ({ children }) => {
     const history = useHistory();
 
@@ -21,10 +23,10 @@ const AuthProvider = ({ children }) => {
         userInfo: userInfo ? JSON.parse(userInfo) : {}
     });
 
+    //Se dispara desde el LogIn (como setAuthState(res.data), ver abajo los value del provider)
     const setAuthInfo = (data) => {
         localStorage.setItem('token', data.access_token);
         const decodedToken = jwt_decode(data.access_token);
-        //console.log(decode);
         localStorage.setItem('expiresAt', decodedToken.exp);
         const incomingUserInfo = {
             name: decodedToken.sub,
@@ -32,7 +34,6 @@ const AuthProvider = ({ children }) => {
             id: decodedToken.uid,
             role: decodedToken.rol[0].authority
         }
-        //console.log(incomingUserInfo);
         localStorage.setItem('userInfo', JSON.stringify(incomingUserInfo));
         
         setAuthState({

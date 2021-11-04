@@ -25,7 +25,7 @@ const LogIn = () => {
     const[password, setPassword] = useState('')
 
     const validForm = () => {
-        return username && password
+        return username && password //campos no vacios
     }
 
     const submit = event => {
@@ -37,14 +37,13 @@ const LogIn = () => {
                 password
             })
             .then(res => {
-                console.log(res.data)
+                //Llamo a AuthContext para guardar la info del usuario
                 authContext.setAuthState(res.data);
                 history.push('/')
             })
             .catch(err => {
                 showToast('error', 'Error', 'Credenciales invalidas')
                 setLoading(false);
-                console.log(err)
             })
         }else{
             showToast('warn', 'Error', 'Complete los campos vacios!')

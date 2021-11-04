@@ -41,7 +41,14 @@ const PasswordChange = () => {
         })
     }
 
+    //Se dispara al presionar el boton Guardar
     const confirm = () => {
+        /*Condiciones:
+            1) Campos no vacios
+            2) La contraseña nueva debe tener mas de 8 caracteres
+            3) La contraseña nueva y la confirmacion deben ser iguales
+            4) La contraseña nueva debe ser distinta a la anterior
+        */
         if(currentPassword === '' || newPassword === '' || newPasswordConfirm === '') {
             showToast('warn', 'Cuidado', 'Complete todos los campos');
         }else{

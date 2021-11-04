@@ -11,5 +11,6 @@ const AppShell = ({children}) => {
         </div>
     )
 }
+//Menubar superior y div que envuelve todas las paginas salvo LogIn
 
 export default AppShell

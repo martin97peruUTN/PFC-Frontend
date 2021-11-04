@@ -80,7 +80,7 @@ const ConsigneeRoute = ({ children, ...rest }) => {
     ></Route>
   );
 };
-//Assistant no hace falta, es lo mismo que el authenticated
+//AssistantRoute no hace falta, es lo mismo que el authenticated
 
 function App() {
 
