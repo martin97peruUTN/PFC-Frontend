@@ -2,6 +2,7 @@ import React, {useState, useRef, useContext} from 'react'
 import { useHistory } from "react-router-dom";
 import { publicFetch } from './../util/fetch';
 import { AuthContext } from './../context/AuthContext';
+import hash from '../util/hash';
 
 import { InputText } from 'primereact/inputtext';
 import { Password } from 'primereact/password';
@@ -34,7 +35,7 @@ const LogIn = () => {
             setLoading(true);
             publicFetch.post('/login', {
                 username,
-                password
+                password: hash(password)
             })
             .then(res => {
                 //Llamo a AuthContext para guardar la info del usuario

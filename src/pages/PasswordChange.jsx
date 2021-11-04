@@ -7,12 +7,15 @@ import { Toast } from 'primereact/toast';
 import { confirmDialog } from 'primereact/confirmdialog';
 
 import { FetchContext } from '../context/FetchContext';
+import { AuthContext } from '../context/AuthContext';
+import hash from '../util/hash';
 
 import Card from '../components/cards/Card'
 
 const PasswordChange = () => {
 
     const fetchContext = useContext(FetchContext)
+    const authContext = useContext(AuthContext)
     const history = useHistory();
     const toast = useRef(null);
     const showToast = (severity, summary, message) => {
@@ -27,17 +30,17 @@ const PasswordChange = () => {
 
     const handleSubmit = () => {
         setLoadingAccept(true);
-        //TODO cambiar esta ruta si hace falta
-        fetchContext.post('/api/user/password-change', {
-            currentPassword: currentPassword,
-            newPassword: newPassword
+        fetchContext.authAxios.patch(`/usuario/${authContext.getUserInfo().id}/modificarpass`, {
+            oldPass: hash(currentPassword),
+            newPass: hash(newPassword)
         }).then(response => {
-            showToast('success', 'Exito', 'La Contraseña ha sido cambiada');
+            showToast('success', 'Exito', 'La Contraseña ha sido cambiada!');
             setTimeout(() => {
                 history.goBack();
             }, 3000);
         }).catch(error => {
-            showToast('error', 'Error', error.message);
+            showToast('error', 'Error', 'Hubo un error al cambiar la contraseña');
+            setLoadingAccept(false);
         })
     }
 

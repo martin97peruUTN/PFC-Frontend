@@ -44,20 +44,25 @@ const Profile = () => {
 
     const handleSubmit = () => {
         setLoadingAccept(true)
-        //TODO corregir esta ruta
-        fetchContext.authAxios.post('/user/update', {
-            name: name,
-            user: user,
-        }).then((res) => {
-            showToast('success','Exito','Se actualizo el usuario, intentelo mas tarde')
-            //TODO definir si deslogueamos al usuario o si actualizamos el localStorage
-            setTimeout(() => {
-                history.push('/')
-            }, 3000);
-        }).catch((err) => {
-            showToast('error','Error','No se pudo actualizar el usuario')
-            setLoadingAccept(false)
-        })
+        //Mando a guardar solo si cambio algo, sino hago history.goBack()
+        if(name!=authContext.getUserInfo().name || user!=authContext.getUserInfo().username){
+            fetchContext.authAxios.patch(`/usuario/${authContext.getUserInfo().id}`, {
+                name: name!=authContext.getUserInfo().name? name : null,
+                user: user!=authContext.getUserInfo().username? user : null,
+            }).then((res) => {
+                showToast('success','Exito','Se actualizo el usuario!')
+                //Actualizo el token y toda la info del usuario
+                authContext.setAuthInfo(res.data)
+                setTimeout(() => {
+                    history.push('/')
+                }, 3000);
+            }).catch((err) => {
+                showToast('error','Error','No se pudo actualizar el usuario')
+                setLoadingAccept(false)
+            })
+        }else{
+            history.push('/')
+        }
     }
 
     //Se dispara al presionar el boton Guardar
