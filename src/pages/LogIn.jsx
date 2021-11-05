@@ -43,11 +43,12 @@ const LogIn = () => {
                 history.push('/')
             })
             .catch(err => {
-                if(err.response.status === 500){
-                    showToast('error', 'Error', 'No se puedo conectar con el servidor')
+                //Pregunto si hay response porque sino crashea
+                if(err.response && err.response.status === 400){
+                    showToast('error', 'Error', 'Credenciales invalidas, vuelva a intentarlo')
                     setLoading(false);
                 }else{
-                    showToast('error', 'Error', 'Credenciales invalidas')
+                    showToast('error', 'Error', 'No se puedo conectar con el servidor')
                     setLoading(false);
                 }
             })
