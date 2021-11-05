@@ -97,10 +97,7 @@ const Profile = () => {
             footer={
                 <div className="flex justify-content-between">
                     <Button className="p-button-danger" onClick={()=> history.goBack()} label="Cancelar"></Button>
-                    <div className="flex justify-content-between">
-                        <Button className="btn btn-primary mr-2" icon="pi pi-pencil" onClick={(event)=> handlePasswordChange(event)} label="Cambiar contraseña"></Button>
-                        <Button className="btn btn-primary" icon="pi pi-check" onClick={()=> confirm()} label="Guardar" loading={loadingAccept}></Button>
-                    </div>
+                    <Button className="btn btn-primary" icon="pi pi-check" onClick={()=> confirm()} label="Guardar" loading={loadingAccept}></Button>
                 </div>
             }
         >
@@ -119,7 +116,10 @@ const Profile = () => {
                 <label htmlFor="role">{!edit ? 'Rol' : 'Rol (no editable)'}</label>
             </span>
             <br/>
-            <Button className="btn btn-primary" icon="pi pi-user-edit" onClick={()=> setEdit(!edit)} label={edit?'Dejar de editar':'Editar'}></Button>
+            <div className="flex">
+                <Button className="btn btn-primary" icon="pi pi-user-edit" onClick={()=> setEdit(!edit)} label={edit?'Dejar de editar':'Editar'}></Button>
+                <Button className="btn btn-primary ml-2" icon="pi pi-pencil" onClick={(event)=> handlePasswordChange(event)} label="Cambiar contraseña"></Button>
+            </div>
         </Card>
         }
         </>
