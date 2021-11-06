@@ -23,10 +23,10 @@ const AuthProvider = ({ children }) => {
         userInfo: userInfo ? JSON.parse(userInfo) : {}
     });
 
-    //Se dispara desde el LogIn (como setAuthState(res.data), ver abajo los value del provider)
-    const setAuthInfo = (data) => {
-        localStorage.setItem('token', data.access_token);
-        const decodedToken = jwt_decode(data.access_token);
+    //(setAuthState)
+    const setAuthInfo = (token) => {
+        localStorage.setItem('token', token);
+        const decodedToken = jwt_decode(token);
         localStorage.setItem('expiresAt', decodedToken.exp);
         const incomingUserInfo = {
             name: decodedToken.sub,
@@ -37,7 +37,7 @@ const AuthProvider = ({ children }) => {
         localStorage.setItem('userInfo', JSON.stringify(incomingUserInfo));
         
         setAuthState({
-            token: data.access_token,
+            token: token,
             userInfo: incomingUserInfo,
             expiresAt: decodedToken.exp
         });
@@ -77,7 +77,7 @@ const AuthProvider = ({ children }) => {
         <Provider
             value={{
                 authState,
-                setAuthState: authInfo => setAuthInfo(authInfo),
+                setAuthState: token => setAuthInfo(token),
                 logout,
                 isAuthenticated,
                 isAdmin,

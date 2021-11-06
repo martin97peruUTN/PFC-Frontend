@@ -39,7 +39,7 @@ const LogIn = () => {
             })
             .then(res => {
                 //Llamo a AuthContext para guardar la info del usuario
-                authContext.setAuthState(res.data);
+                authContext.setAuthState(res.data.access_token);
                 history.push('/')
             })
             .catch(err => {

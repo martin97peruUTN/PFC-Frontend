@@ -36,7 +36,7 @@ const Profile = () => {
         setName(authContext.getUserInfo().name)
         setRole(authContext.getUserInfo().role)
         setLoadingStart(false)
-    }, [])
+    }, [authContext])
 
     const handlePasswordChange = () => {
         history.push('/password-change')
@@ -48,14 +48,14 @@ const Profile = () => {
         if(name!==authContext.getUserInfo().name || user!==authContext.getUserInfo().username){
             fetchContext.authAxios.patch(`/user/${authContext.getUserInfo().id}`, {
                 name: name!==authContext.getUserInfo().name? name : null,
-                user: user!==authContext.getUserInfo().username? user : null,
+                username: user!==authContext.getUserInfo().username? user : null,
             }).then((res) => {
-                showToast('success','Exito','Se actualizo el usuario!')
                 //Actualizo el token y toda la info del usuario
-                authContext.setAuthInfo(res.data)
+                authContext.setAuthState(res.data.token)
+                showToast('success','Exito','Se actualizo el usuario!')
                 setTimeout(() => {
                     history.push('/')
-                }, 3000);
+                }, 2000);
             }).catch((err) => {
                 showToast('error','Error','No se pudo actualizar el usuario')
                 setLoadingAccept(false)

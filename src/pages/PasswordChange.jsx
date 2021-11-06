@@ -37,7 +37,7 @@ const PasswordChange = () => {
             showToast('success', 'Exito', 'La Contraseña ha sido cambiada!');
             setTimeout(() => {
                 history.push('/perfil');
-            }, 3000);
+            }, 2000);
         }).catch(error => {
             showToast('error', 'Error', 'Hubo un error al cambiar la contraseña');
             setLoadingAccept(false);
