@@ -30,13 +30,13 @@ const PasswordChange = () => {
 
     const handleSubmit = () => {
         setLoadingAccept(true);
-        fetchContext.authAxios.patch(`/usuario/${authContext.getUserInfo().id}/modificarpass`, {
-            oldPass: hash(currentPassword),
-            newPass: hash(newPassword)
+        fetchContext.authAxios.patch(`/user/${authContext.getUserInfo().id}/modificarpass`, {
+            oldPassword: hash(currentPassword),
+            newPassword: hash(newPassword)
         }).then(response => {
             showToast('success', 'Exito', 'La Contraseña ha sido cambiada!');
             setTimeout(() => {
-                history.goBack();
+                history.push('/perfil');
             }, 3000);
         }).catch(error => {
             showToast('error', 'Error', 'Hubo un error al cambiar la contraseña');
