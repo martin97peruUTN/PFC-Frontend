@@ -178,6 +178,7 @@ const LocalityList = () => {
                     </div>
                 }
                 /*footer={
+                    TODO agregar paginacion
                     paginator
                 }*/
             >
