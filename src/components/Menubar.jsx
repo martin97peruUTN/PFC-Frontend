@@ -1,8 +1,11 @@
-import React from 'react'
+import React, {useContext} from 'react'
 import { Menubar as MenubarPrime } from 'primereact/menubar';
 import {Button} from 'primereact/button';
+import { AuthContext } from './../context/AuthContext';
 
 const Menubar = () => {
+
+    const authContext = useContext(AuthContext);
 
     const items = [
         {
@@ -13,7 +16,7 @@ const Menubar = () => {
         {
             label: 'Remates',
             icon: 'pi pi-fw pi-book',
-            items: [
+            items: authContext.isConsignee() || authContext.isAdmin()?[
                 {
                     label: 'Nuevo',
                     icon: 'pi pi-fw pi-calendar-plus',
@@ -24,6 +27,12 @@ const Menubar = () => {
                     icon: 'pi pi-fw pi-calendar',
                     url: '/remate-historial'
                 }
+            ]:[
+                {
+                    label: 'Historial',
+                    icon: 'pi pi-fw pi-calendar',
+                    url: '/remate-historial'
+                } 
             ]
         },
         {
@@ -45,7 +54,7 @@ const Menubar = () => {
         {
             label: 'Administracion',
             icon: 'pi pi-fw pi-briefcase',
-            items: [
+            items: authContext.isConsignee() || authContext.isAdmin()?[
                 {
                     label: 'Perfil',
                     icon: 'pi pi-fw pi-user',
@@ -66,11 +75,17 @@ const Menubar = () => {
                     icon: 'pi pi-fw pi-id-card',
                     url: '/usuarios'
                 }
+            ]:[
+                {
+                    label: 'Perfil',
+                    icon: 'pi pi-fw pi-user',
+                    url: '/perfil'
+                }
             ]
         }
     ];
 
-    const end = <Button className="btn-primary" label="Salir" icon="pi pi-sign-out"/>;
+    const end = <Button className="btn-primary" label="Salir" icon="pi pi-sign-out" onClick={() => authContext.logout()} />;
 
     return (
         <MenubarPrime className="sticky top-0 z-5" model={items} end={end} />
