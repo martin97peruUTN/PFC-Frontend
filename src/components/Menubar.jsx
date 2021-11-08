@@ -2,6 +2,7 @@ import React, {useContext} from 'react'
 import { Menubar as MenubarPrime } from 'primereact/menubar';
 import {Button} from 'primereact/button';
 import { AuthContext } from './../context/AuthContext';
+import * as url from '../util/url'
 
 const Menubar = () => {
 
@@ -11,7 +12,7 @@ const Menubar = () => {
         {
             label: 'Inicio',
             icon: 'pi pi-fw pi-home',
-            url: '/'
+            url: url.HOME
         },
         {
             label: 'Remates',
@@ -20,18 +21,18 @@ const Menubar = () => {
                 {
                     label: 'Nuevo',
                     icon: 'pi pi-fw pi-calendar-plus',
-                    url: '/remate'
+                    url: url.AUCTION
                 },
                 {
                     label: 'Historial',
                     icon: 'pi pi-fw pi-calendar',
-                    url: '/remate-historial'
+                    url: url.AUCTION_HISTORY
                 }
             ]:[
                 {
                     label: 'Historial',
                     icon: 'pi pi-fw pi-calendar',
-                    url: '/remate-historial'
+                    url: url.AUCTION_HISTORY
                 } 
             ]
         },
@@ -42,12 +43,12 @@ const Menubar = () => {
                 {
                     label: 'Nuevo',
                     icon: 'pi pi-fw pi-user-plus',
-                    url: '/cliente'
+                    url: url.CLIENT
                 },
                 {
                     label: 'Listado',
                     icon: 'pi pi-fw pi-list',
-                    url: '/cliente-listado'
+                    url: url.CLIENT_LIST
                 }
             ]
         },
@@ -58,28 +59,28 @@ const Menubar = () => {
                 {
                     label: 'Perfil',
                     icon: 'pi pi-fw pi-user',
-                    url: '/perfil'
+                    url: url.PROFILE
                 },
                 {
                     label: 'Localidades',
                     icon: 'pi pi-fw pi-map',
-                    url: '/localidades'
+                    url: url.LOCALITIES
                 },
                 {
                     label: 'Categorias',
                     icon: 'pi pi-fw pi-th-large',
-                    url: '/categorias'
+                    url: url.CATEGORIES
                 },
                 {
                     label: 'Usuarios',
                     icon: 'pi pi-fw pi-id-card',
-                    url: '/usuarios'
+                    url: url.USERS
                 }
             ]:[
                 {
                     label: 'Perfil',
                     icon: 'pi pi-fw pi-user',
-                    url: '/perfil'
+                    url: url.PROFILE
                 }
             ]
         }

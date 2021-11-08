@@ -9,6 +9,7 @@ import { confirmDialog } from 'primereact/confirmdialog';
 import { FetchContext } from '../context/FetchContext';
 import { AuthContext } from '../context/AuthContext';
 import hash from '../util/hash';
+import * as url from '../util/url';
 
 import Card from '../components/cards/Card'
 
@@ -30,13 +31,13 @@ const PasswordChange = () => {
 
     const handleSubmit = () => {
         setLoadingAccept(true);
-        fetchContext.authAxios.patch(`/user/${authContext.getUserInfo().id}/modificarpass`, {
+        fetchContext.authAxios.patch(`${url.USER_API}/${authContext.getUserInfo().id}/modificarpass`, {
             oldPassword: hash(currentPassword),
             newPassword: hash(newPassword)
         }).then(response => {
             showToast('success', 'Exito', 'La Contraseña ha sido cambiada!');
             setTimeout(() => {
-                history.push('/perfil');
+                history.push(url.PROFILE);
             }, 2000);
         }).catch(error => {
             showToast('error', 'Error', 'Hubo un error al cambiar la contraseña');

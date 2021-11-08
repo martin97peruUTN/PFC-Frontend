@@ -9,6 +9,7 @@ import { confirmDialog } from 'primereact/confirmdialog';
 
 import { AuthContext } from '../context/AuthContext';
 import { FetchContext } from '../context/FetchContext';
+import * as url from '../util/url';
 
 import Card from '../components/cards/Card'
 
@@ -39,14 +40,14 @@ const Profile = () => {
     }, [authContext])
 
     const handlePasswordChange = () => {
-        history.push('/password-change')
+        history.push(url.PASSWORD_CHANGE)
     }
 
     const handleSubmit = () => {
         setLoadingAccept(true)
         //Mando a guardar solo si cambio algo, sino hago history.goBack()
         if(name!==authContext.getUserInfo().name || user!==authContext.getUserInfo().username){
-            fetchContext.authAxios.patch(`/user/${authContext.getUserInfo().id}`, {
+            fetchContext.authAxios.patch(`${url.USER_API}/${authContext.getUserInfo().id}`, {
                 name: name!==authContext.getUserInfo().name? name : null,
                 username: user!==authContext.getUserInfo().username? user : null,
             }).then((res) => {
@@ -54,14 +55,14 @@ const Profile = () => {
                 authContext.setAuthState(res.data.token)
                 showToast('success','Exito','Se actualizo el usuario!')
                 setTimeout(() => {
-                    history.push('/')
+                    history.push(url.HOME)
                 }, 2000);
             }).catch((err) => {
                 showToast('error','Error','No se pudo actualizar el usuario')
                 setLoadingAccept(false)
             })
         }else{
-            history.push('/')
+            history.push(url.HOME)
         }
     }
 

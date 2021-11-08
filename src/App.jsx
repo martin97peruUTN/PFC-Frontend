@@ -12,6 +12,7 @@ import './Components.css'
 
 import { FetchProvider } from './context/FetchContext';
 import { AuthProvider, AuthContext } from './context/AuthContext';
+import * as url from './util/url'
 
 import AppShell from './AppShell'
 import HomePage from "./pages/HomePage";
@@ -23,7 +24,7 @@ import PasswordChange from "./pages/PasswordChange";
 const UnauthenticatedRoutes = () => (
   <div className="mx-3 my-7 sm:mx-6">
     <Switch>
-      <Route path="/login">
+      <Route path={url.LOGIN}>
         <LogIn />
       </Route>
       <Route path="*">
@@ -89,38 +90,38 @@ function App() {
   const AppRoutes = () => (
     <Switch>
       
-      <AuthenticatedRoute exact path="/">
+      <AuthenticatedRoute exact path={url.HOME}>
         <HomePage />
       </AuthenticatedRoute>
 
-      <ConsigneeRoute exact path="/remate">
+      <ConsigneeRoute exact path={url.AUCTION}>
         <HomePage />
       </ConsigneeRoute>
-      <AuthenticatedRoute exact path="/remate-historial">
+      <AuthenticatedRoute exact path={url.AUCTION_HISTORY}>
         <HomePage />
       </AuthenticatedRoute>
 
-      <AuthenticatedRoute exact path="/cliente">
+      <AuthenticatedRoute exact path={url.CLIENT}>
         <HomePage />
       </AuthenticatedRoute>
-      <AuthenticatedRoute exact path="/cliente-listado">
+      <AuthenticatedRoute exact path={url.CLIENT_LIST}>
         <HomePage />
       </AuthenticatedRoute>
 
-      <AuthenticatedRoute exact path="/perfil">
+      <AuthenticatedRoute exact path={url.PROFILE}>
         <Profile />
       </AuthenticatedRoute>
-      <AuthenticatedRoute exact path="/password-change">
+      <AuthenticatedRoute exact path={url.PASSWORD_CHANGE}>
         <PasswordChange/>
       </AuthenticatedRoute>
       
-      <ConsigneeRoute exact path="/localidades">
+      <ConsigneeRoute exact path={url.LOCALITIES}>
         <HomePage />
       </ConsigneeRoute>
-      <ConsigneeRoute exact path="/categorias">
+      <ConsigneeRoute exact path={url.CATEGORIES}>
         <HomePage />
       </ConsigneeRoute>
-      <ConsigneeRoute exact path="/usuarios">
+      <ConsigneeRoute exact path={url.USERS}>
         <HomePage />
       </ConsigneeRoute>
 

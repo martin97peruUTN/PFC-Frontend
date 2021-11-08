@@ -3,6 +3,7 @@ import { useHistory } from "react-router-dom";
 import { publicFetch } from './../util/fetch';
 import { AuthContext } from './../context/AuthContext';
 import hash from '../util/hash';
+import * as url from '../util/url';
 
 import { InputText } from 'primereact/inputtext';
 import { Password } from 'primereact/password';
@@ -33,7 +34,7 @@ const LogIn = () => {
         event.preventDefault();
         if(validForm()){
             setLoading(true);
-            publicFetch.post('/login', {
+            publicFetch.post(url.LOGIN, {
                 username,
                 password: hash(password)
             })
@@ -60,7 +61,7 @@ const LogIn = () => {
     return (
         <>
             <style>{
-                'body { background: no-repeat fixed url("https://img5.goodfon.com/wallpaper/nbig/e/b2/korovy-stado-priroda-lug.jpg"); background-size:cover}'
+                `body { background: no-repeat fixed url(${url.LOGIN_WALLPAPER}); background-size:cover}`
             }</style>
             <div className="flex justify-content-center">
                 <BusinessLogo/>
