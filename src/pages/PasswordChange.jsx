@@ -84,23 +84,53 @@ const PasswordChange = () => {
             title="Cambio de contraseña"
             footer={
                 <div className="flex justify-content-between">
-                    <Button className="p-button-danger" onClick={()=> history.goBack()} label="Cancelar"></Button>
-                    <Button className="btn btn-primary" icon="pi pi-check" onClick={()=> confirm()} label="Guardar" loading={loadingAccept}></Button>
+                    <Button 
+                        className="p-button-danger" 
+                        onClick={()=> history.goBack()} 
+                        label="Cancelar"
+                    />
+                    <Button 
+                        className="btn btn-primary" 
+                        icon="pi pi-check" 
+                        onClick={()=> confirm()} 
+                        label="Guardar" 
+                        loading={loadingAccept}
+                    />
                 </div>
             }
         >
             <span className="p-float-label">
-                <Password id="currentPassword" className='w-full' inputClassName='w-full' feedback={false} toggleMask onChange={e => setCurrentPassword(e.target.value)} />
+                <Password id="currentPassword" 
+                    className='w-full' 
+                    inputClassName='w-full' 
+                    feedback={false} 
+                    toggleMask 
+                    onChange={e => setCurrentPassword(e.target.value)}
+                />
                 <label htmlFor="currentPassword">Contraseña actual</label>
             </span>
             <br/>
             <span className="p-float-label">
-                <Password id="newPassword" className='w-full' inputClassName='w-full' feedback={false} toggleMask onChange={e => setNewPassword(e.target.value)} />
+                <Password 
+                    id="newPassword" 
+                    className='w-full passwordFormInput' 
+                    inputClassName='w-full' 
+                    feedback={false} 
+                    toggleMask 
+                    onChange={e => setNewPassword(e.target.value)}
+                />
                 <label htmlFor="newPassword">Contraseña nueva</label>
             </span>
             <br/>
             <span className="p-float-label">
-                <Password id="confirmNewPassword" className='w-full' inputClassName='w-full' feedback={false} toggleMask onChange={e => setNewPasswordConfirm(e.target.value)} />
+                <Password 
+                    id="confirmNewPassword" 
+                    className='w-full' 
+                    inputClassName='w-full' 
+                    feedback={false} 
+                    toggleMask 
+                    onChange={e => setNewPasswordConfirm(e.target.value)} 
+                />
                 <label htmlFor="confirmNewPassword">Confirme la nueva contraseña</label>
             </span>
         </Card>

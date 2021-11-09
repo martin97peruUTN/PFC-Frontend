@@ -8,6 +8,7 @@ import { ProgressSpinner } from 'primereact/progressspinner';
 import { confirmDialog } from 'primereact/confirmdialog';
 import { Dialog } from 'primereact/dialog';
 import { Paginator } from 'primereact/paginator';
+import { ScrollTop } from 'primereact/scrolltop';
 
 import { FetchContext } from '../context/FetchContext';
 import * as url from '../util/url';
@@ -46,7 +47,7 @@ const LocalityList = () => {
         setPaginatorFirst(event.first);
         setPaginatorRows(event.rows);
     }
-    
+
     useEffect(() => {
         setLoadingStart(true)
         fetchContext.authAxios.get(`${baseURL}?limit=${paginatorRows}&offset=${paginatorFirst}`)
@@ -163,6 +164,7 @@ const LocalityList = () => {
 
     return (
         <>
+            <ScrollTop />
             <Toast ref={toast} />
             {editDialog}
             {
