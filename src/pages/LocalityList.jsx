@@ -7,12 +7,13 @@ import { Toast } from 'primereact/toast';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { confirmDialog } from 'primereact/confirmdialog';
 import { Dialog } from 'primereact/dialog';
+import { Paginator } from 'primereact/paginator';
 
 import { FetchContext } from '../context/FetchContext';
 import * as url from '../util/url';
 
 import Card from '../components/cards/Card'
-import CardTwoColumns from '../components/cards/CardTwoColumns'
+import SimpleNameCard from '../components/cards/SimpleNameCard'
 
 const LocalityList = () => {
 
@@ -37,9 +38,18 @@ const LocalityList = () => {
     const baseURL = 'https://61895cd6d0821900178d795e.mockapi.io/api/locality'
     //const baseURL = url.LOCALITY_API
 
+    //Paginator states
+    const [paginatorFirst, setPaginatorFirst] = useState(0);
+    const [paginatorRows, setPaginatorRows] = useState(10);
+
+    const onPaginatorPageChange = (event) => {
+        setPaginatorFirst(event.first);
+        setPaginatorRows(event.rows);
+    }
+    
     useEffect(() => {
         setLoadingStart(true)
-        fetchContext.authAxios.get(baseURL)
+        fetchContext.authAxios.get(`${baseURL}?limit=${paginatorRows}&offset=${paginatorFirst}`)
         .then(response => {
             setLocalityList(response.data)
             setLoadingStart(false)
@@ -51,11 +61,12 @@ const LocalityList = () => {
                 history.push(url.HOME);
             }, 2000);
         })
-    }, [refresh])
+    }, [refresh, paginatorFirst, paginatorRows, fetchContext.authAxios, history])
 
     //Se dispara al tocar el boton crear localidad, se abre el dialogo de creacion/edicion
     const createLocalityHandler = () => {
         setDisplayDialog(true)
+        setEditingItem(null)
     }
 
     //Se dispara la tocar el boton editar, abre el dialogo de creacion/edicion y setea editingItem al que corresponde
@@ -120,36 +131,24 @@ const LocalityList = () => {
 
     //Listado de localidades a mostrar en pantalla
     const localityCardList = localityList.map((locality) => (
-        <CardTwoColumns
-            key = {locality.id}
-            leftSide = {
-                <div className="md:text-4xl text-xl">
-                    {locality.name}
-                </div>
-            }
-            rightSide = {
-                <div className="flex flex-column">
-                    <Button className="btn btn-primary mb-1" icon="pi pi-pencil" onClick={()=> editHandler(locality.id)} label="Editar"></Button>
-                    <Button className="p-button-danger" icon="pi pi-trash" onClick={() => deleteHandler(locality.id)} label="Borrar"></Button>
-                </div>
-            }
+        <SimpleNameCard
+            key={locality.id}
+            id={locality.id}
+            name={locality.name}
+            editHandler={editHandler}
+            deleteHandler={deleteHandler}
         />
     ))
-
-    const onHideDialogHandler = () => {
-        setDisplayDialog(false)
-        setEditingItem(null)
-    }
 
     const editDialog = (
         <Dialog
             header={editingItem?"Editar localidad":"Crear localidad"}
             visible={displayDialog}
             className="w-11 md:w-6"
-            onHide={() => onHideDialogHandler()}
+            onHide={() => setDisplayDialog(false)}
             footer={
                 <div className="">
-                    <Button label="Cancelar" icon="pi pi-times" onClick={() => onHideDialogHandler()} className="p-button-danger" />
+                    <Button label="Cancelar" icon="pi pi-times" onClick={() => setDisplayDialog(false)} className="p-button-danger" />
                     <Button label="Guardar" icon="pi pi-check" onClick={() => saveLocalityHandler()} autoFocus className="btn btn-primary" />
                 </div>
             }
@@ -179,10 +178,16 @@ const LocalityList = () => {
                     <Button className="btn btn-primary" icon="pi pi-plus" onClick={()=> createLocalityHandler()} label="Crear localidad"></Button>
                     </div>
                 }
-                /*footer={
-                    TODO agregar paginacion
-                    paginator
-                }*/
+                footer={
+                    <Paginator
+                        first={paginatorFirst}
+                        rows={paginatorRows}
+                        //TODO cambiar 120 por el total de resultados
+                        totalRecords={120}
+                        rowsPerPageOptions={[10, 20, 30]}
+                        onPageChange={onPaginatorPageChange}
+                    ></Paginator>
+                }
             >
                 {localityCardList}
             </Card>
