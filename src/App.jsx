@@ -23,7 +23,7 @@ import PasswordChange from "./pages/PasswordChange";
 import LocalityList from "./pages/LocalityList";
 
 const UnauthenticatedRoutes = () => (
-  <div className="mx-3 my-7 sm:mx-6">
+  <div className="mx-3 my-7 md:mx-6">
     <Switch>
       <Route path={url.LOGIN}>
         <LogIn />

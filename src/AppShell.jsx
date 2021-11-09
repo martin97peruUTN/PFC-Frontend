@@ -5,7 +5,7 @@ const AppShell = ({children}) => {
     return (
         <div className="App">
             <Menubar/>
-            <div className="mx-1 my-3 sm:mx-6">
+            <div className="mx-1 my-3 md:mx-8">
                 {children}
             </div>
         </div>

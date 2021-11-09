@@ -35,6 +35,7 @@ const LocalityList = () => {
 
     //TODO cambiar esta url
     const baseURL = 'https://61895cd6d0821900178d795e.mockapi.io/api/locality'
+    //const baseURL = url.LOCALITY_API
 
     useEffect(() => {
         setLoadingStart(true)
@@ -67,6 +68,7 @@ const LocalityList = () => {
     const saveLocalityHandler = () => {
         //Si tiene id es que estoy haciendo una edicion, caso contrario, estoy creando uno nuevo
         if(editingItem.id){
+            //TODO cambiar put por patch
             fetchContext.authAxios.put(`${baseURL}/${editingItem.id}`, editingItem)
             .then(response => {
                 showToast('success', 'Exito', 'Localidad guardada')
@@ -97,7 +99,7 @@ const LocalityList = () => {
             header: 'Confirmación',
             message: '¿Está seguro que desea eliminar la localidad?',
             acceptLabel: 'Si',
-            className: 'w-9 sm:w-6',
+            className: 'w-9 md:w-6',
             rejectLabel: 'No',
             acceptClassName: 'p-button-danger',
             accept: () => {
@@ -121,7 +123,7 @@ const LocalityList = () => {
         <CardTwoColumns
             key = {locality.id}
             leftSide = {
-                <div className="sm:text-4xl text-xl">
+                <div className="md:text-4xl text-xl">
                     {locality.name}
                 </div>
             }
@@ -143,7 +145,7 @@ const LocalityList = () => {
         <Dialog
             header={editingItem?"Editar localidad":"Crear localidad"}
             visible={displayDialog}
-            className="w-11 sm:w-6"
+            className="w-11 md:w-6"
             onHide={() => onHideDialogHandler()}
             footer={
                 <div className="">
