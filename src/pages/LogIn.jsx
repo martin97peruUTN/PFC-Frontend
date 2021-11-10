@@ -54,7 +54,7 @@ const LogIn = () => {
                 }
             })
         }else{
-            showToast('warn', 'Error', 'Complete los campos vacios!')
+            showToast('warn', 'Cuidado', 'Complete los campos vacios!')
         }
     }
 

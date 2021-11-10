@@ -4,7 +4,10 @@ import React, {useContext} from "react";
 import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
 
 //Prime React
+//Themes para elegir
 import 'primereact/resources/themes/saga-blue/theme.css';
+//import 'primereact/resources/themes/mdc-light-indigo/theme.css'
+//import 'primereact/resources/themes/bootstrap4-light-blue/theme.css'
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
 import PrimeReact from 'primereact/api';

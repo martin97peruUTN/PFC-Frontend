@@ -52,12 +52,15 @@ const Profile = () => {
             //Actualizo el token y toda la info del usuario
             authContext.setAuthState(res.data.token)
             showToast('success','Exito','El usuario se actualizó correctamente!')
-            setTimeout(() => {
-                history.push(url.HOME)
-            }, 2000);
-        }).catch((err) => {
-            showToast('error','Error','No se pudo actualizar el usuario')
             setLoadingAccept(false)
+        }).catch((err) => {
+            if(err.response.status === 403) {
+                showToast('error','Error','Usuario no disponible')
+                setLoadingAccept(false)
+            }else{
+                showToast('error','Error','No se pudo actualizar el usuario')
+                setLoadingAccept(false)
+            }
         })
     }
 
@@ -76,6 +79,7 @@ const Profile = () => {
                         message: '¿Esta seguro de que desea proceder?',
                         header: 'Actualizar informacion de usuario',
                         icon: 'pi pi-exclamation-circle',
+                        acceptLabel: 'Si',
                         accept: () => handleSubmit()
                     });
                 }

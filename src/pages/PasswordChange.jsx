@@ -69,6 +69,7 @@ const PasswordChange = () => {
                             message: '¿Esta seguro de que desea proceder?',
                             header: 'Cambio de contraseña',
                             icon: 'pi pi-exclamation-circle',
+                            acceptLabel: 'Si',
                             accept: () => handleSubmit()
                         });
                     }

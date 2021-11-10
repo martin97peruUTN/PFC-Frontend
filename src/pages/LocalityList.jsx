@@ -28,20 +28,22 @@ const LocalityList = () => {
     const [loadingStart, setLoadingStart] = useState(false)
 
     const [localityList, setLocalityList] = useState([]);
-    //al poner localityList en el useEffect tira error 429 el server
-    //TODO probar si con el backend nuestro anda con localityList
+    //al poner localityList en el useEffect no funciona bien
+    //por eso uso este estado "comodin" para refrescar la pagina cuando hay un cambio
     const [refresh, setRefresh] = useState(false);
 
+    //Mostrar el dialogo de confirmacion o esconderlo
     const [displayDialog, setDisplayDialog] = useState(false);
-    const [editingItem, setEditingItem] = useState(null);
+    //Para mostrar un titulo u otro en el dialogo
+    const [isEditing, setIsEditing] = useState(false);
 
-    //TODO cambiar esta url
-    const baseURL = 'https://61895cd6d0821900178d795e.mockapi.io/api/locality'
-    //const baseURL = url.LOCALITY_API
+    //Item que se esta editando o creando (ver el Dialog)
+    const [editingItem, setEditingItem] = useState(null);
 
     //Paginator states
     const [paginatorFirst, setPaginatorFirst] = useState(0);
     const [paginatorRows, setPaginatorRows] = useState(10);
+    const [totalPages, setTotalPages] = useState(0);
 
     const onPaginatorPageChange = (event) => {
         setPaginatorFirst(event.first);
@@ -50,14 +52,15 @@ const LocalityList = () => {
 
     useEffect(() => {
         setLoadingStart(true)
-        fetchContext.authAxios.get(`${baseURL}?limit=${paginatorRows}&offset=${paginatorFirst}`)
+        //paginatorFirst es 0, 10, 20, 30, etc, y yo necesito que sea 0, 1, 2, 3, etc, por eso lo divido por paginatorRows
+        fetchContext.authAxios.get(`${url.LOCALITY_API}?page=${paginatorFirst/paginatorRows}&limit=${paginatorRows}`)
         .then(response => {
-            setLocalityList(response.data)
+            setLocalityList(response.data.content)
+            setTotalPages(response.data.totalPages)
             setLoadingStart(false)
         })
         .catch(error => {
-            //TODO ver que hacemos con el error
-            showToast('error', 'Error', error.message)
+            showToast('error', 'Error', 'No se pudo conectar al servidor')
             setTimeout(() => {
                 history.push(url.HOME);
             }, 2000);
@@ -68,41 +71,47 @@ const LocalityList = () => {
     const createLocalityHandler = () => {
         setDisplayDialog(true)
         setEditingItem(null)
+        setIsEditing(false)
     }
 
     //Se dispara la tocar el boton editar, abre el dialogo de creacion/edicion y setea editingItem al que corresponde
     const editHandler = (id) => {
         setDisplayDialog(true)
         setEditingItem(localityList.find(item => item.id === id))
+        setIsEditing(true)
     }
 
     //Se dispara al tocar el boton aceptar en el dialogo
     const saveLocalityHandler = () => {
-        //Si tiene id es que estoy haciendo una edicion, caso contrario, estoy creando uno nuevo
-        if(editingItem.id){
-            //TODO cambiar put por patch
-            fetchContext.authAxios.put(`${baseURL}/${editingItem.id}`, editingItem)
-            .then(response => {
-                showToast('success', 'Exito', 'Localidad guardada')
-                setRefresh(!refresh)
-                setDisplayDialog(false)
-                setEditingItem(null)
-            })
-            .catch(error => {
-                showToast('error', 'Error', error.message)
-            })
+        if(editingItem && editingItem.name){
+            //Si tiene id es que estoy haciendo una edicion, caso contrario, estoy creando uno nuevo
+            if(editingItem.id){
+                fetchContext.authAxios.patch(`${url.LOCALITY_API}/${editingItem.id}`, editingItem)
+                .then(response => {
+                    showToast('success', 'Exito', 'Localidad guardada')
+                    setRefresh(!refresh)
+                    setDisplayDialog(false)
+                    setEditingItem(null)
+                })
+                .catch(error => {
+                    showToast('error', 'Error', 'No se pudo guardar la localidad')
+                })
+            }else{
+                fetchContext.authAxios.post(url.LOCALITY_API, editingItem)
+                .then(response => {
+                    showToast('success', 'Exito', 'Localidad guardada')
+                    setRefresh(!refresh)
+                    setDisplayDialog(false)
+                    setEditingItem(null)
+                })
+                .catch(error => {
+                    showToast('error', 'Error', 'No se pudo guardar la localidad')
+                })
+            }
         }else{
-            fetchContext.authAxios.post(baseURL, editingItem)
-            .then(response => {
-                showToast('success', 'Exito', 'Localidad guardada')
-                setRefresh(!refresh)
-                setDisplayDialog(false)
-                setEditingItem(null)
-            })
-            .catch(error => {
-                showToast('error', 'Error', error.message)
-            })
+            showToast('warn', 'Cuidado', 'El campo esta vacio!')
         }
+        
     }
 
     //Se dispara al tocar el boton eliminar, abre un dialogo de confirmacion
@@ -115,13 +124,13 @@ const LocalityList = () => {
             rejectLabel: 'No',
             acceptClassName: 'p-button-danger',
             accept: () => {
-                fetchContext.authAxios.delete(`${baseURL}/${id}`)
+                fetchContext.authAxios.delete(`${url.LOCALITY_API}/${id}`)
                 .then(response => {
                     showToast('success', 'Éxito', 'La localidad ha sido eliminada')
                     setRefresh(!refresh)
                 })
                 .catch(error => {
-                    showToast('error', 'Error', error.message)
+                    showToast('error', 'Error', 'No se pudo eliminar la localidad')
                     setTimeout(() => {
                         history.push(url.LOCALITIES);
                     }, 2000);
@@ -143,7 +152,7 @@ const LocalityList = () => {
 
     const editDialog = (
         <Dialog
-            header={editingItem?"Editar localidad":"Crear localidad"}
+            header={isEditing?"Editar localidad":"Crear localidad"}
             visible={displayDialog}
             className="w-11 md:w-6"
             onHide={() => setDisplayDialog(false)}
@@ -163,12 +172,11 @@ const LocalityList = () => {
     )
 
     return (
-        <>
-            <ScrollTop />
+        <>  
             <Toast ref={toast} />
+            <ScrollTop />
             {editDialog}
-            {
-            loadingStart?
+            {loadingStart?
             <div style={{"display": "flex"}}>
                 <ProgressSpinner/>
             </div>
@@ -184,8 +192,7 @@ const LocalityList = () => {
                     <Paginator
                         first={paginatorFirst}
                         rows={paginatorRows}
-                        //TODO cambiar 120 por el total de resultados
-                        totalRecords={120}
+                        totalRecords={totalPages*paginatorRows}
                         rowsPerPageOptions={[10, 20, 30]}
                         onPageChange={onPaginatorPageChange}
                     ></Paginator>
