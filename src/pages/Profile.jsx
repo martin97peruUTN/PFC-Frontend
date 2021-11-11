@@ -36,6 +36,9 @@ const Profile = () => {
         setUser(authContext.getUserInfo().username)
         setName(authContext.getUserInfo().name)
         setRole(authContext.getUserInfo().role)
+        if(history.location.state){
+            showToast(history.location.state.severity, history.location.state.summary, history.location.state.message)
+        }
         setLoadingStart(false)
     }, [authContext])
 

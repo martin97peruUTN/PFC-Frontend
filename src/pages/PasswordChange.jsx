@@ -35,10 +35,18 @@ const PasswordChange = () => {
             oldPassword: hash(currentPassword),
             newPassword: hash(newPassword)
         }).then(response => {
-            showToast('success', 'Exito', 'La Contraseña ha sido cambiada!');
+            /*showToast('success', 'Exito', 'La Contraseña ha sido cambiada!');
             setTimeout(() => {
                 history.push(url.PROFILE);
-            }, 2000);
+            }, 2000);*/
+            history.push({
+                pathname:url.PROFILE,
+                state:{
+                    severity: 'success',
+                    summary: 'Exito',
+                    message:'La Contraseña ha sido cambiada!'
+                }
+            });
         }).catch(error => {
             showToast('error', 'Error', 'Hubo un error al cambiar la contraseña');
             setLoadingAccept(false);
