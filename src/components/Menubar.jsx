@@ -1,12 +1,19 @@
-import React, {useContext} from 'react'
+import React, {useContext, useRef} from 'react'
+
 import { Menubar as MenubarPrime } from 'primereact/menubar';
 import {Button} from 'primereact/button';
 import { AuthContext } from './../context/AuthContext';
+import { Avatar } from 'primereact/avatar';
+import { Menu } from 'primereact/menu';
+
 import * as url from '../util/url'
+import { getInitialLetters } from '../util/miscFunctions'
 
 const Menubar = () => {
 
     const authContext = useContext(AuthContext);
+
+    const menu = useRef(null);
 
     const items = [
         {
@@ -51,16 +58,14 @@ const Menubar = () => {
                     url: url.CLIENT_LIST
                 }
             ]
-        },
-        {
+        }
+    ];
+
+    if(authContext.isConsignee() || authContext.isAdmin()){
+        items.push({
             label: 'Administracion',
             icon: 'pi pi-fw pi-briefcase',
-            items: authContext.isConsignee() || authContext.isAdmin()?[
-                {
-                    label: 'Perfil',
-                    icon: 'pi pi-fw pi-user',
-                    url: url.PROFILE
-                },
+            items: [
                 {
                     label: 'Localidades',
                     icon: 'pi pi-fw pi-map',
@@ -76,20 +81,35 @@ const Menubar = () => {
                     icon: 'pi pi-fw pi-id-card',
                     url: url.USERS
                 }
-            ]:[
-                {
-                    label: 'Perfil',
-                    icon: 'pi pi-fw pi-user',
-                    url: url.PROFILE
-                }
             ]
-        }
-    ];
+        })
+    }
 
-    const end = <Button className="btn-primary" label="Salir" icon="pi pi-sign-out" onClick={() => authContext.logout()} />;
+    const avatarMenuItems = [
+        {
+            label: 'Perfil',
+            icon: 'pi pi-fw pi-user',
+            url: url.PROFILE
+        },
+        {
+            label: 'Salir',
+            icon: 'pi pi-fw pi-sign-out',
+            command: () => authContext.logout()
+        }
+    ]
+
+    const end = <Avatar 
+        label={getInitialLetters(authContext.getUserInfo().name)} 
+        shape="circle"
+        style={{ backgroundColor: authContext.getAvatarColor(), color: '#ffffff' }}
+        onClick={(e) => menu.current.toggle(e)}
+    />
 
     return (
-        <MenubarPrime className="sticky top-0 z-5" model={items} end={end} />
+        <>
+            <Menu model={avatarMenuItems} popup ref={menu} className="mt-2"/>
+            <MenubarPrime className="sticky top-0 z-5" model={items} end={end} />
+        </>
     )
 }
 

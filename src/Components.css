@@ -18,21 +18,21 @@ body {
 .p-menubar {
     background-color: var(--primary) !important;
 }
-.p-menu-list {
+.p-menubar .p-menu-list {
     background: var(--primary) !important;
 }
-.p-submenu-list {
+.p-menubar .p-submenu-list {
     background: var(--primary) !important;
 }
-.p-menuitem {
+.p-menubar .p-menuitem {
     background-color: var(--primary) !important;
 }
-.p-menuitem-text, .p-menuitem-icon, .p-submenu-icon {
+.p-menubar .p-menuitem-text, .p-menubar .p-menuitem-icon, .p-menubar .p-submenu-icon {
     color: var(--text-primary) !important;
 }
-.p-menuitem-active a {
+.p-menubar .p-menuitem-active a {
     background: var(--primary) !important;
 }
-.p-menuitem-link:hover {
+.p-menubar .p-menuitem-link:hover {
     background-color: var(--dark) !important;
 }

@@ -4,6 +4,7 @@ import React, { createContext, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import jwt_decode from "jwt-decode";
 import * as constants from '../util/constants'
+import { randomColorGenerator } from '../util/miscFunctions'
 
 const AuthContext = createContext();
 const { Provider } = AuthContext;
@@ -41,6 +42,9 @@ const AuthProvider = ({ children }) => {
             userInfo: incomingUserInfo,
             expiresAt: decodedToken.exp
         });
+
+        //Guardo un color random para el avatar del usuario
+        localStorage.setItem('avatarColor', randomColorGenerator());
     }
 
     const logout = () => {
@@ -83,7 +87,8 @@ const AuthProvider = ({ children }) => {
                 isAdmin,
                 isConsignee,
                 isAssistant,
-                getUserInfo: () => authState.userInfo
+                getUserInfo: () => authState.userInfo,
+                getAvatarColor: () => localStorage.getItem('avatarColor')
             }}
         >
             {children}

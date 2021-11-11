@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useRef, useContext} from 'react';
 import { useHistory } from "react-router-dom";
 import * as url from '../util/url';
-import pluralizeSpanishWord from '../util/pluralizeSpanishWord';
+import { pluralizeSpanishWord } from '../util/miscFunctions';
 
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
