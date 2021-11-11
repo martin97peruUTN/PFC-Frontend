@@ -169,7 +169,7 @@ const SimpleItemList = (props) => {
             >
                 <br/>
                 <span className="p-float-label">
-                    <InputText id="name" className='w-full' value={editingItem?editingItem.name:null} onChange={e => setEditingItem({...editingItem, name:e.target.value})}/>
+                    <InputText id="name" className='w-full' value={editingItem?editingItem.name:''} onChange={e => setEditingItem({...editingItem, name:e.target.value})}/>
                     <label htmlFor="name">Nombre</label>
                 </span>
         </Dialog>
