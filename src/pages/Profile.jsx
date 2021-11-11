@@ -38,6 +38,7 @@ const Profile = () => {
         setRole(authContext.getUserInfo().role)
         if(history.location.state){
             showToast(history.location.state.severity, history.location.state.summary, history.location.state.message)
+            history.location.state = null
         }
         setLoadingStart(false)
     }, [authContext])

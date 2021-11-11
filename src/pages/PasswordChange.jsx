@@ -44,7 +44,7 @@ const PasswordChange = () => {
                 state:{
                     severity: 'success',
                     summary: 'Exito',
-                    message:'La Contraseña ha sido cambiada!'
+                    message:'La contraseña ha sido cambiada!'
                 }
             });
         }).catch(error => {
