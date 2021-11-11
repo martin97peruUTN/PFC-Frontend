@@ -24,6 +24,7 @@ import LogIn from "./pages/LogIn";
 import Profile from "./pages/Profile";
 import PasswordChange from "./pages/PasswordChange";
 import LocalityList from "./pages/LocalityList";
+import CategoryList from "./pages/CategoryList";
 
 const UnauthenticatedRoutes = () => (
   <div className="mx-3 my-7 md:mx-6">
@@ -118,12 +119,11 @@ function App() {
       <AuthenticatedRoute exact path={url.PASSWORD_CHANGE}>
         <PasswordChange/>
       </AuthenticatedRoute>
-      
       <ConsigneeRoute exact path={url.LOCALITIES}>
         <LocalityList />
       </ConsigneeRoute>
       <ConsigneeRoute exact path={url.CATEGORIES}>
-        <HomePage />
+        <CategoryList />
       </ConsigneeRoute>
       <ConsigneeRoute exact path={url.USERS}>
         <HomePage />
