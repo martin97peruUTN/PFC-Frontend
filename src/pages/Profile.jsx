@@ -36,6 +36,10 @@ const Profile = () => {
         setUser(authContext.getUserInfo().username)
         setName(authContext.getUserInfo().name)
         setRole(authContext.getUserInfo().role)
+        if(history.location.state){
+            showToast(history.location.state.severity, history.location.state.summary, history.location.state.message)
+            history.location.state = null
+        }
         setLoadingStart(false)
     }, [authContext])
 
@@ -45,41 +49,44 @@ const Profile = () => {
 
     const handleSubmit = () => {
         setLoadingAccept(true)
-        //Mando a guardar solo si cambio algo, sino hago history.goBack()
-        if(name!==authContext.getUserInfo().name || user!==authContext.getUserInfo().username){
-            fetchContext.authAxios.patch(`${url.USER_API}/${authContext.getUserInfo().id}`, {
-                name: name!==authContext.getUserInfo().name? name : null,
-                username: user!==authContext.getUserInfo().username? user : null,
-            }).then((res) => {
-                //Actualizo el token y toda la info del usuario
-                authContext.setAuthState(res.data.token)
-                showToast('success','Exito','Se actualizo el usuario!')
-                setTimeout(() => {
-                    history.push(url.HOME)
-                }, 2000);
-            }).catch((err) => {
+        fetchContext.authAxios.patch(`${url.USER_API}/${authContext.getUserInfo().id}`, {
+            name: name!==authContext.getUserInfo().name? name : null,
+            username: user!==authContext.getUserInfo().username? user : null,
+        }).then((res) => {
+            //Actualizo el token y toda la info del usuario
+            authContext.setAuthState(res.data.token)
+            showToast('success','Exito','El usuario se actualizó correctamente!')
+            setLoadingAccept(false)
+        }).catch((err) => {
+            if(err.response.status === 403) {
+                showToast('error','Error','Usuario no disponible')
+                setLoadingAccept(false)
+            }else{
                 showToast('error','Error','No se pudo actualizar el usuario')
                 setLoadingAccept(false)
-            })
-        }else{
-            history.push(url.HOME)
-        }
+            }
+        })
     }
 
     //Se dispara al presionar el boton Guardar
     const confirm = () => {
-        if(user.length > 0 && name.length > 0 && user.length <= 20){
-            confirmDialog({
-                message: '¿Esta seguro de que desea proceder?',
-                header: 'Actualizar informacion de usuario',
-                icon: 'pi pi-exclamation-circle',
-                accept: () => handleSubmit()
-            });
+        if(user.length < 5 || user.length > 30){
+            showToast('error','Error','El usuario debe tener entre 5 y 30 caracteres!')
         }else{
-            if(user.length > 20){
-                showToast('warn','Cuidado','El usuario debe tener como maximo 20 caracteres')
+            if(name.length === 0){
+                showToast('error','Error','El nombre no puede ser vacio!')
             }else{
-                showToast('warn','Cuidado','Complete los campo del formulario')
+                if(name===authContext.getUserInfo().name && user===authContext.getUserInfo().username){
+                    showToast('warn','Cuidado','Ningun dato fue cambiado!')
+                }else{
+                    confirmDialog({
+                        message: '¿Esta seguro de que desea proceder?',
+                        header: 'Actualizar informacion de usuario',
+                        icon: 'pi pi-exclamation-circle',
+                        acceptLabel: 'Si',
+                        accept: () => handleSubmit()
+                    });
+                }
             }
         }
     }
@@ -97,18 +104,43 @@ const Profile = () => {
             title='Perfil'
             footer={
                 <div className="flex justify-content-between">
-                    <Button className="p-button-danger" onClick={()=> history.goBack()} label="Cancelar"></Button>
-                    <Button className="btn btn-primary" icon="pi pi-check" onClick={()=> confirm()} label="Guardar" loading={loadingAccept}></Button>
+                    <Button 
+                        className="p-button-danger" 
+                        onClick={()=> history.goBack()} 
+                        label="Cancelar"
+                    />
+                    <Button 
+                        className="btn btn-primary" 
+                        icon="pi pi-check" 
+                        onClick={()=> confirm()} 
+                        label="Guardar" 
+                        loading={loadingAccept}
+                    />
                 </div>
             }
         >
             <span className="p-float-label">
-                <InputText id="name" className='w-full' value={name} onChange={e => setName(e.target.value)} disabled={!edit}/>
+                <InputText
+                    id="name"
+                    className='w-full' 
+                    value={name} 
+                    onChange={e => setName(e.target.value)} 
+                    disabled={!edit}
+                />
                 <label htmlFor="name">Nombre</label>
             </span>
             <br/>
             <span className="p-float-label">
-                <InputText id="user" className='w-full' keyfilter="email" value={user} onChange={e => setUser(e.target.value)} disabled={!edit}/>
+                <InputText 
+                    id="user" 
+                    className='w-full' 
+                    keyfilter="email" 
+                    value={user} 
+                    onChange={e => setUser(e.target.value)} 
+                    disabled={!edit}
+                    tooltip="Entre 6 y 20 caracteres" 
+                    tooltipOptions={{position: 'top', event: 'focus'}}
+                />
                 <label htmlFor="user">Usuario</label>
             </span>
             <br/>
@@ -118,8 +150,18 @@ const Profile = () => {
             </span>
             <br/>
             <div className="flex">
-                <Button className="btn btn-primary" icon="pi pi-user-edit" onClick={()=> setEdit(!edit)} label={edit?'Dejar de editar':'Editar'}></Button>
-                <Button className="btn btn-primary ml-2" icon="pi pi-pencil" onClick={(event)=> handlePasswordChange(event)} label="Cambiar contraseña"></Button>
+                <Button 
+                    className="btn btn-primary" 
+                    icon="pi pi-user-edit" 
+                    onClick={()=> setEdit(!edit)} 
+                    label={edit?'Dejar de editar':'Editar'}
+                />
+                <Button 
+                    className="btn btn-primary ml-2" 
+                    icon="pi pi-pencil" 
+                    onClick={(event)=> handlePasswordChange(event)} 
+                    label="Cambiar contraseña"
+                />
             </div>
         </Card>
         }

@@ -18,21 +18,42 @@ body {
 .p-menubar {
     background-color: var(--primary) !important;
 }
-.p-menu-list {
+.p-menubar .p-menu-list {
     background: var(--primary) !important;
 }
-.p-submenu-list {
+.p-menubar .p-submenu-list {
     background: var(--primary) !important;
 }
-.p-menuitem {
+.p-menubar .p-menuitem {
     background-color: var(--primary) !important;
 }
-.p-menuitem-text, .p-menuitem-icon, .p-submenu-icon {
+.p-menubar .p-menuitem-text, .p-menubar .p-menuitem-icon, .p-menubar .p-submenu-icon {
     color: var(--text-primary) !important;
 }
-.p-menuitem-active a {
+.p-menubar .p-menuitem-active a {
     background: var(--primary) !important;
 }
-.p-menuitem-link:hover {
+.p-menubar .p-menuitem-link:hover {
     background-color: var(--dark) !important;
+}
+/*escondo el burger button de la menubar cuando la pantalla es de celular*/
+.p-menubar-button {
+    display: none !important;
+}
+
+/*Button de menubar cuando la pantalla es de celular*/
+.sm-menubar-button {
+    background-color: var(--primary) !important;
+}
+/*Sidebar*/
+.p-sidebar .p-sidebar-content {
+    padding: 0;
+}
+.p-sidebar {
+    background-color: transparent;
+    padding-top: 3.5rem;
+    box-shadow: none;
+}
+.p-sidebar .p-sidebar-header {
+    display: none !important;
 }

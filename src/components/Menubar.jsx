@@ -1,19 +1,28 @@
-import React, {useContext} from 'react'
+import React, {useContext, useState, useRef} from 'react'
+
 import { Menubar as MenubarPrime } from 'primereact/menubar';
 import {Button} from 'primereact/button';
 import { AuthContext } from './../context/AuthContext';
+import { Avatar } from 'primereact/avatar';
+import { Menu } from 'primereact/menu';
+import { Sidebar } from 'primereact/sidebar';
+
 import * as url from '../util/url'
+import { getInitialLetters } from '../util/miscFunctions'
 
 const Menubar = () => {
 
     const authContext = useContext(AuthContext);
 
-    const items = [
+    const avatarMenu = useRef(null);
+
+    const MenubarItems = [
         {
             label: 'Inicio',
             icon: 'pi pi-fw pi-home',
             url: url.HOME
         },
+        {separator: true},
         {
             label: 'Remates',
             icon: 'pi pi-fw pi-book',
@@ -36,6 +45,7 @@ const Menubar = () => {
                 } 
             ]
         },
+        {separator: true},
         {
             label: 'Clientes',
             icon: 'pi pi-fw pi-users',
@@ -51,16 +61,16 @@ const Menubar = () => {
                     url: url.CLIENT_LIST
                 }
             ]
-        },
+        }
+    ];
+
+    if(authContext.isConsignee() || authContext.isAdmin()){
+        MenubarItems.push(
+        {separator: true},
         {
             label: 'Administracion',
             icon: 'pi pi-fw pi-briefcase',
-            items: authContext.isConsignee() || authContext.isAdmin()?[
-                {
-                    label: 'Perfil',
-                    icon: 'pi pi-fw pi-user',
-                    url: url.PROFILE
-                },
+            items: [
                 {
                     label: 'Localidades',
                     icon: 'pi pi-fw pi-map',
@@ -76,20 +86,69 @@ const Menubar = () => {
                     icon: 'pi pi-fw pi-id-card',
                     url: url.USERS
                 }
-            ]:[
-                {
-                    label: 'Perfil',
-                    icon: 'pi pi-fw pi-user',
-                    url: url.PROFILE
-                }
             ]
+        })
+    }
+
+    //992 es el breakpoint de primereact parece
+    if(window.screen.width < 992){
+        MenubarItems.push(
+            {separator: true},
+            {separator: true},
+            {
+                label: 'Cerrar menu',
+                icon: 'pi pi-fw pi-arrow-circle-left',
+                command: () => setVisible(false)
+            }
+        )
+    }
+
+    const avatarMenuItems = [
+        {
+            label: 'Perfil',
+            icon: 'pi pi-fw pi-user',
+            url: url.PROFILE
+        },
+        {
+            label: 'Salir',
+            icon: 'pi pi-fw pi-sign-out',
+            command: () => authContext.logout()
         }
-    ];
+    ]
 
-    const end = <Button className="btn-primary" label="Salir" icon="pi pi-sign-out" onClick={() => authContext.logout()} />;
+    const end = <Avatar 
+        label={getInitialLetters(authContext.getUserInfo().name)} 
+        shape="circle"
+        style={{ backgroundColor: authContext.getAvatarColor(), color: '#ffffff' }}
+        className="md:mr-1"
+        onClick={(e) => avatarMenu.current.toggle(e)}
+    />
 
+    const [visible, setVisible] = useState(false);
+
+    const sidebar = (
+        <Sidebar visible={visible} style={{width:'12.5em'}} onHide={() => setVisible(false)}>
+            <Menu model={MenubarItems} />
+        </Sidebar>
+    )
+    const openSidebarButton = (
+        <Button icon="pi pi-bars" className="sm-menubar-button m-0" onClick={(e) => setVisible(true)}/>
+    )
+
+    //El primer menu es para pantallas grandes
+    //El segundo para pantallas chicas
     return (
-        <MenubarPrime className="sticky top-0 z-5" model={items} end={end} />
+        <>
+            <Menu model={avatarMenuItems} popup ref={avatarMenu} className="mt-2"/>
+            <div className='hidden lg:block lg:sticky lg:top-0 lg:z-5'>
+                <MenubarPrime model={MenubarItems} end={end} />
+            </div>
+
+            <div className='block lg:hidden'>
+                <MenubarPrime start={openSidebarButton} end={end} />
+                {sidebar}
+            </div>
+        </>
     )
 }
 

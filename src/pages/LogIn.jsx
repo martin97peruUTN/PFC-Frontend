@@ -54,7 +54,7 @@ const LogIn = () => {
                 }
             })
         }else{
-            showToast('warn', 'Error', 'Complete los campos vacios!')
+            showToast('warn', 'Cuidado', 'Complete los campos vacios!')
         }
     }
 
@@ -71,18 +71,35 @@ const LogIn = () => {
                 title='Ingrese a su cuenta'
                 footer={
                     <div className="flex justify-content-center">
-                        <Button label='Ingresar' className="btn btn-primary" icon="pi pi-sign-in" onClick={e => submit(e)} loading={loading}></Button>
+                        <Button 
+                            label='Ingresar' 
+                            className="btn btn-primary" 
+                            icon="pi pi-sign-in" 
+                            onClick={e => submit(e)} 
+                            loading={loading}
+                        />
                     </div>
                 }
             >   
                 <Toast ref={toast}/>
                 <span className="p-float-label">
-                    <InputText id="user" className='w-full' onChange={e => setUsername(e.target.value)} />
+                    <InputText 
+                        id="user" 
+                        className='w-full' 
+                        onChange={e => setUsername(e.target.value)} 
+                    />
                     <label htmlFor="user">Usuario</label>
                 </span>
                 <br/>
                 <span className="p-float-label">
-                    <Password id="password" className='w-full' inputClassName='w-full' feedback={false} toggleMask onChange={e => setPassword(e.target.value)} />
+                    <Password 
+                        id="password" 
+                        className='w-full' 
+                        inputClassName='w-full' 
+                        feedback={false} 
+                        toggleMask 
+                        onChange={e => setPassword(e.target.value)} 
+                    />
                     <label htmlFor="password">Contraseña</label>
                 </span>
             </Card>

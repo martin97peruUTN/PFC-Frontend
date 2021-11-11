@@ -4,7 +4,10 @@ import React, {useContext} from "react";
 import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
 
 //Prime React
+//Themes para elegir
 import 'primereact/resources/themes/saga-blue/theme.css';
+//import 'primereact/resources/themes/mdc-light-indigo/theme.css'
+//import 'primereact/resources/themes/bootstrap4-light-blue/theme.css'
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
 import PrimeReact from 'primereact/api';
@@ -20,9 +23,11 @@ import PageNotFound from './pages/PageNotFound'
 import LogIn from "./pages/LogIn";
 import Profile from "./pages/Profile";
 import PasswordChange from "./pages/PasswordChange";
+import LocalityList from "./pages/LocalityList";
+import CategoryList from "./pages/CategoryList";
 
 const UnauthenticatedRoutes = () => (
-  <div className="mx-3 my-7 sm:mx-6">
+  <div className="mx-3 my-7 md:mx-6">
     <Switch>
       <Route path={url.LOGIN}>
         <LogIn />
@@ -114,12 +119,11 @@ function App() {
       <AuthenticatedRoute exact path={url.PASSWORD_CHANGE}>
         <PasswordChange/>
       </AuthenticatedRoute>
-      
       <ConsigneeRoute exact path={url.LOCALITIES}>
-        <HomePage />
+        <LocalityList />
       </ConsigneeRoute>
       <ConsigneeRoute exact path={url.CATEGORIES}>
-        <HomePage />
+        <CategoryList />
       </ConsigneeRoute>
       <ConsigneeRoute exact path={url.USERS}>
         <HomePage />

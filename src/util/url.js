@@ -14,3 +14,5 @@ export const USERS = '/usuarios'
 
 //Backend only (some of the frontend ones are used for backend fetch as well)
 export const USER_API = '/user'
+export const LOCALITY_API = '/locality'
+export const CATEGORY_API = '/category'
