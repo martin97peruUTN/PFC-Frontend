@@ -1,10 +1,11 @@
-import React, {useContext, useRef} from 'react'
+import React, {useContext, useState, useRef} from 'react'
 
 import { Menubar as MenubarPrime } from 'primereact/menubar';
 import {Button} from 'primereact/button';
 import { AuthContext } from './../context/AuthContext';
 import { Avatar } from 'primereact/avatar';
 import { Menu } from 'primereact/menu';
+import { Sidebar } from 'primereact/sidebar';
 
 import * as url from '../util/url'
 import { getInitialLetters } from '../util/miscFunctions'
@@ -13,9 +14,9 @@ const Menubar = () => {
 
     const authContext = useContext(AuthContext);
 
-    const menu = useRef(null);
+    const avatarMenu = useRef(null);
 
-    const items = [
+    const MenubarItems = [
         {
             label: 'Inicio',
             icon: 'pi pi-fw pi-home',
@@ -62,7 +63,7 @@ const Menubar = () => {
     ];
 
     if(authContext.isConsignee() || authContext.isAdmin()){
-        items.push({
+        MenubarItems.push({
             label: 'Administracion',
             icon: 'pi pi-fw pi-briefcase',
             items: [
@@ -102,13 +103,34 @@ const Menubar = () => {
         label={getInitialLetters(authContext.getUserInfo().name)} 
         shape="circle"
         style={{ backgroundColor: authContext.getAvatarColor(), color: '#ffffff' }}
-        onClick={(e) => menu.current.toggle(e)}
+        className="md:mr-1"
+        onClick={(e) => avatarMenu.current.toggle(e)}
     />
 
+    const [visible, setVisible] = useState(false);
+
+    const sidebar = (
+        <Sidebar visible={visible} style={{width:'14.5em'}} onHide={() => setVisible(false)}>
+            <Menu model={MenubarItems} />
+        </Sidebar>
+    )
+    const openSidebarButton = (
+        <Button icon="pi pi-bars" className="sm-menubar-button m-0" onClick={(e) => setVisible(true)}/>
+    )
+
+    //El primer menu es para pantallas grandes
+    //El segundo para pantallas chicas
     return (
         <>
-            <Menu model={avatarMenuItems} popup ref={menu} className="mt-2"/>
-            <MenubarPrime className="sticky top-0 z-5" model={items} end={end} />
+            <Menu model={avatarMenuItems} popup ref={avatarMenu} className="mt-2"/>
+            <div className='hidden lg:block lg:sticky lg:top-0 lg:z-5'>
+                <MenubarPrime model={MenubarItems} end={end} />
+            </div>
+
+            <div className='block lg:hidden'>
+                <MenubarPrime start={openSidebarButton} end={end} />
+                {sidebar}
+            </div>
         </>
     )
 }

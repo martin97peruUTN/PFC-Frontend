@@ -36,3 +36,12 @@ body {
 .p-menubar .p-menuitem-link:hover {
     background-color: var(--dark) !important;
 }
+/*escondo el burger button de la menubar cuando la pantalla es de celular*/
+.p-menubar-button {
+    display: none !important;
+}
+
+/*Button de menubar cuando la pantalla es de celular*/
+.sm-menubar-button {
+    background-color: var(--primary) !important;
+}
