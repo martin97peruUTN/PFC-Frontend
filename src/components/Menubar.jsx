@@ -22,6 +22,7 @@ const Menubar = () => {
             icon: 'pi pi-fw pi-home',
             url: url.HOME
         },
+        {separator: true},
         {
             label: 'Remates',
             icon: 'pi pi-fw pi-book',
@@ -44,6 +45,7 @@ const Menubar = () => {
                 } 
             ]
         },
+        {separator: true},
         {
             label: 'Clientes',
             icon: 'pi pi-fw pi-users',
@@ -63,7 +65,9 @@ const Menubar = () => {
     ];
 
     if(authContext.isConsignee() || authContext.isAdmin()){
-        MenubarItems.push({
+        MenubarItems.push(
+        {separator: true},
+        {
             label: 'Administracion',
             icon: 'pi pi-fw pi-briefcase',
             items: [
@@ -84,6 +88,19 @@ const Menubar = () => {
                 }
             ]
         })
+    }
+
+    //992 es el breakpoint de primereact parece
+    if(window.screen.width < 992){
+        MenubarItems.push(
+            {separator: true},
+            {separator: true},
+            {
+                label: 'Cerrar menu',
+                icon: 'pi pi-fw pi-arrow-circle-left',
+                command: () => setVisible(false)
+            }
+        )
     }
 
     const avatarMenuItems = [
@@ -110,7 +127,7 @@ const Menubar = () => {
     const [visible, setVisible] = useState(false);
 
     const sidebar = (
-        <Sidebar visible={visible} style={{width:'14.5em'}} onHide={() => setVisible(false)}>
+        <Sidebar visible={visible} style={{width:'12.5em'}} onHide={() => setVisible(false)}>
             <Menu model={MenubarItems} />
         </Sidebar>
     )
