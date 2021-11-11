@@ -1,6 +1,7 @@
 import React, {useState, useEffect, useRef, useContext} from 'react';
 import { useHistory } from "react-router-dom";
 import * as url from '../util/url';
+import pluralizeSpanishWord from '../util/pluralizeSpanishWord';
 
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
@@ -187,7 +188,7 @@ const SimpleItemList = (props) => {
             <Card
                 title={
                     <div className="flex justify-content-between">
-                    <>{`${itemNameUppercase}${itemNameUppercase==="Localidad"?"es":itemNameUppercase==="Categoria"?"s":null}`}</>
+                    <>{pluralizeSpanishWord(itemNameUppercase)}</>
                     <Button className="btn btn-primary" icon="pi pi-plus" onClick={()=> createItemHandler()} label={`Crear ${itemNameLowercase}`}></Button>
                     </div>
                 }
