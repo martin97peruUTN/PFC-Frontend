@@ -45,6 +45,7 @@ const SimpleItemList = (props) => {
     //Paginator states
     const [paginatorFirst, setPaginatorFirst] = useState(0);
     const [paginatorRows, setPaginatorRows] = useState(10);
+    const [paginatorPage, setPaginatorPage] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
 
     const [itemList, setItemList] = useState([]);
@@ -54,8 +55,7 @@ const SimpleItemList = (props) => {
 
     useEffect(() => {
         setLoadingStart(true)
-        //paginatorFirst es 0, 10, 20, 30, etc, y yo necesito que sea 0, 1, 2, 3, etc, por eso lo divido por paginatorRows
-        fetchContext.authAxios.get(`${urlAPI}?page=${paginatorFirst/paginatorRows}&limit=${paginatorRows}`)
+        fetchContext.authAxios.get(`${urlAPI}?page=${paginatorPage}&limit=${paginatorRows}`)
         .then(response => {
             setItemList(response.data.content)
             setTotalPages(response.data.totalPages)
@@ -72,6 +72,7 @@ const SimpleItemList = (props) => {
     const onPaginatorPageChange = (event) => {
         setPaginatorFirst(event.first);
         setPaginatorRows(event.rows);
+        setPaginatorPage(event.page);
     }
 
     //Se dispara al tocar el boton crear, se abre el dialogo de creacion/edicion
