@@ -33,9 +33,6 @@ const Profile = () => {
 
     useEffect(() => {
         setLoadingStart(true)
-        setTimeout(() => {
-
-        
         setUser(authContext.getUserInfo().username)
         setName(authContext.getUserInfo().name)
         setRole(authContext.getUserInfo().role)
@@ -44,8 +41,6 @@ const Profile = () => {
             history.location.state = null
         }
         setLoadingStart(false)
-
-        },3000)
     }, [authContext])
 
     const handlePasswordChange = () => {
