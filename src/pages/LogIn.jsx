@@ -46,7 +46,7 @@ const LogIn = () => {
             .catch(err => {
                 //Pregunto si hay response porque sino crashea
                 if(err.response && err.response.status === 400){
-                    showToast('error', 'Error', 'Credenciales invalidas, vuelva a intentarlo')
+                    showToast('error', 'Error', 'Usuario o contraseña incorrecto, vuelva a intentarlo')
                     setLoading(false);
                 }else{
                     showToast('error', 'Error', 'No se puedo conectar con el servidor')

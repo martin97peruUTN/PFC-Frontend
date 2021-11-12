@@ -6,7 +6,7 @@ import { pluralizeSpanishWord } from '../util/miscFunctions';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { Toast } from 'primereact/toast';
-import { ProgressSpinner } from 'primereact/progressspinner';
+import { Skeleton } from 'primereact/skeleton';
 import { confirmDialog } from 'primereact/confirmdialog';
 import { Dialog } from 'primereact/dialog';
 import { Paginator } from 'primereact/paginator';
@@ -175,16 +175,23 @@ const SimpleItemList = (props) => {
         </Dialog>
     )
 
+    const loadingScreen = (
+        <div>
+            <Skeleton width="100%" height="8rem"/>
+            <br/>
+            <Skeleton width="100%" height="8rem"/>
+            <br/>
+            <Skeleton width="100%" height="8rem"/>
+            <br/>
+            <Skeleton width="100%" height="8rem"/>
+        </div>
+    )
+
     return (
         <>  
             <Toast ref={toast} />
             <ScrollTop />
             {editDialog}
-            {loadingStart?
-            <div style={{"display": "flex"}}>
-                <ProgressSpinner/>
-            </div>
-            :
             <Card
                 title={
                     <div className="flex justify-content-between">
@@ -202,9 +209,12 @@ const SimpleItemList = (props) => {
                     ></Paginator>
                 }
             >
-                {itemCardList}
-            </Card>
-            }         
+                {loadingStart?
+                    loadingScreen
+                    :
+                    itemCardList
+                }
+            </Card>     
         </>
     )
 }

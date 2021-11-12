@@ -4,7 +4,7 @@ import { useHistory } from "react-router-dom";
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { Toast } from 'primereact/toast';
-import { ProgressSpinner } from 'primereact/progressspinner';
+import { Skeleton } from 'primereact/skeleton';
 import { confirmDialog } from 'primereact/confirmdialog';
 
 import { AuthContext } from '../context/AuthContext';
@@ -33,6 +33,9 @@ const Profile = () => {
 
     useEffect(() => {
         setLoadingStart(true)
+        setTimeout(() => {
+
+        
         setUser(authContext.getUserInfo().username)
         setName(authContext.getUserInfo().name)
         setRole(authContext.getUserInfo().role)
@@ -41,6 +44,8 @@ const Profile = () => {
             history.location.state = null
         }
         setLoadingStart(false)
+
+        },3000)
     }, [authContext])
 
     const handlePasswordChange = () => {
@@ -91,34 +96,8 @@ const Profile = () => {
         }
     }
 
-    return (
-        <>
-        <Toast ref={toast} />
-        {
-        loadingStart?
-        <div style={{"display": "flex"}}>
-            <ProgressSpinner/>
-        </div>
-        :
-        <Card
-            title='Perfil'
-            footer={
-                <div className="flex justify-content-between">
-                    <Button 
-                        className="p-button-danger" 
-                        onClick={()=> history.goBack()} 
-                        label="Cancelar"
-                    />
-                    <Button 
-                        className="btn btn-primary" 
-                        icon="pi pi-check" 
-                        onClick={()=> confirm()} 
-                        label="Guardar" 
-                        loading={loadingAccept}
-                    />
-                </div>
-            }
-        >
+    const cardForm = (
+        <div>
             <span className="p-float-label">
                 <InputText
                     id="name"
@@ -163,8 +142,49 @@ const Profile = () => {
                     label="Cambiar contraseña"
                 />
             </div>
+        </div>
+    )
+
+    const loadingScreen = (
+        <div>
+            <Skeleton width="100%" height="3rem"/>
+            <br/>
+            <Skeleton width="100%" height="3rem"/>
+            <br/>
+            <Skeleton width="100%" height="3rem"/>
+            <br/>
+            <Skeleton width="100%" height="3rem"/>
+        </div>
+    )
+
+    return (
+        <>
+        <Toast ref={toast} />
+        <Card
+            title='Perfil'
+            footer={
+                <div className="flex justify-content-between">
+                    <Button 
+                        className="p-button-danger" 
+                        onClick={()=> history.goBack()} 
+                        label="Cancelar"
+                    />
+                    <Button 
+                        className="btn btn-primary" 
+                        icon="pi pi-check" 
+                        onClick={()=> confirm()} 
+                        label="Guardar" 
+                        loading={loadingAccept}
+                    />
+                </div>
+            }
+        >
+            {loadingStart?
+                loadingScreen
+                :
+                cardForm
+            }
         </Card>
-        }
         </>
     )
 }
