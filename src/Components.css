@@ -45,6 +45,7 @@ body {
 .sm-menubar-button {
     background-color: var(--primary) !important;
 }
+
 /*Sidebar*/
 .p-sidebar .p-sidebar-content {
     padding: 0;
@@ -56,4 +57,9 @@ body {
 }
 .p-sidebar .p-sidebar-header {
     display: none !important;
+}
+
+/*Skeleton*/
+.p-skeleton {
+    background-color: #d8d8d8 !important;
 }
