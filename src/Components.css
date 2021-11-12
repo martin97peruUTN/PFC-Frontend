@@ -63,3 +63,10 @@ body {
 .p-skeleton {
     background-color: #d8d8d8 !important;
 }
+
+/*Hago que los toast ocupen 90% en pantallas chicas, sino se desbordan*/
+@media only screen and (max-width: 600px) {
+    .p-toast {
+        width: 90%;
+    }
+}
