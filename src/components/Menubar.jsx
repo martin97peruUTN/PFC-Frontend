@@ -127,7 +127,7 @@ const Menubar = () => {
     const [visible, setVisible] = useState(false);
 
     const sidebar = (
-        <Sidebar visible={visible} style={{width:'12.5em'}} onHide={() => setVisible(false)}>
+        <Sidebar visible={visible} blockScroll onHide={() => setVisible(false)}>
             <Menu model={MenubarItems} />
         </Sidebar>
     )

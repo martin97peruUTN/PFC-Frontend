@@ -47,13 +47,14 @@ body {
 }
 
 /*Sidebar*/
-.p-sidebar .p-sidebar-content {
-    padding: 0;
-}
 .p-sidebar {
     background-color: transparent;
-    padding-top: 3.5rem;
+    width: 12.5rem;
+    margin-top: 3.5rem;
     box-shadow: none;
+}
+.p-sidebar .p-sidebar-content {
+    padding: 0;
 }
 .p-sidebar .p-sidebar-header {
     display: none !important;
