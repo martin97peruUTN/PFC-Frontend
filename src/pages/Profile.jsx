@@ -29,12 +29,14 @@ const Profile = () => {
     const [edit, setEdit] = useState(false)
     const [user, setUser] = useState('')
     const [name, setName] = useState('')
+    const [lastname, setLastname] = useState('')
     const [role, setRole] = useState('')
 
     useEffect(() => {
         setLoadingStart(true)
         setUser(authContext.getUserInfo().username)
         setName(authContext.getUserInfo().name)
+        setLastname(authContext.getUserInfo().lastname)
         setRole(authContext.getUserInfo().role)
         if(history.location.state){
             showToast(history.location.state.severity, history.location.state.summary, history.location.state.message)
@@ -51,6 +53,7 @@ const Profile = () => {
         setLoadingAccept(true)
         fetchContext.authAxios.patch(`${url.USER_API}/${authContext.getUserInfo().id}`, {
             name: name!==authContext.getUserInfo().name? name : null,
+            lastname: lastname!==authContext.getUserInfo().lastname? lastname : null,
             username: user!==authContext.getUserInfo().username? user : null,
         }).then((res) => {
             //Actualizo el token y toda la info del usuario
@@ -76,7 +79,7 @@ const Profile = () => {
             if(name.length === 0){
                 showToast('error','Error','El nombre no puede ser vacio!')
             }else{
-                if(name===authContext.getUserInfo().name && user===authContext.getUserInfo().username){
+                if(name===authContext.getUserInfo().name && user===authContext.getUserInfo().username && lastname===authContext.getUserInfo().lastName){
                     showToast('warn','Cuidado','Ningun dato fue cambiado!')
                 }else{
                     confirmDialog({
@@ -102,6 +105,17 @@ const Profile = () => {
                     disabled={!edit}
                 />
                 <label htmlFor="name">Nombre</label>
+            </span>
+            <br/>
+            <span className="p-float-label">
+                <InputText
+                    id="lastname"
+                    className='w-full' 
+                    value={lastname} 
+                    onChange={e => setLastname(e.target.value)} 
+                    disabled={!edit}
+                />
+                <label htmlFor="lastname">Apellido</label>
             </span>
             <br/>
             <span className="p-float-label">

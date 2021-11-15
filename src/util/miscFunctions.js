@@ -7,10 +7,6 @@ export const pluralizeSpanishWord = word => {
     }
 }
 
-export const getInitialLetters = (name) => {
-    return name.split(' ').map(name => name[0]).join('').toUpperCase();
-}
-
 export const randomColorGenerator = () => {
     const letters = '0123456789ABCDEF';
     let color = '#';
