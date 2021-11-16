@@ -28,6 +28,7 @@ const AuctionCRUD = () => {
     const [loadingAccept, setLoadingAccept] = useState(false)
     const [loadingStart, setLoadingStart] = useState(false)
 
+    const [enableEditing, setEnableEditing] = useState(true)
     const [auctionId, setAuctionId] = useState(null)
     const [senasaNumber, setSenasaNumber] = useState('')
     const [date, setDate] = useState()
@@ -44,6 +45,7 @@ const AuctionCRUD = () => {
             setSenasaNumber(senasaNumber)
             setDate(date)
             setSelectedLocality(selectedLocality)
+            setEnableEditing(false)
         }
         setLoadingStart(false)
     }, [history.location.state])
@@ -147,6 +149,7 @@ const AuctionCRUD = () => {
                     value={senasaNumber} 
                     onChange={e => setSenasaNumber(e.target.value)}
                     keyfilter="pint"
+                    disabled={!enableEditing}
                 />
                 <label htmlFor="senasaNumber">Numero de Senasa</label>
             </span>
@@ -161,6 +164,7 @@ const AuctionCRUD = () => {
                     mask="99/99/9999"
                     tooltip="DD/MM/AAAA"
                     tooltipOptions={{position: 'top'}}
+                    disabled={!enableEditing}
                 />    
                 <label htmlFor="calendar">Fecha</label>
             </span>
@@ -175,9 +179,25 @@ const AuctionCRUD = () => {
                     field="name" 
                     dropdown 
                     forceSelection 
-                    onChange={(e) => setSelectedLocality(e.value)} />
+                    onChange={(e) => setSelectedLocality(e.value)} 
+                    disabled={!enableEditing}
+                />
                 <label htmlFor="localityAutocompleteForm">Localidad</label>
             </span>
+            {auctionId?
+                <>
+                    <br/>
+                    <Button 
+                        className="btn btn-primary" 
+                        icon="pi pi-user-edit" 
+                        onClick={()=> setEnableEditing(!enableEditing)} 
+                        label={enableEditing?'Dejar de editar':'Editar'}
+                    />
+                </>
+            :
+                null
+                //Si no hay id es que estoy creando, por lo que no tiene sentido dejar de editar
+            }
         </div>
     )
 
@@ -195,7 +215,7 @@ const AuctionCRUD = () => {
         <>
         <Toast ref={toast} />
         <Card
-            title={auctionId?'Editar remate':'Nuevo remate'}
+            title={auctionId?'Informacion del remate':'Nuevo remate'}
             footer={
                 <div className="flex justify-content-between">
                     <div className="flex justify-content-start">
@@ -212,7 +232,7 @@ const AuctionCRUD = () => {
                             />
                         :
                             null
-                            //No se muestra el boton eliminar si no hay id 
+                            //No se muestra el boton eliminar si estoy creando
                         }
                     </div>
                     <Button 

@@ -29,7 +29,7 @@ const Menubar = () => {
                 {
                     label: 'Nuevo',
                     icon: 'pi pi-fw pi-calendar-plus',
-                    url: url.AUCTION
+                    url: url.AUCTION_CRUD
                 },
                 {
                     label: 'Historial',
