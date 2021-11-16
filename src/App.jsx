@@ -22,6 +22,7 @@ import Profile from "./pages/Profile";
 import PasswordChange from "./pages/PasswordChange";
 import LocalityList from "./pages/LocalityList";
 import CategoryList from "./pages/CategoryList";
+import AuctionCRUD from "./pages/AuctionCRUD";
 
 const UnauthenticatedRoutes = () => (
   <div className="mx-3 my-7 md:mx-6">
@@ -97,7 +98,7 @@ function App() {
       </AuthenticatedRoute>
 
       <ConsigneeRoute exact path={url.AUCTION}>
-        <HomePage />
+        <AuctionCRUD />
       </ConsigneeRoute>
       <AuthenticatedRoute exact path={url.AUCTION_HISTORY}>
         <HomePage />
