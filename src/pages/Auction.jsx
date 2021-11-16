@@ -6,6 +6,7 @@ import { Toast } from 'primereact/toast';
 import { Skeleton } from 'primereact/skeleton';
 import { ScrollTop } from 'primereact/scrolltop';
 import { Menu } from 'primereact/menu';
+import { TabView, TabPanel } from 'primereact/tabview';
 
 import { AuthContext } from '../context/AuthContext';
 import { FetchContext } from '../context/FetchContext';
@@ -28,6 +29,7 @@ const Auction = () => {
     const [loadingStart, setLoadingStart] = useState(false)
 
     const [auctionId, setAuctionId] = useState()
+    const [tabViewActiveIndex, setTabViewActiveIndex] = useState(0);
     const [batches, setBatches] = useState([])
 
     /*useEffect(() => {
@@ -52,6 +54,28 @@ const Auction = () => {
             })
         }
     }, [])*/
+
+    const tabViewActiveIndexChange = (index) => {
+        setTabViewActiveIndex(index)
+        //TODO ver si hago una llamada a la API para cargar lo que corresponda
+    }
+
+    const tabView = (
+        <TabView className='w-full' 
+            activeIndex={tabViewActiveIndex} 
+            onTabChange={(e) => tabViewActiveIndexChange(e.index)}
+        >
+            <TabPanel header="Para venta">
+                Content I
+            </TabPanel>
+            <TabPanel header="No vendidos">
+                Content II
+            </TabPanel>
+            <TabPanel header="Vendidos">
+                Content III
+            </TabPanel>
+        </TabView>
+    )
 
     //TODO cambiar urls cuando las tengamos (url o command: () => hacerAlgo())
     const menuItems = [
@@ -96,11 +120,11 @@ const Auction = () => {
         
     ]
 
-    const itemCardList = batches.map(batch => {
+    const itemCardList = batches.map(batch => (
         <BatchCard
             id={batch.id}
         />
-    })
+    ))
 
     const loadingScreen = (
         <div>
@@ -141,7 +165,10 @@ const Auction = () => {
                 {loadingStart?
                     loadingScreen
                 :
-                    itemCardList
+                    <>
+                        {tabView}
+                        {itemCardList}
+                    </>
                 }
             </Card>
         </>
