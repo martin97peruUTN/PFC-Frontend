@@ -197,7 +197,11 @@ const SimpleItemList = (props) => {
                 title={
                     <div className="flex justify-content-between">
                     <>{pluralizeSpanishWord(itemNameUppercase)}</>
-                    <Button className="btn btn-primary" icon="pi pi-plus" onClick={()=> createItemHandler()} label={`Crear ${itemNameLowercase}`}></Button>
+                    <Button 
+                        className="btn btn-primary" 
+                        icon="pi pi-plus" 
+                        onClick={()=> createItemHandler()} 
+                        label={`Crear ${itemNameLowercase}`}/>
                     </div>
                 }
                 footer={
