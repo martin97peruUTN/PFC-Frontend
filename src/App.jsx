@@ -52,7 +52,7 @@ const AuthenticatedRoute = ({ children, ...rest }) => {
     ></Route>
   );
 };
-
+/*
 const AdminRoute = ({ children, ...rest }) => {
   const auth = useContext(AuthContext);
   return (
@@ -67,7 +67,8 @@ const AdminRoute = ({ children, ...rest }) => {
       }
     ></Route>
   );
-};//por el momento no se usa, pero lo dejo a futuro
+};*/
+//por el momento no se usa, pero lo dejo a futuro
 
 const ConsigneeRoute = ({ children, ...rest }) => {
   const auth = useContext(AuthContext);

@@ -67,7 +67,7 @@ const SimpleItemList = (props) => {
                 history.push(url.HOME);
             }, 2000);
         })
-    }, [refresh, paginatorFirst, paginatorRows, fetchContext.authAxios, history])
+    }, [refresh, paginatorFirst, paginatorRows, fetchContext.authAxios, history, urlAPI, paginatorPage])
 
     const onPaginatorPageChange = (event) => {
         setPaginatorFirst(event.first);

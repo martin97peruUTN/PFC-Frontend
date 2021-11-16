@@ -29,11 +29,11 @@ const AuctionCRUD = () => {
     const [loadingStart, setLoadingStart] = useState(false)
 
     const [auctionId, setAuctionId] = useState(null)
-    const [senasaNumber, setsenasaNumber] = useState('')
-    const [date, setDate] = useState('')
+    const [senasaNumber, setSenasaNumber] = useState('')
+    const [date, setDate] = useState()
     const [filteredLocalityList, setFilteredLocalityList] = useState([])
     const [selectedLocality, setSelectedLocality] = useState()
-
+    //TODO ver si hace falta parsear la fecha o si asi anda bien
     useEffect(() => {
         setLoadingStart(true)
         //Si esta editando me llega esto desde la otra pantalla
@@ -41,12 +41,38 @@ const AuctionCRUD = () => {
         if(history.location.state){
             const {autionId, senasaNumber, date, selectedLocality} = history.location.state
             setAuctionId(autionId)
-            setsenasaNumber(senasaNumber)
+            setSenasaNumber(senasaNumber)
             setDate(date)
             setSelectedLocality(selectedLocality)
         }
         setLoadingStart(false)
-    }, [])
+    }, [history.location.state])
+
+    //Busqueda de localidades por nombre para el autocomplete
+    const searchLocality = (event) => {
+        fetchContext.authAxios.get(`${url.LOCALITY_API}?name=${event.query}`)
+        .then(response => {
+            setFilteredLocalityList(response.data.content)
+        })
+        .catch(error => {
+            toast.current.show({severity:'error', summary:'Error', detail:'No se pudo obtener la lista de localidades'})
+        })
+    }
+
+    //Se dispara al presionar el boton Guardar
+    const confirm = () => {
+        if(senasaNumber.length === 0 || !date || !selectedLocality){
+            showToast('warn', 'Cuidado', 'Debe completar todos los campos')
+        }else{
+            confirmDialog({
+                message: '¿Esta seguro de que desea proceder?',
+                header: 'Actualizar informacion de usuario',
+                icon: 'pi pi-exclamation-circle',
+                acceptLabel: 'Si',
+                accept: () => handleSubmit()
+            });
+        }
+    }
 
     const handleSubmit = () => {
         setLoadingAccept(true)
@@ -88,29 +114,27 @@ const AuctionCRUD = () => {
         }
     }
 
-    //Se dispara al presionar el boton Guardar
-    const confirm = () => {
-        if(senasaNumber.length === 0 || !date || !selectedLocality){
-            showToast('warn', 'Cuidado', 'Debe completar todos los campos')
-        }else{
-            confirmDialog({
-                message: '¿Esta seguro de que desea proceder?',
-                header: 'Actualizar informacion de usuario',
-                icon: 'pi pi-exclamation-circle',
-                acceptLabel: 'Si',
-                accept: () => handleSubmit()
-            });
-        }
+    //Se dispara al tocar el boton eliminar
+    const deleteHandler = () => {
+        confirmDialog({
+            message: '¿Esta seguro de que desea eliminar el remate?',
+            header: 'Eliminar remate',
+            icon: 'pi pi-exclamation-circle',
+            acceptLabel: 'Si',
+            accept: () => deleteAuction()
+        })
     }
 
-    //Busqueda de localidades por nombre para el automcomplete
-    const searchLocality = (event) => {
-        fetchContext.authAxios.get(`${url.LOCALITY_API}?name=${event.query}`)
+    const deleteAuction = () => {
+        fetchContext.authAxios.delete(`${url.AUCTION_API}/${auctionId}`)
         .then(response => {
-            setFilteredLocalityList(response.data.content)
+            showToast('success', 'Exito', 'El remate ha sido eliminado')
+            setTimeout(() => {
+                history.goBack();
+            }, 3000);
         })
         .catch(error => {
-            toast.current.show({severity:'error', summary:'Error', detail:'No se pudo obtener la lista de localidades'})
+            showToast('error', 'Error', 'No se pudo eliminar el remate')
         })
     }
 
@@ -121,7 +145,7 @@ const AuctionCRUD = () => {
                     id="senasaNumber"
                     className='w-full' 
                     value={senasaNumber} 
-                    onChange={e => setsenasaNumber(e.target.value)}
+                    onChange={e => setSenasaNumber(e.target.value)}
                     keyfilter="pint"
                 />
                 <label htmlFor="senasaNumber">Numero de Senasa</label>
@@ -134,13 +158,16 @@ const AuctionCRUD = () => {
                     value={date} 
                     onChange={(e) => setDate(e.value)} 
                     dateFormat="dd/mm/yy" 
-                    mask="99/99/9999"/>
+                    mask="99/99/9999"
+                    tooltip="DD/MM/AAAA"
+                    tooltipOptions={{position: 'top'}}
+                />    
                 <label htmlFor="calendar">Fecha</label>
             </span>
             <br/>
             <span className="p-float-label">
                 <AutoComplete 
-                    id='localityAutocomplete'
+                    id='localityAutocompleteForm'
                     className='w-full'
                     value={selectedLocality} 
                     suggestions={filteredLocalityList} 
@@ -149,7 +176,7 @@ const AuctionCRUD = () => {
                     dropdown 
                     forceSelection 
                     onChange={(e) => setSelectedLocality(e.value)} />
-                <label htmlFor="localityAutocomplete">Localidad</label>
+                <label htmlFor="localityAutocompleteForm">Localidad</label>
             </span>
         </div>
     )
@@ -171,11 +198,23 @@ const AuctionCRUD = () => {
             title={auctionId?'Editar remate':'Nuevo remate'}
             footer={
                 <div className="flex justify-content-between">
-                    <Button 
-                        className="p-button-danger" 
-                        onClick={()=> history.goBack()} 
-                        label="Cancelar"
-                    />
+                    <div className="flex justify-content-start">
+                        <Button 
+                            className="p-button-danger mr-2" 
+                            onClick={()=> history.goBack()} 
+                            label="Cancelar"
+                        />
+                        {auctionId?
+                            <Button 
+                                className="p-button-danger" 
+                                onClick={()=> deleteHandler()} 
+                                label="Eliminar"
+                            />
+                        :
+                            null
+                            //No se muestra el boton eliminar si no hay id 
+                        }
+                    </div>
                     <Button 
                         className="btn btn-primary" 
                         icon="pi pi-check" 
