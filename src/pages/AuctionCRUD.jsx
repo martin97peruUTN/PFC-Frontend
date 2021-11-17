@@ -37,19 +37,27 @@ const AuctionCRUD = () => {
     const [selectedLocality, setSelectedLocality] = useState()
 
     useEffect(() => {
-        setLoadingStart(true)
         //Si esta editando me llega esto desde la otra pantalla
-        //TODO ver esto despues desde la otra pantalla
         if(history.location.state){
-            const {autionId, senasaNumber, date, selectedLocality} = history.location.state
-            setAuctionId(autionId)
-            setSenasaNumber(senasaNumber)
-            //TODO ver como llega la fecha, por ahi hace falta parsear
-            setDate(date)
-            setSelectedLocality(selectedLocality)
+            setLoadingStart(true)
             setEnableEditing(false)
+            const {auctionId} = history.location.state
+            setAuctionId(auctionId)
+            fetchContext.authAxios.get(`${url.AUCTION_API}/${auctionId}`)
+            .then(response => {
+                const {senasaNumber, date, locality} = response.data
+                setSenasaNumber(senasaNumber)
+                setDate(miscFunctions.parseDateFromBackend(date))
+                setSelectedLocality(locality)
+                setLoadingStart(false)
+            })
+            .catch(error => {
+                showToast('error', 'Error', 'No se encontro el remate')
+                setTimeout(() => {
+                    history.goBack();
+                }, 3000)
+            })
         }
-        setLoadingStart(false)
     }, [history.location.state])
 
     //Busqueda de localidades por nombre para el autocomplete

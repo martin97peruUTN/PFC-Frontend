@@ -32,6 +32,7 @@ const Auction = () => {
     const [tabViewActiveIndex, setTabViewActiveIndex] = useState(0);
     const [batches, setBatches] = useState([])
 
+    //TODO terminar cuando tengamos los endpoints
     /*useEffect(() => {
         setLoadingStart(true)
         if(!history.location.state){
@@ -54,6 +55,11 @@ const Auction = () => {
             })
         }
     }, [])*/
+
+    //TODO eliminar este, es de prueba nomas
+    useEffect(() => {
+        setAuctionId(1)
+    },[])
 
     const tabViewActiveIndexChange = (index) => {
         setTabViewActiveIndex(index)
@@ -92,7 +98,11 @@ const Auction = () => {
         {
             label: 'Informacion del remate',
             icon: 'pi pi-fw pi-info-circle',
-            url: url.HOME
+            command: () => history.push(url.AUCTION_CRUD, 
+                {
+                    auctionId: auctionId
+                }
+            )
         },
         {separator: true},
         {
