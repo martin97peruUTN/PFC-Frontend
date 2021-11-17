@@ -43,32 +43,10 @@ const Profile = () => {
             history.location.state = null
         }
         setLoadingStart(false)
-    }, [authContext])
+    }, [authContext, history.location])
 
     const handlePasswordChange = () => {
         history.push(url.PASSWORD_CHANGE)
-    }
-
-    const handleSubmit = () => {
-        setLoadingAccept(true)
-        fetchContext.authAxios.patch(`${url.USER_API}/${authContext.getUserInfo().id}`, {
-            name: name!==authContext.getUserInfo().name? name : null,
-            lastname: lastname!==authContext.getUserInfo().lastname? lastname : null,
-            username: user!==authContext.getUserInfo().username? user : null,
-        }).then((res) => {
-            //Actualizo el token y toda la info del usuario
-            authContext.setAuthState(res.data.token)
-            showToast('success','Exito','El usuario se actualizó correctamente!')
-            setLoadingAccept(false)
-        }).catch((err) => {
-            if(err.response.status === 403) {
-                showToast('error','Error','Usuario no disponible')
-                setLoadingAccept(false)
-            }else{
-                showToast('error','Error','No se pudo actualizar el usuario')
-                setLoadingAccept(false)
-            }
-        })
     }
 
     //Se dispara al presionar el boton Guardar
@@ -92,6 +70,28 @@ const Profile = () => {
                 }
             }
         }
+    }
+
+    const handleSubmit = () => {
+        setLoadingAccept(true)
+        fetchContext.authAxios.patch(`${url.USER_API}/${authContext.getUserInfo().id}`, {
+            name: name!==authContext.getUserInfo().name? name : null,
+            lastname: lastname!==authContext.getUserInfo().lastname? lastname : null,
+            username: user!==authContext.getUserInfo().username? user : null,
+        }).then((res) => {
+            //Actualizo el token y toda la info del usuario
+            authContext.setAuthState(res.data.token)
+            showToast('success','Exito','El usuario se actualizó correctamente!')
+            setLoadingAccept(false)
+        }).catch((err) => {
+            if(err.response.status === 403) {
+                showToast('error','Error','Usuario no disponible')
+                setLoadingAccept(false)
+            }else{
+                showToast('error','Error','No se pudo actualizar el usuario')
+                setLoadingAccept(false)
+            }
+        })
     }
 
     const cardForm = (

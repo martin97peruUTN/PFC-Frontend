@@ -22,6 +22,8 @@ import Profile from "./pages/Profile";
 import PasswordChange from "./pages/PasswordChange";
 import LocalityList from "./pages/LocalityList";
 import CategoryList from "./pages/CategoryList";
+import AuctionCRUD from "./pages/AuctionCRUD";
+import Auction from "./pages/Auction";
 
 const UnauthenticatedRoutes = () => (
   <div className="mx-3 my-7 md:mx-6">
@@ -51,7 +53,7 @@ const AuthenticatedRoute = ({ children, ...rest }) => {
     ></Route>
   );
 };
-
+/*
 const AdminRoute = ({ children, ...rest }) => {
   const auth = useContext(AuthContext);
   return (
@@ -66,7 +68,8 @@ const AdminRoute = ({ children, ...rest }) => {
       }
     ></Route>
   );
-};//por el momento no se usa, pero lo dejo a futuro
+};*/
+//por el momento no se usa, pero lo dejo a futuro
 
 const ConsigneeRoute = ({ children, ...rest }) => {
   const auth = useContext(AuthContext);
@@ -96,11 +99,14 @@ function App() {
         <HomePage />
       </AuthenticatedRoute>
 
-      <ConsigneeRoute exact path={url.AUCTION}>
-        <HomePage />
+      <ConsigneeRoute exact path={url.AUCTION_CRUD}>
+        <AuctionCRUD />
       </ConsigneeRoute>
       <AuthenticatedRoute exact path={url.AUCTION_HISTORY}>
         <HomePage />
+      </AuthenticatedRoute>
+      <AuthenticatedRoute exact path={url.AUCTION}>
+        <Auction />
       </AuthenticatedRoute>
 
       <AuthenticatedRoute exact path={url.CLIENT}>

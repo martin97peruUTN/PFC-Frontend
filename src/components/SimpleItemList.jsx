@@ -67,7 +67,7 @@ const SimpleItemList = (props) => {
                 history.push(url.HOME);
             }, 2000);
         })
-    }, [refresh, paginatorFirst, paginatorRows, fetchContext.authAxios, history])
+    }, [refresh, paginatorFirst, paginatorRows, fetchContext.authAxios, history, urlAPI, paginatorPage])
 
     const onPaginatorPageChange = (event) => {
         setPaginatorFirst(event.first);
@@ -197,7 +197,11 @@ const SimpleItemList = (props) => {
                 title={
                     <div className="flex justify-content-between">
                     <>{pluralizeSpanishWord(itemNameUppercase)}</>
-                    <Button className="btn btn-primary" icon="pi pi-plus" onClick={()=> createItemHandler()} label={`Crear ${itemNameLowercase}`}></Button>
+                    <Button 
+                        className="btn btn-primary" 
+                        icon="pi pi-plus" 
+                        onClick={()=> createItemHandler()} 
+                        label={`Crear ${itemNameLowercase}`}/>
                     </div>
                 }
                 footer={

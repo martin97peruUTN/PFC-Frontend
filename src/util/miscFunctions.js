@@ -15,3 +15,12 @@ export const randomColorGenerator = () => {
     }
     return color;
 }
+
+export const parseDateFromBackend = (dateJson) => {
+    const dateReturn = new Date(JSON.parse(`"${dateJson}"`));
+    return dateReturn;
+}
+
+export const parseDateToBackend = (date) => {
+    return date.toISOString()
+}

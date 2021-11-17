@@ -29,30 +29,6 @@ const PasswordChange = () => {
     const [newPassword, setNewPassword] = useState('');
     const [newPasswordConfirm, setNewPasswordConfirm] = useState('');
 
-    const handleSubmit = () => {
-        setLoadingAccept(true);
-        fetchContext.authAxios.patch(`${url.USER_API}/${authContext.getUserInfo().id}/modificarpass`, {
-            oldPassword: hash(currentPassword),
-            newPassword: hash(newPassword)
-        }).then(response => {
-            /*showToast('success', 'Exito', 'La Contraseña ha sido cambiada!');
-            setTimeout(() => {
-                history.push(url.PROFILE);
-            }, 2000);*/
-            history.push({
-                pathname:url.PROFILE,
-                state:{
-                    severity: 'success',
-                    summary: 'Exito',
-                    message:'La contraseña ha sido cambiada!'
-                }
-            });
-        }).catch(error => {
-            showToast('error', 'Error', 'Hubo un error al cambiar la contraseña');
-            setLoadingAccept(false);
-        })
-    }
-
     //Se dispara al presionar el boton Guardar
     const confirm = () => {
         /*Condiciones:
@@ -84,6 +60,25 @@ const PasswordChange = () => {
                 }
             }
         }
+    }
+
+    const handleSubmit = () => {
+        setLoadingAccept(true);
+        fetchContext.authAxios.patch(`${url.USER_API}/${authContext.getUserInfo().id}/modificarpass`, {
+            oldPassword: hash(currentPassword),
+            newPassword: hash(newPassword)
+        }).then(response => {
+            history.push(url.PROFILE,
+                {
+                    severity: 'success',
+                    summary: 'Exito',
+                    message:'La contraseña ha sido cambiada!'
+                }
+            );
+        }).catch(error => {
+            showToast('error', 'Error', 'Hubo un error al cambiar la contraseña');
+            setLoadingAccept(false);
+        })
     }
 
     return (
