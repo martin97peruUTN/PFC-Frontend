@@ -12,6 +12,7 @@ import { Calendar } from 'primereact/calendar';
 import { AuthContext } from '../context/AuthContext';
 import { FetchContext } from '../context/FetchContext';
 import * as url from '../util/url';
+import * as miscFunctions from '../util/miscFunctions';
 
 import Card from '../components/cards/Card'
 
@@ -34,7 +35,7 @@ const AuctionCRUD = () => {
     const [date, setDate] = useState()
     const [filteredLocalityList, setFilteredLocalityList] = useState([])
     const [selectedLocality, setSelectedLocality] = useState()
-    //TODO ver si hace falta parsear la fecha o si asi anda bien
+
     useEffect(() => {
         setLoadingStart(true)
         //Si esta editando me llega esto desde la otra pantalla
@@ -43,6 +44,7 @@ const AuctionCRUD = () => {
             const {autionId, senasaNumber, date, selectedLocality} = history.location.state
             setAuctionId(autionId)
             setSenasaNumber(senasaNumber)
+            //TODO ver como llega la fecha, por ahi hace falta parsear
             setDate(date)
             setSelectedLocality(selectedLocality)
             setEnableEditing(false)
@@ -63,7 +65,7 @@ const AuctionCRUD = () => {
 
     //Se dispara al presionar el boton Guardar
     const confirm = () => {
-        if(senasaNumber.length === 0 || !date || !selectedLocality){
+        if(!senasaNumber || !date || !selectedLocality){
             showToast('warn', 'Cuidado', 'Debe completar todos los campos')
         }else{
             confirmDialog({
@@ -80,7 +82,7 @@ const AuctionCRUD = () => {
         setLoadingAccept(true)
         const body = {
             senasaNumber,
-            date,
+            'date' : miscFunctions.parseDateToBackend(date),
             locality: selectedLocality,
             users: [
                 {
@@ -163,6 +165,7 @@ const AuctionCRUD = () => {
                     dateFormat="dd/mm/yy" 
                     mask="99/99/9999"
                     tooltip="DD/MM/AAAA"
+                    minDate={new Date()}//Fecha actual
                     tooltipOptions={{position: 'top'}}
                     disabled={!enableEditing}
                 />    
