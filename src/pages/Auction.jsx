@@ -175,10 +175,7 @@ const Auction = () => {
                 {loadingStart?
                     loadingScreen
                 :
-                    <>
-                        {tabView}
-                        {itemCardList}
-                    </>
+                    tabView
                 }
             </Card>
         </>

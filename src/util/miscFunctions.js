@@ -16,11 +16,16 @@ export const randomColorGenerator = () => {
     return color;
 }
 
-export const parseDateFromBackend = (dateJson) => {
+export const parseDateBackToFront = (dateJson) => {
     const dateReturn = new Date(JSON.parse(`"${dateJson}"`));
     return dateReturn;
 }
 
-export const parseDateToBackend = (date) => {
+export const parseDateFrontToBack = (date) => {
     return date.toISOString()
+}
+
+export const parseDateToShow = (dateJson) => {
+    const date = new Date(JSON.parse(`"${dateJson}"`));
+    return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
 }

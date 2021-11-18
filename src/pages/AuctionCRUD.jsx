@@ -47,7 +47,7 @@ const AuctionCRUD = () => {
             .then(response => {
                 const {senasaNumber, date, locality} = response.data
                 setSenasaNumber(senasaNumber)
-                setDate(miscFunctions.parseDateFromBackend(date))
+                setDate(miscFunctions.parseDateBackToFront(date))
                 setSelectedLocality(locality)
                 setLoadingStart(false)
             })
@@ -90,7 +90,7 @@ const AuctionCRUD = () => {
         setLoadingAccept(true)
         const body = {
             senasaNumber,
-            'date' : miscFunctions.parseDateToBackend(date),
+            'date' : miscFunctions.parseDateFrontToBack(date),
             locality: selectedLocality,
             users: [
                 {
