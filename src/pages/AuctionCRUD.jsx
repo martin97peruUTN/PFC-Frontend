@@ -170,11 +170,11 @@ const AuctionCRUD = () => {
                     className='w-full' 
                     value={date} 
                     onChange={(e) => setDate(e.value)} 
-                    dateFormat="dd/mm/yy" 
-                    mask="99/99/9999"
-                    tooltip="DD/MM/AAAA"
-                    minDate={new Date()}//Fecha actual
+                    dateFormat="d/m/y"
+                    tooltip="D/M/AA HH:MM"
                     tooltipOptions={{position: 'top'}}
+                    minDate={new Date()}//Fecha actual
+                    showTime
                     disabled={!enableEditing}
                 />    
                 <label htmlFor="calendar">Fecha</label>
