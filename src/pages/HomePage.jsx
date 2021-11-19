@@ -46,7 +46,7 @@ const HomePage = () => {
         setIsAdmin(authContext.isAdmin())
         const auctionListToGet = isAdmin? 'all' : tabViewActiveIndex === 0 ? 'own' : 'others'
         //TODO cambiar este endpoint cuando lo tengamos y el setAuctionsList
-        //fetchContext.authAxios.get(`${url.USER_AUCTIONS_API}/${ownOrOthers}/${userId}?page=${paginatorPage}&limit=${paginatorRows}`)
+        //fetchContext.authAxios.get(`${url.USER_AUCTIONS_API}/${auctionListToGet}${isAdmin ? `/${userId}` : null}?page=${paginatorPage}&limit=${paginatorRows}`)
         fetchContext.authAxios.get(`${url.AUCTION_API}/1`)
         .then(res => {
             //setAuctionsList(res.data)
