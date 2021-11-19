@@ -32,9 +32,12 @@ const HomePage = () => {
     const [paginatorPage, setPaginatorPage] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
 
+    //uso este estado para controlar el tabView asi como para saber que listado mostrar
+    //0 para remates propios, 1 para ajenos. En caso de los admins no se usa
+    const [tabViewActiveIndex, setTabViewActiveIndex] = useState(0);
+
     const [isAdmin, setIsAdmin] = useState(false)
     const [userId, setUserId] = useState()
-    const [tabViewActiveIndex, setTabViewActiveIndex] = useState(0);
     const [auctionList, setAuctionsList] = useState([])
 
     useEffect(() => {
@@ -42,9 +45,12 @@ const HomePage = () => {
         setUserId(authContext.getUserInfo().id)
         setIsAdmin(authContext.isAdmin())
         const auctionListToGet = isAdmin? 'all' : tabViewActiveIndex === 0 ? 'own' : 'others'
-        /*fetchContext.authAxios.get(`${url.USER_AUCTIONS_API}/${ownOrOthers}/${userId}?page=${paginatorPage}&limit=${paginatorRows}`)
+        //TODO cambiar este endpoint cuando lo tengamos y el setAuctionsList
+        //fetchContext.authAxios.get(`${url.USER_AUCTIONS_API}/${ownOrOthers}/${userId}?page=${paginatorPage}&limit=${paginatorRows}`)
+        fetchContext.authAxios.get(`${url.AUCTION_API}/1`)
         .then(res => {
-            setAuctionsList(res.data)
+            //setAuctionsList(res.data)
+            setAuctionsList([res.data])
             setLoadingStart(false)
         })
         .catch(err => {
@@ -52,7 +58,7 @@ const HomePage = () => {
             setTimeout(() => {
                 history.goBack();
             },3000)
-        })*/
+        })
     },[tabViewActiveIndex, paginatorFirst, paginatorRows, paginatorPage])
 
     const onPaginatorPageChange = (event) => {
@@ -63,10 +69,16 @@ const HomePage = () => {
 
     const addBatchHandler = (auctionId) => {
         //TODO terminar cuando se tenga el endpoint
+        if(authContext.isAdmin() || tabViewActiveIndex === 0){
+            
+        }
     }
 
     const auctionScreenHandler = (auctionId) => {
-        history.push(url.AUCTION, {auctionId: auctionId})
+        //Este if es por las dudas nomas, para asegurar, porque igual no se muestan los botones
+        if(authContext.isAdmin() || tabViewActiveIndex === 0){
+            history.push(url.AUCTION, {auctionId: auctionId})
+        }
     }
 
     const auctionCardList = auctionList.map((auction) => (
@@ -75,7 +87,9 @@ const HomePage = () => {
             id={auction.id}
             senasaNumber={auction.senasaNumber}
             date={auction.date}
-            locality={auction.locality}
+            locality={auction.locality.name}
+            //paso el index para mostrar o no los botones, segun que pestaña esta mirando
+            tabViewActiveIndex={tabViewActiveIndex}
             addBatchHandler={addBatchHandler}
             auctionScreenHandler={auctionScreenHandler}
         />
@@ -124,7 +138,11 @@ const HomePage = () => {
                 {loadingStart?
                     loadingScreen
                     :
-                    tabView
+                    authContext.isAdmin()?
+                        //Si es admin le muestro directamente las cards porque tiene acceso a todas
+                        auctionCardList 
+                        :
+                        tabView
                 }
             </Card>
         </>

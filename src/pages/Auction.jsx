@@ -58,7 +58,7 @@ const Auction = () => {
 
     //TODO eliminar este, es de prueba nomas
     useEffect(() => {
-        setAuctionId(1)
+        setAuctionId(history.location.state.auctionId)
     },[])
 
     const tabViewActiveIndexChange = (index) => {

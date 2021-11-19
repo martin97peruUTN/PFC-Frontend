@@ -29,3 +29,9 @@ export const parseDateToShow = (dateJson) => {
     const date = new Date(JSON.parse(`"${dateJson}"`));
     return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
 }
+
+export const parseDateGetTime = (dateJson) => {
+    const date = new Date(JSON.parse(`"${dateJson}"`));
+    //Si los minutos son menos de 10, se le agrega un 0 al inicio, sino muestra 14:7 en ves de 14:07
+    return `${date.getHours()}:${date.getMinutes()>10 ? date.getMinutes() : '0'+date.getMinutes()}`
+}

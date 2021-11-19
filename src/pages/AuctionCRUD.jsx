@@ -38,7 +38,7 @@ const AuctionCRUD = () => {
 
     useEffect(() => {
         //Si esta editando me llega esto desde la otra pantalla
-        if(history.location.state){
+        if(history.location.state.auctionId){
             setLoadingStart(true)
             setEnableEditing(false)
             const {auctionId} = history.location.state
