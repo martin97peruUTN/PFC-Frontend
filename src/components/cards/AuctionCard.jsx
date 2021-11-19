@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { parseDateGetTime, parseDateToShow } from '../../util/miscFunctions';
+import { parseDateTimeToShow, parseDateToShow } from '../../util/miscFunctions';
 import { AuthContext } from '../../context/AuthContext';
 
 import { Button } from 'primereact/button';
@@ -18,7 +18,7 @@ const AuctionCard = props => {
                 <div>
                     {`${window.screen.width>600?'Numero de Senasa':'N° Senasa'}: ${props.senasaNumber}`}
                     <br/>
-                    {`Fecha: ${parseDateToShow(props.date)} ${parseDateGetTime(props.date)}`}
+                    {`Fecha: ${parseDateToShow(props.date)} ${parseDateTimeToShow(props.date)}`}
                     <br/>
                     {`Lugar: ${props.locality}`}
                 </div>

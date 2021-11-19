@@ -30,15 +30,17 @@ const AuctionCRUD = () => {
     const [loadingStart, setLoadingStart] = useState(false)
 
     const [enableEditing, setEnableEditing] = useState(true)
+
     const [auctionId, setAuctionId] = useState(null)
     const [senasaNumber, setSenasaNumber] = useState('')
     const [date, setDate] = useState()
+    const [time, setTime] = useState()
     const [filteredLocalityList, setFilteredLocalityList] = useState([])
     const [selectedLocality, setSelectedLocality] = useState()
 
     useEffect(() => {
         //Si esta editando me llega esto desde la otra pantalla
-        if(history.location.state.auctionId){
+        if(history.location.state){
             setLoadingStart(true)
             setEnableEditing(false)
             const {auctionId} = history.location.state
@@ -48,6 +50,7 @@ const AuctionCRUD = () => {
                 const {senasaNumber, date, locality} = response.data
                 setSenasaNumber(senasaNumber)
                 setDate(miscFunctions.parseDateBackToFront(date))
+                setTime(miscFunctions.parseDateBackToFront(date))
                 setSelectedLocality(locality)
                 setLoadingStart(false)
             })
@@ -90,7 +93,7 @@ const AuctionCRUD = () => {
         setLoadingAccept(true)
         const body = {
             senasaNumber,
-            'date' : miscFunctions.parseDateFrontToBack(date),
+            'date' : miscFunctions.parseDateFrontToBack(date, time),
             locality: selectedLocality,
             users: [
                 {
@@ -105,7 +108,7 @@ const AuctionCRUD = () => {
                 showToast('success', 'Exito', 'El remate ha sido creado')
                 setTimeout(() => {
                     history.goBack();
-                }, 3000);
+                }, 2000);
             })
             .catch(error => {
                 showToast('error', 'Error', 'No se pudo crear el remate')
@@ -117,7 +120,7 @@ const AuctionCRUD = () => {
                 showToast('success', 'Exito', 'El remate ha sido actualizado')
                 setTimeout(() => {
                     history.goBack();
-                }, 3000);
+                }, 2000);
             })
             .catch(error => {
                 showToast('error', 'Error', 'No se pudo actualizar el remate')
@@ -143,7 +146,7 @@ const AuctionCRUD = () => {
             showToast('success', 'Exito', 'El remate ha sido eliminado')
             setTimeout(() => {
                 history.goBack();
-            }, 3000);
+            }, 2000);
         })
         .catch(error => {
             showToast('error', 'Error', 'No se pudo eliminar el remate')
@@ -164,21 +167,40 @@ const AuctionCRUD = () => {
                 <label htmlFor="senasaNumber">Numero de Senasa</label>
             </span>
             <br/>
-            <span className="p-float-label">
-                <Calendar
-                    id='calendar' 
-                    className='w-full' 
-                    value={date} 
-                    onChange={(e) => setDate(e.value)} 
-                    dateFormat="d/m/y"
-                    tooltip="D/M/AA HH:MM"
-                    tooltipOptions={{position: 'top'}}
-                    minDate={new Date()}//Fecha actual
-                    showTime
-                    disabled={!enableEditing}
-                />    
-                <label htmlFor="calendar">Fecha</label>
-            </span>
+            <div className="grid">
+                <div className="col-6">
+                    <span className="p-float-label">
+                        <Calendar
+                            id='calendar' 
+                            className='w-full'
+                            value={date} 
+                            onChange={(e) => setDate(e.value)} 
+                            dateFormat="d/m/y"
+                            tooltip="D/M/AA"
+                            tooltipOptions={{position: 'top'}}
+                            minDate={new Date()}//Fecha actual
+                            disabled={!enableEditing}
+                        />    
+                        <label htmlFor="calendar">Fecha</label>
+                    </span>
+                </div>
+                <div className="col-6">
+                    <span className="p-float-label">
+                        <Calendar
+                            id='time' 
+                            className='w-full'
+                            value={time} 
+                            onChange={(e) => setTime(e.value)} 
+                            dateFormat="d/m/y"
+                            tooltip="HH:MM"
+                            tooltipOptions={{position: 'top'}}
+                            timeOnly
+                            disabled={!enableEditing}
+                        />    
+                        <label htmlFor="time">Hora</label>
+                    </span>
+                </div>
+            </div>
             <br/>
             <span className="p-float-label">
                 <AutoComplete 
