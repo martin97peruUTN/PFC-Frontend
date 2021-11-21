@@ -4,6 +4,7 @@ import { AuthContext } from '../../context/AuthContext';
 
 import { Button } from 'primereact/button';
 import { CARD_TWO_COLUMNS_BUTTON, CARD_TWO_COLUMNS_BUTTON_DIV } from '../../util/constants';
+import { isSmallScreen } from '../../util/miscFunctions';
 
 import CardTwoColumns from './CardTwoColumns'
 
@@ -16,7 +17,7 @@ const AuctionCard = props => {
             key = {props.id}
             content = {
                 <div>
-                    {`${window.screen.width>600?'Numero de Senasa':'N° Senasa'}: ${props.senasaNumber}`}
+                    {`${isSmallScreen()?'N° Senasa':'Numero de Senasa'}: ${props.senasaNumber}`}
                     <br/>
                     {`Fecha: ${parseDateToShow(props.date)} ${parseDateTimeToShow(props.date)}`}
                     <br/>

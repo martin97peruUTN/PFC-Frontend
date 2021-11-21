@@ -1,3 +1,5 @@
+import * as constant from './constants'
+
 export const pluralizeSpanishWord = word => {
     const char = word.substring(word.length - 1)
     if(char === 'a' || char === 'e' || char === 'i' || char === 'o' || char === 'u') {
@@ -39,3 +41,6 @@ export const parseDateTimeToShow = (dateJson) => {
     return `${date.getHours()}:${date.getMinutes()>=10 ? date.getMinutes() : '0'+date.getMinutes()}`
 }
 
+export const isSmallScreen = () =>{
+    return window.screen.width<=SMALL_SCREEN_BREAKPOINT
+}

@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { SMALL_SCREEN_BREAKPOINT } from '../../util/constants'
+import { isSmallScreen } from '../../util/miscFunctions'
 
 import Card from './Card'
 
@@ -11,7 +11,7 @@ const CardTwoColumns = (props) => {
             title={props.title} 
             footer={
                 //Si la pantalla es chica pongo los botones en el footer
-                window.screen.width<=SMALL_SCREEN_BREAKPOINT?
+                isSmallScreen()?
                 props.buttons
                 :
                 null
@@ -23,7 +23,7 @@ const CardTwoColumns = (props) => {
                 <div className="col-12 md:col-10 md:text-4xl text-2xl">
                     {props.content}
                 </div>
-                {window.screen.width>SMALL_SCREEN_BREAKPOINT ?
+                {!isSmallScreen() ?
                     //Si la pantalla es grande pongo los botones en la columna derecha
                     <div className="col-2">
                         {props.buttons}
