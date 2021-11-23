@@ -81,7 +81,7 @@ const AuctionCRUD = () => {
         }else{
             confirmDialog({
                 message: '¿Esta seguro de que desea proceder?',
-                header: 'Actualizar informacion de usuario',
+                header: 'Guardar remate',
                 icon: 'pi pi-exclamation-circle',
                 acceptLabel: 'Si',
                 accept: () => handleSubmit()
