@@ -33,7 +33,7 @@ const Auction = () => {
     const [batches, setBatches] = useState([])
 
     //TODO terminar cuando tengamos los endpoints
-    /*useEffect(() => {
+    useEffect(() => {
         setLoadingStart(true)
         if(!history.location.state){
             showToast('error', 'Error', 'No se encontro el remate')
@@ -42,7 +42,7 @@ const Auction = () => {
             }, 3000)
         }else{
             setAuctionId(history.location.state.auctionId)
-            fetchContext.authAxios.get(`${url.AUCTION_BATCHES_API}/${auctionId}`)
+            /*fetchContext.authAxios.get(`${url.AUCTION_BATCHES_API}/${auctionId}`)
             .then(response => {
                 setBatches(response.data)
                 setLoadingStart(false)
@@ -52,18 +52,13 @@ const Auction = () => {
                 setTimeout(() => {
                     history.goBack();
                 }, 3000)
-            })
+            })*/
         }
-    }, [])*/
-
-    //TODO eliminar este, es de prueba nomas
-    useEffect(() => {
-        setAuctionId(history.location.state.auctionId)
-    },[])
+    }, [])
 
     const tabViewActiveIndexChange = (index) => {
         setTabViewActiveIndex(index)
-        //TODO ver si hago una llamada a la API para cargar lo que corresponda
+        //TODO llamar a la API para cargar lo que corresponda
     }
 
     const tabView = (

@@ -41,10 +41,8 @@ const HomePage = () => {
     useEffect(() => {
         setLoadingStart(true)
         fetchContext.authAxios.get(`${url.USER_AUCTIONS_API}${authContext.isAdmin() ? "" : (tabViewActiveIndex === 0? "/own/"+authContext.getUserInfo().id : "/others/"+authContext.getUserInfo().id)}?page=${paginatorPage}&limit=${paginatorRows}`)
-        //fetchContext.authAxios.get(`${url.AUCTION_API}/1`)
         .then(res => {
             setAuctionsList(res.data.content)
-            //setAuctionsList([res.data])
             setLoadingStart(false)
         })
         .catch(err => {
