@@ -42,5 +42,5 @@ export const parseDateTimeToShow = (dateJson) => {
 }
 
 export const isSmallScreen = () =>{
-    return window.screen.width<=SMALL_SCREEN_BREAKPOINT
+    return window.screen.width<=constant.SMALL_SCREEN_BREAKPOINT
 }

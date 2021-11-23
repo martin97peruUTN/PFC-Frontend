@@ -36,21 +36,15 @@ const HomePage = () => {
     //0 para remates propios, 1 para ajenos. En caso de los admins no se usa
     const [tabViewActiveIndex, setTabViewActiveIndex] = useState(0);
 
-    const [isAdmin, setIsAdmin] = useState(false)
-    const [userId, setUserId] = useState()
     const [auctionList, setAuctionsList] = useState([])
 
     useEffect(() => {
         setLoadingStart(true)
-        setUserId(authContext.getUserInfo().id)
-        setIsAdmin(authContext.isAdmin())
-        const auctionListToGet = isAdmin? 'all' : tabViewActiveIndex === 0 ? 'own' : 'others'
-        //TODO cambiar este endpoint cuando lo tengamos y el setAuctionsList
-        //fetchContext.authAxios.get(`${url.USER_AUCTIONS_API}/${auctionListToGet}${isAdmin ? `/${userId}` : null}?page=${paginatorPage}&limit=${paginatorRows}`)
-        fetchContext.authAxios.get(`${url.AUCTION_API}/1`)
+        fetchContext.authAxios.get(`${url.USER_AUCTIONS_API}${authContext.isAdmin() ? "" : (tabViewActiveIndex === 0? "/own/"+authContext.getUserInfo().id : "/others/"+authContext.getUserInfo().id)}?page=${paginatorPage}&limit=${paginatorRows}`)
+        //fetchContext.authAxios.get(`${url.AUCTION_API}/1`)
         .then(res => {
-            //setAuctionsList(res.data)
-            setAuctionsList([res.data])
+            setAuctionsList(res.data.content)
+            //setAuctionsList([res.data])
             setLoadingStart(false)
         })
         .catch(err => {
