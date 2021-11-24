@@ -43,6 +43,7 @@ const HomePage = () => {
         fetchContext.authAxios.get(`${url.USER_AUCTIONS_API}${authContext.isAdmin() ? "" : (tabViewActiveIndex === 0? "/own/"+authContext.getUserInfo().id : "/others/"+authContext.getUserInfo().id)}?page=${paginatorPage}&limit=${paginatorRows}`)
         .then(res => {
             setAuctionsList(res.data.content)
+            setTotalPages(res.data.totalPages)
             setLoadingStart(false)
         })
         .catch(err => {
