@@ -7,6 +7,7 @@ import { Skeleton } from 'primereact/skeleton';
 import { ScrollTop } from 'primereact/scrolltop';
 import { Menu } from 'primereact/menu';
 import { TabView, TabPanel } from 'primereact/tabview';
+import { confirmDialog } from 'primereact/confirmdialog';
 
 import { AuthContext } from '../context/AuthContext';
 import { FetchContext } from '../context/FetchContext';
@@ -42,6 +43,7 @@ const Auction = () => {
             }, 3000)
         }else{
             setAuctionId(history.location.state.auctionId)
+            setLoadingStart(false)
             /*fetchContext.authAxios.get(`${url.AUCTION_BATCHES_API}/${auctionId}`)
             .then(response => {
                 setBatches(response.data)
@@ -59,6 +61,30 @@ const Auction = () => {
     const tabViewActiveIndexChange = (index) => {
         setTabViewActiveIndex(index)
         //TODO llamar a la API para cargar lo que corresponda
+    }
+
+    //Se dispara al presionar Terminar remate
+    const confirmFinishAuction = () => {
+        confirmDialog({
+            message: '¿Esta seguro de que desea proceder?',
+            header: 'Terminar remate',
+            icon: 'pi pi-exclamation-circle',
+            acceptLabel: 'Si',
+            accept: () => finishAuction()
+        });
+    }
+
+    const finishAuction = () => {
+        fetchContext.authAxios.patch(`${url.AUCTION_API}/${auctionId}`, {finished : true})
+        .then(response => {
+            showToast('success', 'Exito', 'Remate finalizado')
+            setTimeout(() => {
+                history.goBack();
+            }, 2000)
+        })
+        .catch(error => {
+            showToast('error', 'Error', 'No se pudo finalizar el remate')
+        })
     }
 
     const tabView = (
@@ -120,7 +146,7 @@ const Auction = () => {
         {
             label: 'Terminar remate',
             icon: 'pi pi-fw pi-check-square',
-            url: url.HOME
+            command: () => confirmFinishAuction()
         },
         
     ]

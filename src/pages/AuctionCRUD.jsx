@@ -145,7 +145,7 @@ const AuctionCRUD = () => {
         .then(response => {
             showToast('success', 'Exito', 'El remate ha sido eliminado')
             setTimeout(() => {
-                history.goBack();
+                history.push('/');
             }, 2000);
         })
         .catch(error => {
