@@ -76,7 +76,7 @@ const AuctionCRUD = () => {
 
     //Se dispara al presionar el boton Guardar
     const confirm = () => {
-        if(!senasaNumber || !date || !selectedLocality){
+        if(!senasaNumber || !date || !time || !selectedLocality){
             showToast('warn', 'Cuidado', 'Debe completar todos los campos')
         }else{
             confirmDialog({
