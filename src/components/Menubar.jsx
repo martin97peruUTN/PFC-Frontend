@@ -8,7 +8,6 @@ import { Menu } from 'primereact/menu';
 import { Sidebar } from 'primereact/sidebar';
 
 import * as url from '../util/url'
-import { getInitialLetters } from '../util/miscFunctions'
 
 const Menubar = () => {
 
@@ -30,7 +29,7 @@ const Menubar = () => {
                 {
                     label: 'Nuevo',
                     icon: 'pi pi-fw pi-calendar-plus',
-                    url: url.AUCTION
+                    url: url.AUCTION_CRUD
                 },
                 {
                     label: 'Historial',
@@ -116,8 +115,8 @@ const Menubar = () => {
         }
     ]
 
-    const end = <Avatar 
-        label={getInitialLetters(authContext.getUserInfo().name)} 
+    const end = <Avatar
+        label={authContext.getUserInfo().name.substring(0,1)+authContext.getUserInfo().lastname.substring(0,1)}
         shape="circle"
         style={{ backgroundColor: authContext.getAvatarColor(), color: '#ffffff' }}
         className="md:mr-1"

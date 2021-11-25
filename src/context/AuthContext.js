@@ -30,7 +30,8 @@ const AuthProvider = ({ children }) => {
         const decodedToken = jwt_decode(token);
         localStorage.setItem('expiresAt', decodedToken.exp);
         const incomingUserInfo = {
-            name: decodedToken.sub,
+            name: decodedToken.name,
+            lastname: decodedToken.lastname,
             username: decodedToken.username,
             id: decodedToken.uid,
             role: decodedToken.rol[0].authority
@@ -80,13 +81,13 @@ const AuthProvider = ({ children }) => {
     return (
         <Provider
             value={{
-                authState,
                 setAuthState: token => setAuthInfo(token),
                 logout,
                 isAuthenticated,
                 isAdmin,
                 isConsignee,
                 isAssistant,
+                getToken: () => authState.token,
                 getUserInfo: () => authState.userInfo,
                 getAvatarColor: () => localStorage.getItem('avatarColor')
             }}

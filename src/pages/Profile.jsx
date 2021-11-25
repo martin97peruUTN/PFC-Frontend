@@ -29,28 +29,54 @@ const Profile = () => {
     const [edit, setEdit] = useState(false)
     const [user, setUser] = useState('')
     const [name, setName] = useState('')
+    const [lastname, setLastname] = useState('')
     const [role, setRole] = useState('')
 
     useEffect(() => {
         setLoadingStart(true)
         setUser(authContext.getUserInfo().username)
         setName(authContext.getUserInfo().name)
+        setLastname(authContext.getUserInfo().lastname)
         setRole(authContext.getUserInfo().role)
         if(history.location.state){
             showToast(history.location.state.severity, history.location.state.summary, history.location.state.message)
             history.location.state = null
         }
         setLoadingStart(false)
-    }, [authContext])
+    }, [authContext, history.location])
 
     const handlePasswordChange = () => {
         history.push(url.PASSWORD_CHANGE)
+    }
+
+    //Se dispara al presionar el boton Guardar
+    const confirm = () => {
+        if(user.length < 5 || user.length > 30){
+            showToast('error','Error','El usuario debe tener entre 5 y 30 caracteres!')
+        }else{
+            if(name.length === 0){
+                showToast('error','Error','El nombre no puede ser vacio!')
+            }else{
+                if(name===authContext.getUserInfo().name && user===authContext.getUserInfo().username && lastname===authContext.getUserInfo().lastName){
+                    showToast('warn','Cuidado','Ningun dato fue cambiado!')
+                }else{
+                    confirmDialog({
+                        message: '¿Esta seguro de que desea proceder?',
+                        header: 'Actualizar informacion de usuario',
+                        icon: 'pi pi-exclamation-circle',
+                        acceptLabel: 'Si',
+                        accept: () => handleSubmit()
+                    });
+                }
+            }
+        }
     }
 
     const handleSubmit = () => {
         setLoadingAccept(true)
         fetchContext.authAxios.patch(`${url.USER_API}/${authContext.getUserInfo().id}`, {
             name: name!==authContext.getUserInfo().name? name : null,
+            lastname: lastname!==authContext.getUserInfo().lastname? lastname : null,
             username: user!==authContext.getUserInfo().username? user : null,
         }).then((res) => {
             //Actualizo el token y toda la info del usuario
@@ -68,29 +94,6 @@ const Profile = () => {
         })
     }
 
-    //Se dispara al presionar el boton Guardar
-    const confirm = () => {
-        if(user.length < 5 || user.length > 30){
-            showToast('error','Error','El usuario debe tener entre 5 y 30 caracteres!')
-        }else{
-            if(name.length === 0){
-                showToast('error','Error','El nombre no puede ser vacio!')
-            }else{
-                if(name===authContext.getUserInfo().name && user===authContext.getUserInfo().username){
-                    showToast('warn','Cuidado','Ningun dato fue cambiado!')
-                }else{
-                    confirmDialog({
-                        message: '¿Esta seguro de que desea proceder?',
-                        header: 'Actualizar informacion de usuario',
-                        icon: 'pi pi-exclamation-circle',
-                        acceptLabel: 'Si',
-                        accept: () => handleSubmit()
-                    });
-                }
-            }
-        }
-    }
-
     const cardForm = (
         <div>
             <span className="p-float-label">
@@ -102,6 +105,17 @@ const Profile = () => {
                     disabled={!edit}
                 />
                 <label htmlFor="name">Nombre</label>
+            </span>
+            <br/>
+            <span className="p-float-label">
+                <InputText
+                    id="lastname"
+                    className='w-full' 
+                    value={lastname} 
+                    onChange={e => setLastname(e.target.value)} 
+                    disabled={!edit}
+                />
+                <label htmlFor="lastname">Apellido</label>
             </span>
             <br/>
             <span className="p-float-label">
