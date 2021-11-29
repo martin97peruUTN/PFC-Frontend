@@ -25,6 +25,7 @@ import CategoryList from "./pages/CategoryList";
 import AuctionCRUD from "./pages/AuctionCRUD";
 import Auction from "./pages/Auction";
 import UserList from "./pages/UserList";
+import UserCRUD from "./pages/UserCRUD";
 
 const UnauthenticatedRoutes = () => (
   <div className="mx-3 my-7 md:mx-6">
@@ -131,6 +132,9 @@ function App() {
       </ConsigneeRoute>
       <ConsigneeRoute exact path={url.USERS}>
         <UserList />
+      </ConsigneeRoute>
+      <ConsigneeRoute exact path={url.USER_CRUD}>
+        <UserCRUD />
       </ConsigneeRoute>
 
       <UnauthenticatedRoutes />

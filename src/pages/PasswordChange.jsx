@@ -117,7 +117,7 @@ const PasswordChange = () => {
             <span className="p-float-label">
                 <Password 
                     id="newPassword" 
-                    className='w-full passwordFormInput' 
+                    className='w-full' 
                     inputClassName='w-full' 
                     feedback={false} 
                     toggleMask 

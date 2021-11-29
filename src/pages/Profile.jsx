@@ -51,11 +51,11 @@ const Profile = () => {
 
     //Se dispara al presionar el boton Guardar
     const confirm = () => {
-        if(user.length < 5 || user.length > 30){
-            showToast('error','Error','El usuario debe tener entre 5 y 30 caracteres!')
+        if(user.length < 6 || user.length > 30){
+            showToast('warn','Error','El usuario debe tener entre 6 y 30 caracteres!')
         }else{
             if(name.length === 0){
-                showToast('error','Error','El nombre no puede ser vacio!')
+                showToast('warn','Error','El nombre no puede ser vacio!')
             }else{
                 if(name===authContext.getUserInfo().name && user===authContext.getUserInfo().username && lastname===authContext.getUserInfo().lastName){
                     showToast('warn','Cuidado','Ningun dato fue cambiado!')
@@ -126,7 +126,7 @@ const Profile = () => {
                     value={user} 
                     onChange={e => setUser(e.target.value)} 
                     disabled={!edit}
-                    tooltip="Entre 6 y 20 caracteres" 
+                    tooltip="Entre 6 y 30 caracteres" 
                     tooltipOptions={{position: 'top', event: 'focus'}}
                 />
                 <label htmlFor="user">Usuario</label>

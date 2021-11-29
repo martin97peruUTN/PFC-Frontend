@@ -42,7 +42,7 @@ const UserList = () => {
 
     useEffect(() => {
         setLoadingStart(true);
-        fetchContext.authAxios.get(`${url.USER_API}?page=${paginatorPage}&limit=${paginatorRows}${searchValue ? `&name=${searchValue}` : ''}`)
+        /*fetchContext.authAxios.get(`${url.USER_API}?page=${paginatorPage}&limit=${paginatorRows}${searchValue ? `&name=${searchValue}` : ''}`)
         .then(res => {
             setItemList(res.data.content)
             setTotalPages(res.data.totalPages)
@@ -53,7 +53,7 @@ const UserList = () => {
             setTimeout(() => {
                 history.push(url.HOME);
             }, 2000);
-        })
+        })*/
     }, [refresh, searchValue, paginatorFirst, paginatorRows, paginatorPage])
 
     const onPaginatorPageChange = (event) => {
