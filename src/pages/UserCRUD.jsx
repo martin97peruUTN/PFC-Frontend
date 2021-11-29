@@ -233,7 +233,7 @@ const UserCRUD = () => {
                     options={roleList} 
                     onChange={e => setRole(e.target.value)} 
                     optionLabel="name"
-                    disabled={!enableEditing}
+                    disabled={userId ? true : false}
                 />
                 <label htmlFor="role">Rol</label>
             </span>
