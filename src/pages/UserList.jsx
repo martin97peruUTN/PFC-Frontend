@@ -161,16 +161,15 @@ const UserList = () => {
                     ></Paginator>
                 }
             >
+                <span className="p-float-label">
+                    <InputText id="search" className='w-full' value={searchValue} onChange={e => setSearchValue(e.target.value)}/>
+                    <label htmlFor="search">Buscar</label>
+                </span>
+                <br/>
                 {loadingStart?
                     loadingScreen
                     :
-                    <>
-                        <span className="p-float-label">
-                            <InputText id="search" className='w-full' value={searchValue} onChange={e => setSearchValue(e.target.value)}/>
-                            <label htmlFor="search">Buscar</label>
-                        </span>
-                        {itemCardList}
-                    </>
+                    itemCardList
                 }
             </Card> 
         </>
