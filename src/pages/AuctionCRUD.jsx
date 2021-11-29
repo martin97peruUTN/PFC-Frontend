@@ -161,7 +161,6 @@ const AuctionCRUD = () => {
                     className='w-full' 
                     value={senasaNumber} 
                     onChange={e => setSenasaNumber(e.target.value)}
-                    keyfilter="pint"
                     disabled={!enableEditing}
                 />
                 <label htmlFor="senasaNumber">Numero de Senasa</label>
