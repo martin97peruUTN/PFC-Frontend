@@ -91,7 +91,7 @@ const UserList = () => {
                 accept: () => {
                     fetchContext.authAxios.delete(`${url.USER_API}/${id}`)
                     .then(res => {
-                        showToast('success', 'Éxito', 'Usuario eliminado')
+                        showToast('success', 'Exito', 'El usuario ha sido eliminado')
                         setRefresh(!refresh)
                     })
                     .catch(err => {
