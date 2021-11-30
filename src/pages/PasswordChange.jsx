@@ -64,7 +64,7 @@ const PasswordChange = () => {
 
     const handleSubmit = () => {
         setLoadingAccept(true);
-        fetchContext.authAxios.patch(`${url.USER_API}/${authContext.getUserInfo().id}/modificarpass`, {
+        fetchContext.authAxios.patch(`${url.USER_API}/profile/${authContext.getUserInfo().id}/modificarpass`, {
             oldPassword: hash(currentPassword),
             newPassword: hash(newPassword)
         }).then(response => {

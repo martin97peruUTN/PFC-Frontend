@@ -1,6 +1,7 @@
 import React, {useState, useEffect, useRef, useContext} from 'react';
 import { useHistory } from "react-router-dom";
 import * as url from '../util/url';
+import { ADMIN_ROLE } from '../util/constants';
 
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
@@ -42,7 +43,7 @@ const UserList = () => {
 
     useEffect(() => {
         setLoadingStart(true);
-        fetchContext.authAxios.get(`${url.USER_API}?page=${paginatorPage}&limit=${paginatorRows}${searchValue ? `&name=${searchValue}` : ''}`)
+        fetchContext.authAxios.get(`${url.USER_API}/user-list?page=${paginatorPage}&limit=${paginatorRows}${searchValue ? `&name=${searchValue}` : ''}`)
         .then(res => {
             setItemList(res.data.content)
             setTotalPages(res.data.totalPages)
@@ -79,8 +80,9 @@ const UserList = () => {
         }
     }
 
-    const deleteHandler = (id) => {
-        if(authContext.isAdmin()){
+    const deleteHandler = (id, rol) => {
+        //No deberia llegar a disparar esto igual, este if es solo por las dudas
+        if(authContext.isAdmin() && rol!==ADMIN_ROLE){
             confirmDialog({
                 header: 'Confirmación',
                 message: `¿Está seguro que desea eliminar el usuario?`,

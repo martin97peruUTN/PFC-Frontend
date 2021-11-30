@@ -74,7 +74,7 @@ const Profile = () => {
 
     const handleSubmit = () => {
         setLoadingAccept(true)
-        fetchContext.authAxios.patch(`${url.USER_API}/${authContext.getUserInfo().id}`, {
+        fetchContext.authAxios.patch(`${url.USER_API}/profile/${authContext.getUserInfo().id}`, {
             name: name!==authContext.getUserInfo().name? name : null,
             lastname: lastname!==authContext.getUserInfo().lastname? lastname : null,
             username: user!==authContext.getUserInfo().username? user : null,

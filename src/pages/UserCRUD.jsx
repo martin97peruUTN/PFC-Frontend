@@ -55,11 +55,18 @@ const UserCRUD = () => {
             setUserId(userId)
             fetchContext.authAxios.get(`${url.USER_API}/${userId}`)
             .then(res => {
-                const {name, lastName, username, rol} = res.data
+                console.log(res)
+                const {name, lastname, username, rol} = res.data
                 setName(name)
-                setLastName(lastName)
+                setLastName(lastname)
                 setUsername(username)
-                setRole(rol)
+                if(rol===constants.ADMIN_ROLE){
+                    setRole(roleList[0])
+                }else if(rol===constants.CONSIGNEE_ROLE){
+                    setRole(roleList[1])
+                }else if(rol===constants.ASSISTANT_ROLE){
+                    setRole(roleList[2])
+                }
                 setLoadingStart(false)
             })
             .catch(err => {
@@ -80,7 +87,7 @@ const UserCRUD = () => {
         /*Si no tengo userId es porque estoy creando, por lo que ambos campos contraseña
         deben estar completos */
         if(!userId && (!password || !repeatPassword)){
-            return 'Debe ingresar una contraseña'
+            return 'Debe ingresar una contraseña en ambos campos'   
         }
         /*Si hay userId estoy editando, por lo que puedo o no ingresar una nueva contraseña 
         pero si la ingreso, debe estar en ambos campos. Es un XOR, o ambas o ninguna */
@@ -131,7 +138,7 @@ const UserCRUD = () => {
             name,
             lastname: lastName,
             username,
-            rol: role,
+            rol: role.name,
             password: password ? hash(password) : null
         }
         //Si no hay id es que estoy creando, si hay es que estoy editando
@@ -165,13 +172,16 @@ const UserCRUD = () => {
 
     //Se dispara al tocar el boton eliminar
     const deleteHandler = () => {
-        confirmDialog({
-            message: '¿Esta seguro de que desea eliminar el usuario?',
-            header: 'Eliminar usuario',
-            icon: 'pi pi-exclamation-circle',
-            acceptLabel: 'Si',
-            accept: () => deleteUser()
-        })
+        //No deberia llegar hasta aca desde la otra pantalla, este if es solo por las dudas
+        if(role.name!==constants.ADMIN_ROLE){
+            confirmDialog({
+                message: '¿Esta seguro de que desea eliminar el usuario?',
+                header: 'Eliminar usuario',
+                icon: 'pi pi-exclamation-circle',
+                acceptLabel: 'Si',
+                accept: () => deleteUser()
+            })
+        }
     }
 
     const deleteUser = () => {
