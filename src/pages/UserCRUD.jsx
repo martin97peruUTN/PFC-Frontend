@@ -151,8 +151,12 @@ const UserCRUD = () => {
                 }, 2000)
             })
             .catch(err => {
-                //TODO revisar caso donde el usuario ya existe
-                showToast('error', 'Error', 'No se pudo crear el usuario')
+                console.log(err)
+                if(err.response.status === 403) {
+                    showToast('error','Error','Usuario no disponible')
+                }else{
+                    showToast('error', 'Error', 'No se pudo crear el usuario')
+                }
                 setLoadingAccept(false)
             })
         }else{

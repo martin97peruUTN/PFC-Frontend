@@ -13,7 +13,7 @@ const UserCard = props => {
     return (
         <CardTwoColumns
             key = {props.id}
-            title = {`${props.name} ${props.lastname}`}
+            title = {`${props.lastname} ${props.name}`}
             content = {
                 <div>
                     {`Usuario: ${props.username}`}
