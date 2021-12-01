@@ -53,9 +53,12 @@ const SimpleItemList = (props) => {
     //Item que se esta editando o creando (ver el Dialog)
     const [editingItem, setEditingItem] = useState(null);
 
+    //Valor de la barra de busqueda
+    const [searchValue, setSearchValue] = useState('');
+
     useEffect(() => {
         setLoadingStart(true)
-        fetchContext.authAxios.get(`${urlAPI}?page=${paginatorPage}&limit=${paginatorRows}`)
+        fetchContext.authAxios.get(`${urlAPI}?page=${paginatorPage}&limit=${paginatorRows}${searchValue ? `&name=${searchValue}` : ''}`)
         .then(response => {
             setItemList(response.data.content)
             setTotalPages(response.data.totalPages)
@@ -67,7 +70,7 @@ const SimpleItemList = (props) => {
                 history.push(url.HOME);
             }, 2000);
         })
-    }, [refresh, paginatorFirst, paginatorRows, fetchContext.authAxios, history, urlAPI, paginatorPage])
+    }, [refresh, paginatorFirst, paginatorRows, fetchContext.authAxios, history, urlAPI, paginatorPage, searchValue])
 
     const onPaginatorPageChange = (event) => {
         setPaginatorFirst(event.first);
@@ -214,6 +217,11 @@ const SimpleItemList = (props) => {
                     ></Paginator>
                 }
             >
+                <span className="p-float-label">
+                    <InputText id="search" className='w-full' value={searchValue} onChange={e => setSearchValue(e.target.value)}/>
+                    <label htmlFor="search">Buscar</label>
+                </span>
+                <br/>
                 {loadingStart?
                     loadingScreen
                     :

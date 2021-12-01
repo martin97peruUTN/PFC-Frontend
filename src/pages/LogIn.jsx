@@ -34,7 +34,7 @@ const LogIn = () => {
         event.preventDefault();
         if(validForm()){
             setLoading(true);
-            publicFetch.post(url.LOGIN, {
+            publicFetch.post(url.LOGIN_API, {
                 username,
                 password: hash(password)
             })

@@ -39,6 +39,8 @@ const UserList = () => {
     const [totalPages, setTotalPages] = useState(0);
 
     const [itemList, setItemList] = useState([]);
+
+    //Valor de la barra de busqueda
     const [searchValue, setSearchValue] = useState('');
 
     useEffect(() => {
