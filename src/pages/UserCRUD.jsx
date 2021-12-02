@@ -55,7 +55,6 @@ const UserCRUD = () => {
             setUserId(userId)
             fetchContext.authAxios.get(`${url.USER_API}/${userId}`)
             .then(res => {
-                console.log(res)
                 const {name, lastname, username, rol} = res.data
                 setName(name)
                 setLastName(lastname)
@@ -151,7 +150,6 @@ const UserCRUD = () => {
                 }, 2000)
             })
             .catch(err => {
-                console.log(err)
                 if(err.response.status === 403) {
                     showToast('error','Error','Usuario no disponible')
                 }else{
@@ -168,7 +166,13 @@ const UserCRUD = () => {
                 }, 2000)
             })
             .catch(err => {
-                showToast('error', 'Error', 'No se pudo actualizar el usuario')
+                if(err.response.status === 403) {
+                    showToast('error','Error','Usuario no disponible')
+                }else if(err.response.status === 400){
+                    showToast('error','Error','La nueva contraseña es igual a la anterior')
+                }else{
+                    showToast('error', 'Error', 'No se pudo actualizar el usuario')
+                }
                 setLoadingAccept(false)
             })
         }
