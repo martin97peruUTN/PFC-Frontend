@@ -63,13 +63,8 @@ const PasswordChange = ({showToast}) => {
             oldPassword: hash(currentPassword),
             newPassword: hash(newPassword)
         }).then(response => {
-            history.push(url.PROFILE,
-                {
-                    severity: 'success',
-                    summary: 'Exito',
-                    message:'La contraseña ha sido cambiada!'
-                }
-            );
+            showToast('success', 'Exito', 'Contraseña modificada con exito');
+            history.push(url.PROFILE);
         }).catch(error => {
             showToast('error', 'Error', 'Hubo un error al cambiar la contraseña');
             setLoadingAccept(false);

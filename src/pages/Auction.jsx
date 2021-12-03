@@ -33,9 +33,7 @@ const Auction = ({showToast}) => {
         setLoadingStart(true)
         if(!history.location.state){
             showToast('error', 'Error', 'No se encontro el remate')
-            setTimeout(() => {
-                history.goBack();
-            }, 3000)
+            history.goBack();
         }else{
             setAuctionId(history.location.state.auctionId)
             setLoadingStart(false)
@@ -46,9 +44,7 @@ const Auction = ({showToast}) => {
             })
             .catch(error => {
                 showToast('error', 'Error', 'No se pudo obtener los lotes del remate')
-                setTimeout(() => {
-                    history.goBack();
-                }, 3000)
+                history.goBack();
             })*/
         }
     }, [])
@@ -73,9 +69,7 @@ const Auction = ({showToast}) => {
         fetchContext.authAxios.patch(`${url.AUCTION_API}/${auctionId}`, {finished : true})
         .then(response => {
             showToast('success', 'Exito', 'Remate finalizado')
-            setTimeout(() => {
-                history.goBack();
-            }, 2000)
+            history.goBack();
         })
         .catch(error => {
             showToast('error', 'Error', 'No se pudo finalizar el remate')

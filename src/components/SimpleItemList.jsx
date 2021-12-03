@@ -61,9 +61,7 @@ const SimpleItemList = ({showToast, ...props}) => {
         })
         .catch(error => {
             showToast('error', 'Error', 'No se pudo conectar al servidor')
-            setTimeout(() => {
-                history.push(url.HOME);
-            }, 2000);
+            history.push(url.HOME);
         })
     }, [refresh, paginatorFirst, paginatorRows, fetchContext.authAxios, history, urlAPI, paginatorPage, searchValue])
 

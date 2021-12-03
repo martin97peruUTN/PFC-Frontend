@@ -51,9 +51,7 @@ const AuctionCRUD = ({showToast}) => {
             })
             .catch(error => {
                 showToast('error', 'Error', 'No se encontro el remate')
-                setTimeout(() => {
-                    history.goBack();
-                }, 3000)
+                history.goBack();
             })
         }
     }, [history.location.state])
@@ -101,9 +99,7 @@ const AuctionCRUD = ({showToast}) => {
             fetchContext.authAxios.post(url.AUCTION_API, body)
             .then(response => {
                 showToast('success', 'Exito', 'El remate ha sido creado')
-                setTimeout(() => {
-                    history.push('/');
-                }, 2000);
+                history.push('/');
             })
             .catch(error => {
                 showToast('error', 'Error', 'No se pudo crear el remate')
@@ -113,9 +109,7 @@ const AuctionCRUD = ({showToast}) => {
             fetchContext.authAxios.patch(`${url.AUCTION_API}/${auctionId}`, body)
             .then(response => {
                 showToast('success', 'Exito', 'El remate ha sido actualizado')
-                setTimeout(() => {
-                    history.goBack();
-                }, 2000);
+                history.goBack();
             })
             .catch(error => {
                 showToast('error', 'Error', 'No se pudo actualizar el remate')
@@ -139,9 +133,7 @@ const AuctionCRUD = ({showToast}) => {
         fetchContext.authAxios.delete(`${url.AUCTION_API}/${auctionId}`)
         .then(response => {
             showToast('success', 'Exito', 'El remate ha sido eliminado')
-            setTimeout(() => {
-                history.push('/');
-            }, 2000);
+            history.push('/');
         })
         .catch(error => {
             showToast('error', 'Error', 'No se pudo eliminar el remate')
@@ -162,7 +154,7 @@ const AuctionCRUD = ({showToast}) => {
             </span>
             <br/>
             <div className="grid">
-                <div className="col-6">
+                <div className="col-6 pb-0">
                     <span className="p-float-label">
                         <Calendar
                             id='calendar' 
@@ -178,7 +170,7 @@ const AuctionCRUD = ({showToast}) => {
                         <label htmlFor="calendar">Fecha</label>
                     </span>
                 </div>
-                <div className="col-6">
+                <div className="col-6 pb-0">
                     <span className="p-float-label">
                         <Calendar
                             id='time' 

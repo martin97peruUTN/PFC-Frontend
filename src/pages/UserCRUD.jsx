@@ -65,9 +65,7 @@ const UserCRUD = ({showToast}) => {
             })
             .catch(err => {
                 showToast('error', 'Error', 'No se encontro el usuario')
-                setTimeout(() => {
-                    history.goBack();
-                }, 3000)
+                history.goBack();
             })
         }
     }, [history.location.state])
@@ -141,9 +139,7 @@ const UserCRUD = ({showToast}) => {
             fetchContext.authAxios.post(url.USER_API, data)
             .then(res => {
                 showToast('success', 'Exito', 'Usuario creado')
-                setTimeout(() => {
-                    history.goBack();
-                }, 2000)
+                history.goBack();
             })
             .catch(err => {
                 if(err.response.status === 403) {
@@ -157,9 +153,7 @@ const UserCRUD = ({showToast}) => {
             fetchContext.authAxios.patch(`${url.USER_API}/admin-patch/${userId}`, data)
             .then(res => {
                 showToast('success', 'Exito', 'Usuario ha sido actualizado')
-                setTimeout(() => {
-                    history.goBack();
-                }, 2000)
+                history.goBack();
             })
             .catch(err => {
                 if(err.response.status === 403) {
@@ -192,9 +186,7 @@ const UserCRUD = ({showToast}) => {
         fetchContext.authAxios.delete(`${url.USER_API}/${userId}`)
         .then(response => {
             showToast('success', 'Exito', 'El usuario ha sido eliminado')
-            setTimeout(() => {
-                history.goBack();
-            }, 2000);
+            history.goBack();
         })
         .catch(error => {
             showToast('error', 'Error', 'No se pudo eliminar el usuario')

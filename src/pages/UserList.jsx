@@ -49,9 +49,7 @@ const UserList = ({showToast}) => {
         })
         .catch(err => {
             showToast('error', 'Error', 'No se pudo conectar al servidor')
-            setTimeout(() => {
-                history.push(url.HOME);
-            }, 2000);
+            history.push(url.HOME);
         })
     }, [refresh, searchValue, paginatorFirst, paginatorRows, paginatorPage])
 
