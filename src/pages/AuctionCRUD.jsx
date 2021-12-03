@@ -3,7 +3,6 @@ import { useHistory } from "react-router-dom";
 
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
-import { Toast } from 'primereact/toast';
 import { Skeleton } from 'primereact/skeleton';
 import { confirmDialog } from 'primereact/confirmdialog';
 import { AutoComplete } from 'primereact/autocomplete';
@@ -16,15 +15,11 @@ import * as miscFunctions from '../util/miscFunctions';
 
 import Card from '../components/cards/Card'
 
-const AuctionCRUD = () => {
+const AuctionCRUD = ({showToast}) => {
 
     const authContext = useContext(AuthContext)
     const fetchContext = useContext(FetchContext)
     const history = useHistory();
-    const toast = useRef(null);
-    const showToast = (severity, summary, message) => {
-        toast.current.show({severity:severity, summary: summary, detail:message});
-    }
 
     const [loadingAccept, setLoadingAccept] = useState(false)
     const [loadingStart, setLoadingStart] = useState(false)
@@ -70,7 +65,7 @@ const AuctionCRUD = () => {
             setFilteredLocalityList(response.data.content)
         })
         .catch(error => {
-            toast.current.show({severity:'error', summary:'Error', detail:'No se pudo obtener la lista de localidades'})
+            showToast('error','Error','No se pudo obtener la lista de localidades')
         })
     }
 
@@ -107,7 +102,7 @@ const AuctionCRUD = () => {
             .then(response => {
                 showToast('success', 'Exito', 'El remate ha sido creado')
                 setTimeout(() => {
-                    history.goBack();
+                    history.push('/');
                 }, 2000);
             })
             .catch(error => {
@@ -244,8 +239,6 @@ const AuctionCRUD = () => {
     )
 
     return (
-        <>
-        <Toast ref={toast} />
         <Card
             title={auctionId?'Informacion del remate':'Nuevo remate'}
             footer={
@@ -283,7 +276,6 @@ const AuctionCRUD = () => {
                 cardForm
             }
         </Card>
-        </>
     )
 }
 

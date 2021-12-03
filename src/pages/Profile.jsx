@@ -3,7 +3,6 @@ import { useHistory } from "react-router-dom";
 
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
-import { Toast } from 'primereact/toast';
 import { Skeleton } from 'primereact/skeleton';
 import { confirmDialog } from 'primereact/confirmdialog';
 
@@ -13,15 +12,11 @@ import * as url from '../util/url';
 
 import Card from '../components/cards/Card'
 
-const Profile = () => {
+const Profile = ({showToast}) => {
 
     const authContext = useContext(AuthContext)
     const fetchContext = useContext(FetchContext)
     const history = useHistory();
-    const toast = useRef(null);
-    const showToast = (severity, summary, message) => {
-        toast.current.show({severity:severity, summary: summary, detail:message});
-    }
 
     const [loadingAccept, setLoadingAccept] = useState(false)
     const [loadingStart, setLoadingStart] = useState(false)
@@ -167,8 +162,6 @@ const Profile = () => {
     )
 
     return (
-        <>
-        <Toast ref={toast} />
         <Card
             title='Perfil'
             footer={
@@ -194,7 +187,6 @@ const Profile = () => {
                 cardForm
             }
         </Card>
-        </>
     )
 }
 

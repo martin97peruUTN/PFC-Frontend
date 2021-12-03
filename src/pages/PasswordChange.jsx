@@ -3,7 +3,6 @@ import { useHistory } from "react-router-dom";
 
 import { Password } from 'primereact/password';
 import { Button } from 'primereact/button';
-import { Toast } from 'primereact/toast';
 import { confirmDialog } from 'primereact/confirmdialog';
 
 import { FetchContext } from '../context/FetchContext';
@@ -13,15 +12,11 @@ import * as url from '../util/url';
 
 import Card from '../components/cards/Card'
 
-const PasswordChange = () => {
+const PasswordChange = ({showToast}) => {
 
     const fetchContext = useContext(FetchContext)
     const authContext = useContext(AuthContext)
     const history = useHistory();
-    const toast = useRef(null);
-    const showToast = (severity, summary, message) => {
-        toast.current.show({severity:severity, summary: summary, detail:message});
-    }
 
     const [loadingAccept, setLoadingAccept] = useState(false);
 
@@ -82,8 +77,6 @@ const PasswordChange = () => {
     }
 
     return (
-        <>
-        <Toast ref={toast} />
         <Card
             title="Cambio de contraseña"
             footer={
@@ -138,7 +131,6 @@ const PasswordChange = () => {
                 <label htmlFor="confirmNewPassword">Confirme la nueva contraseña</label>
             </span>
         </Card>
-        </>
     )
 }
 

@@ -5,7 +5,6 @@ import { pluralizeSpanishWord } from '../util/miscFunctions';
 
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
-import { Toast } from 'primereact/toast';
 import { Skeleton } from 'primereact/skeleton';
 import { confirmDialog } from 'primereact/confirmdialog';
 import { Dialog } from 'primereact/dialog';
@@ -17,7 +16,7 @@ import { FetchContext } from '../context/FetchContext';
 import Card from './cards/Card'
 import SimpleNameCard from './cards/SimpleNameCard'
 
-const SimpleItemList = (props) => {
+const SimpleItemList = ({showToast, ...props}) => {
 
     //Aca depende si es localidad o categoria estos valores
     const urlAPI = props.urlAPI;
@@ -26,10 +25,6 @@ const SimpleItemList = (props) => {
 
     const fetchContext = useContext(FetchContext)
     const history = useHistory();
-    const toast = useRef(null);
-    const showToast = (severity, summary, message) => {
-        toast.current.show({severity:severity, summary: summary, detail:message});
-    }
 
     const [loadingStart, setLoadingStart] = useState(false)
     
@@ -193,7 +188,6 @@ const SimpleItemList = (props) => {
 
     return (
         <>  
-            <Toast ref={toast} />
             <ScrollTop />
             {editDialog}
             <Card

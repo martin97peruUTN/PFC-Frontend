@@ -3,7 +3,6 @@ import { useHistory } from "react-router-dom";
 
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
-import { Toast } from 'primereact/toast';
 import { Skeleton } from 'primereact/skeleton';
 import { confirmDialog } from 'primereact/confirmdialog';
 import { Dropdown } from 'primereact/dropdown';
@@ -17,15 +16,11 @@ import hash from '../util/hash'
 
 import Card from '../components/cards/Card'
 
-const UserCRUD = () => {
+const UserCRUD = ({showToast}) => {
 
     const authContext = useContext(AuthContext)
     const fetchContext = useContext(FetchContext)
     const history = useHistory();
-    const toast = useRef(null);
-    const showToast = (severity, summary, message) => {
-        toast.current.show({severity:severity, summary: summary, detail:message});
-    }
 
     const [loadingAccept, setLoadingAccept] = useState(false)
     const [loadingStart, setLoadingStart] = useState(false)
@@ -79,7 +74,8 @@ const UserCRUD = () => {
 
     //Aviso de que puede dejar los campos de contraseña vacios si no la quiere cambiar (solo si esta editando)
     const showPasswordToast = () => {
-        toast.current.show({sticky: true, severity:'info', summary:'Cambio de contraseña', detail:'Si no desea cambiar la contraseña, puede dejar estos campos en blanco'});
+        //El ultimo true es para que sea sticky (que se quede en pantalla salvo que el usuario la cierre)
+        showToast('info','Cambio de contraseña','Si no desea cambiar la contraseña, puede dejar estos campos en blanco',true)
     }
 
     const passwordVerification = () => {
@@ -311,7 +307,6 @@ const UserCRUD = () => {
 
     return (
         <>
-        <Toast ref={toast} />
         <Card
             title={userId?'Informacion del usuario':'Nuevo usuario'}
             footer={

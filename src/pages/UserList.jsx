@@ -17,15 +17,11 @@ import { AuthContext } from '../context/AuthContext';
 import Card from '../components/cards/Card'
 import UserCard from '../components/cards/UserCard'
 
-const UserList = () => {
+const UserList = ({showToast}) => {
 
     const fetchContext = useContext(FetchContext)
     const authContext = useContext(AuthContext)
     const history = useHistory();
-    const toast = useRef(null);
-    const showToast = (severity, summary, message) => {
-        toast.current.show({severity:severity, summary: summary, detail:message});
-    }
 
     const [loadingStart, setLoadingStart] = useState(false)
 
@@ -136,7 +132,6 @@ const UserList = () => {
 
     return (
         <>
-            <Toast ref={toast} />
             <ScrollTop />
             <Card
                 title={

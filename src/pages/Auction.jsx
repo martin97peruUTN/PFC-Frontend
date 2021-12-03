@@ -9,22 +9,17 @@ import { Menu } from 'primereact/menu';
 import { TabView, TabPanel } from 'primereact/tabview';
 import { confirmDialog } from 'primereact/confirmdialog';
 
-import { AuthContext } from '../context/AuthContext';
 import { FetchContext } from '../context/FetchContext';
 import * as url from '../util/url';
 
 import Card from '../components/cards/Card'
 import BatchCard from '../components/cards/BatchCard'
 
-const Auction = () => {
+const Auction = ({showToast}) => {
 
-    const authContext = useContext(AuthContext)
     const fetchContext = useContext(FetchContext)
     const history = useHistory();
-    const toast = useRef(null);
-    const showToast = (severity, summary, message) => {
-        toast.current.show({severity:severity, summary: summary, detail:message});
-    }
+    
     const menu = useRef(null);
 
     const [loadingStart, setLoadingStart] = useState(false)
@@ -171,7 +166,6 @@ const Auction = () => {
 
     return (
         <>
-            <Toast ref={toast} />
             <ScrollTop />
             <Menu 
                 className='w-auto' 
