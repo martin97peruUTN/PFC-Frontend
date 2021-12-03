@@ -26,6 +26,8 @@ import AuctionCRUD from "./pages/AuctionCRUD";
 import Auction from "./pages/Auction";
 import UserList from "./pages/UserList";
 import UserCRUD from "./pages/UserCRUD";
+import ClientList from "./pages/ClientList";
+import ClientCRUD from "./pages/ClientCRUD";
 
 import { Toast } from 'primereact/toast';
 
@@ -117,11 +119,11 @@ function App() {
         <Auction showToast={showToast}/>
       </AuthenticatedRoute>
 
-      <AuthenticatedRoute exact path={url.CLIENT}>
-        <HomePage showToast={showToast}/>
+      <AuthenticatedRoute exact path={url.CLIENT_CRUD}>
+        <ClientList showToast={showToast}/>
       </AuthenticatedRoute>
       <AuthenticatedRoute exact path={url.CLIENT_LIST}>
-        <HomePage showToast={showToast}/>
+        <ClientCRUD showToast={showToast}/>
       </AuthenticatedRoute>
 
       <AuthenticatedRoute exact path={url.PROFILE}>

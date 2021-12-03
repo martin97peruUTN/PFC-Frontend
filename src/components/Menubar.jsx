@@ -52,7 +52,7 @@ const Menubar = () => {
                 {
                     label: 'Nuevo',
                     icon: 'pi pi-fw pi-user-plus',
-                    url: url.CLIENT
+                    url: url.CLIENT_CRUD
                 },
                 {
                     label: 'Listado',
