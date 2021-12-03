@@ -12,10 +12,8 @@ export const PASSWORD_CHANGE = '/password-change'
 export const LOCALITIES = '/localidades'
 export const CATEGORIES = '/categorias'
 export const USERS = '/usuarios'
-export const USER_CRUD = '/crear-editar-usuario'
 
-//Backend
-export const LOGIN_API = '/login'
+//Backend only (some of the frontend ones are used for backend fetch as well)
 export const USER_API = '/user'
 export const LOCALITY_API = '/locality'
 export const CATEGORY_API = '/category'

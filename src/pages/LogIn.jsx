@@ -8,15 +8,19 @@ import * as url from '../util/url';
 import { InputText } from 'primereact/inputtext';
 import { Password } from 'primereact/password';
 import { Button } from 'primereact/button'
+import { Toast } from 'primereact/toast';
 import { ReactComponent as BusinessLogo } from '../assets/images/BusinessLogo.svg';
 
 import Card from '../components/cards/Card'
 
-const LogIn = ({showToast}) => {
+const LogIn = () => {
 
     const authContext = useContext(AuthContext);
     let history = useHistory();
-
+    const toast = useRef(null);
+    const showToast = (severity, summary, message) => {
+        toast.current.show({severity:severity, summary: summary, detail:message});
+    }
     const[loading, setLoading] = useState(false);
 
     const[username, setUsername] = useState('')
@@ -30,7 +34,7 @@ const LogIn = ({showToast}) => {
         event.preventDefault();
         if(validForm()){
             setLoading(true);
-            publicFetch.post(url.LOGIN_API, {
+            publicFetch.post(url.LOGIN, {
                 username,
                 password: hash(password)
             })
@@ -77,6 +81,7 @@ const LogIn = ({showToast}) => {
                     </div>
                 }
             >   
+                <Toast ref={toast}/>
                 <span className="p-float-label">
                     <InputText 
                         id="user" 
