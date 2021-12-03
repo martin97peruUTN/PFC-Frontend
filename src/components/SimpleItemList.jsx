@@ -5,6 +5,7 @@ import { pluralizeSpanishWord } from '../util/miscFunctions';
 
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
+import { Toast } from 'primereact/toast';
 import { Skeleton } from 'primereact/skeleton';
 import { confirmDialog } from 'primereact/confirmdialog';
 import { Dialog } from 'primereact/dialog';
@@ -16,7 +17,7 @@ import { FetchContext } from '../context/FetchContext';
 import Card from './cards/Card'
 import SimpleNameCard from './cards/SimpleNameCard'
 
-const SimpleItemList = ({showToast, ...props}) => {
+const SimpleItemList = (props) => {
 
     //Aca depende si es localidad o categoria estos valores
     const urlAPI = props.urlAPI;
@@ -25,6 +26,10 @@ const SimpleItemList = ({showToast, ...props}) => {
 
     const fetchContext = useContext(FetchContext)
     const history = useHistory();
+    const toast = useRef(null);
+    const showToast = (severity, summary, message) => {
+        toast.current.show({severity:severity, summary: summary, detail:message});
+    }
 
     const [loadingStart, setLoadingStart] = useState(false)
     
@@ -48,12 +53,9 @@ const SimpleItemList = ({showToast, ...props}) => {
     //Item que se esta editando o creando (ver el Dialog)
     const [editingItem, setEditingItem] = useState(null);
 
-    //Valor de la barra de busqueda
-    const [searchValue, setSearchValue] = useState('');
-
     useEffect(() => {
         setLoadingStart(true)
-        fetchContext.authAxios.get(`${urlAPI}?page=${paginatorPage}&limit=${paginatorRows}${searchValue ? `&name=${searchValue}` : ''}`)
+        fetchContext.authAxios.get(`${urlAPI}?page=${paginatorPage}&limit=${paginatorRows}`)
         .then(response => {
             setItemList(response.data.content)
             setTotalPages(response.data.totalPages)
@@ -61,9 +63,11 @@ const SimpleItemList = ({showToast, ...props}) => {
         })
         .catch(error => {
             showToast('error', 'Error', 'No se pudo conectar al servidor')
-            history.push(url.HOME);
+            setTimeout(() => {
+                history.push(url.HOME);
+            }, 2000);
         })
-    }, [refresh, paginatorFirst, paginatorRows, fetchContext.authAxios, history, urlAPI, paginatorPage, searchValue])
+    }, [refresh, paginatorFirst, paginatorRows, fetchContext.authAxios, history, urlAPI, paginatorPage])
 
     const onPaginatorPageChange = (event) => {
         setPaginatorFirst(event.first);
@@ -186,6 +190,7 @@ const SimpleItemList = ({showToast, ...props}) => {
 
     return (
         <>  
+            <Toast ref={toast} />
             <ScrollTop />
             {editDialog}
             <Card
@@ -209,11 +214,6 @@ const SimpleItemList = ({showToast, ...props}) => {
                     ></Paginator>
                 }
             >
-                <span className="p-float-label">
-                    <InputText id="search" className='w-full' value={searchValue} onChange={e => setSearchValue(e.target.value)}/>
-                    <label htmlFor="search">Buscar</label>
-                </span>
-                <br/>
                 {loadingStart?
                     loadingScreen
                     :

@@ -2,6 +2,7 @@ import React, {useState, useEffect, useRef, useContext} from 'react';
 import { useHistory } from "react-router-dom";
 import * as url from '../util/url';
 
+import { Toast } from 'primereact/toast';
 import { Skeleton } from 'primereact/skeleton';
 import { Paginator } from 'primereact/paginator';
 import { ScrollTop } from 'primereact/scrolltop';
@@ -13,11 +14,15 @@ import { AuthContext } from '../context/AuthContext';
 import Card from '../components/cards/Card'
 import AuctionCard from '../components/cards/AuctionCard';
 
-const HomePage = ({showToast}) => {
+const HomePage = () => {
 
     const authContext = useContext(AuthContext)
     const fetchContext = useContext(FetchContext)
     const history = useHistory();
+    const toast = useRef(null);
+    const showToast = (severity, summary, message) => {
+        toast.current.show({severity:severity, summary: summary, detail:message});
+    }
 
     const [loadingStart, setLoadingStart] = useState(false)
 
@@ -43,7 +48,9 @@ const HomePage = ({showToast}) => {
         })
         .catch(err => {
             showToast('error', 'Error', 'No se pudieron cargar lo remates')
-            history.goBack();
+            setTimeout(() => {
+                history.goBack();
+            },3000)
         })
     },[tabViewActiveIndex, paginatorFirst, paginatorRows, paginatorPage])
 
@@ -107,6 +114,7 @@ const HomePage = ({showToast}) => {
 
     return (
         <>
+            <Toast ref={toast} />
             <ScrollTop />
             <Card
                 title={'Inicio'}

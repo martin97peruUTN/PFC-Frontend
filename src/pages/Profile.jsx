@@ -3,6 +3,7 @@ import { useHistory } from "react-router-dom";
 
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
+import { Toast } from 'primereact/toast';
 import { Skeleton } from 'primereact/skeleton';
 import { confirmDialog } from 'primereact/confirmdialog';
 
@@ -12,11 +13,15 @@ import * as url from '../util/url';
 
 import Card from '../components/cards/Card'
 
-const Profile = ({showToast}) => {
+const Profile = () => {
 
     const authContext = useContext(AuthContext)
     const fetchContext = useContext(FetchContext)
     const history = useHistory();
+    const toast = useRef(null);
+    const showToast = (severity, summary, message) => {
+        toast.current.show({severity:severity, summary: summary, detail:message});
+    }
 
     const [loadingAccept, setLoadingAccept] = useState(false)
     const [loadingStart, setLoadingStart] = useState(false)
@@ -33,6 +38,10 @@ const Profile = ({showToast}) => {
         setName(authContext.getUserInfo().name)
         setLastname(authContext.getUserInfo().lastname)
         setRole(authContext.getUserInfo().role)
+        if(history.location.state){
+            showToast(history.location.state.severity, history.location.state.summary, history.location.state.message)
+            history.location.state = null
+        }
         setLoadingStart(false)
     }, [authContext, history.location])
 
@@ -42,11 +51,11 @@ const Profile = ({showToast}) => {
 
     //Se dispara al presionar el boton Guardar
     const confirm = () => {
-        if(user.length < 6 || user.length > 30){
-            showToast('warn','Error','El usuario debe tener entre 6 y 30 caracteres!')
+        if(user.length < 5 || user.length > 30){
+            showToast('error','Error','El usuario debe tener entre 5 y 30 caracteres!')
         }else{
             if(name.length === 0){
-                showToast('warn','Error','El nombre no puede ser vacio!')
+                showToast('error','Error','El nombre no puede ser vacio!')
             }else{
                 if(name===authContext.getUserInfo().name && user===authContext.getUserInfo().username && lastname===authContext.getUserInfo().lastName){
                     showToast('warn','Cuidado','Ningun dato fue cambiado!')
@@ -65,7 +74,7 @@ const Profile = ({showToast}) => {
 
     const handleSubmit = () => {
         setLoadingAccept(true)
-        fetchContext.authAxios.patch(`${url.USER_API}/profile/${authContext.getUserInfo().id}`, {
+        fetchContext.authAxios.patch(`${url.USER_API}/${authContext.getUserInfo().id}`, {
             name: name!==authContext.getUserInfo().name? name : null,
             lastname: lastname!==authContext.getUserInfo().lastname? lastname : null,
             username: user!==authContext.getUserInfo().username? user : null,
@@ -117,7 +126,7 @@ const Profile = ({showToast}) => {
                     value={user} 
                     onChange={e => setUser(e.target.value)} 
                     disabled={!edit}
-                    tooltip="Entre 6 y 30 caracteres" 
+                    tooltip="Entre 6 y 20 caracteres" 
                     tooltipOptions={{position: 'top', event: 'focus'}}
                 />
                 <label htmlFor="user">Usuario</label>
@@ -158,6 +167,8 @@ const Profile = ({showToast}) => {
     )
 
     return (
+        <>
+        <Toast ref={toast} />
         <Card
             title='Perfil'
             footer={
@@ -183,6 +194,7 @@ const Profile = ({showToast}) => {
                 cardForm
             }
         </Card>
+        </>
     )
 }
 

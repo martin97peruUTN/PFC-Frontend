@@ -3,6 +3,7 @@ import { useHistory } from "react-router-dom";
 
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
+import { Toast } from 'primereact/toast';
 import { Skeleton } from 'primereact/skeleton';
 import { confirmDialog } from 'primereact/confirmdialog';
 import { AutoComplete } from 'primereact/autocomplete';
@@ -15,11 +16,15 @@ import * as miscFunctions from '../util/miscFunctions';
 
 import Card from '../components/cards/Card'
 
-const AuctionCRUD = ({showToast}) => {
+const AuctionCRUD = () => {
 
     const authContext = useContext(AuthContext)
     const fetchContext = useContext(FetchContext)
     const history = useHistory();
+    const toast = useRef(null);
+    const showToast = (severity, summary, message) => {
+        toast.current.show({severity:severity, summary: summary, detail:message});
+    }
 
     const [loadingAccept, setLoadingAccept] = useState(false)
     const [loadingStart, setLoadingStart] = useState(false)
@@ -51,7 +56,9 @@ const AuctionCRUD = ({showToast}) => {
             })
             .catch(error => {
                 showToast('error', 'Error', 'No se encontro el remate')
-                history.goBack();
+                setTimeout(() => {
+                    history.goBack();
+                }, 3000)
             })
         }
     }, [history.location.state])
@@ -63,7 +70,7 @@ const AuctionCRUD = ({showToast}) => {
             setFilteredLocalityList(response.data.content)
         })
         .catch(error => {
-            showToast('error','Error','No se pudo obtener la lista de localidades')
+            toast.current.show({severity:'error', summary:'Error', detail:'No se pudo obtener la lista de localidades'})
         })
     }
 
@@ -99,7 +106,9 @@ const AuctionCRUD = ({showToast}) => {
             fetchContext.authAxios.post(url.AUCTION_API, body)
             .then(response => {
                 showToast('success', 'Exito', 'El remate ha sido creado')
-                history.push('/');
+                setTimeout(() => {
+                    history.goBack();
+                }, 2000);
             })
             .catch(error => {
                 showToast('error', 'Error', 'No se pudo crear el remate')
@@ -109,7 +118,9 @@ const AuctionCRUD = ({showToast}) => {
             fetchContext.authAxios.patch(`${url.AUCTION_API}/${auctionId}`, body)
             .then(response => {
                 showToast('success', 'Exito', 'El remate ha sido actualizado')
-                history.goBack();
+                setTimeout(() => {
+                    history.goBack();
+                }, 2000);
             })
             .catch(error => {
                 showToast('error', 'Error', 'No se pudo actualizar el remate')
@@ -133,7 +144,9 @@ const AuctionCRUD = ({showToast}) => {
         fetchContext.authAxios.delete(`${url.AUCTION_API}/${auctionId}`)
         .then(response => {
             showToast('success', 'Exito', 'El remate ha sido eliminado')
-            history.push('/');
+            setTimeout(() => {
+                history.push('/');
+            }, 2000);
         })
         .catch(error => {
             showToast('error', 'Error', 'No se pudo eliminar el remate')
@@ -148,13 +161,14 @@ const AuctionCRUD = ({showToast}) => {
                     className='w-full' 
                     value={senasaNumber} 
                     onChange={e => setSenasaNumber(e.target.value)}
+                    keyfilter="pint"
                     disabled={!enableEditing}
                 />
                 <label htmlFor="senasaNumber">Numero de Senasa</label>
             </span>
             <br/>
             <div className="grid">
-                <div className="col-6 pb-0">
+                <div className="col-6">
                     <span className="p-float-label">
                         <Calendar
                             id='calendar' 
@@ -170,7 +184,7 @@ const AuctionCRUD = ({showToast}) => {
                         <label htmlFor="calendar">Fecha</label>
                     </span>
                 </div>
-                <div className="col-6 pb-0">
+                <div className="col-6">
                     <span className="p-float-label">
                         <Calendar
                             id='time' 
@@ -231,6 +245,8 @@ const AuctionCRUD = ({showToast}) => {
     )
 
     return (
+        <>
+        <Toast ref={toast} />
         <Card
             title={auctionId?'Informacion del remate':'Nuevo remate'}
             footer={
@@ -268,6 +284,7 @@ const AuctionCRUD = ({showToast}) => {
                 cardForm
             }
         </Card>
+        </>
     )
 }
 

@@ -1,6 +1,6 @@
 //Parte del codigo tomado del tutorial de Ryan Chenkie: https://github.com/chenkie/orbit
 
-import React, {useContext, useRef} from "react";
+import React, {useContext} from "react";
 import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
 
 //Prime React
@@ -24,16 +24,12 @@ import LocalityList from "./pages/LocalityList";
 import CategoryList from "./pages/CategoryList";
 import AuctionCRUD from "./pages/AuctionCRUD";
 import Auction from "./pages/Auction";
-import UserList from "./pages/UserList";
-import UserCRUD from "./pages/UserCRUD";
 
-import { Toast } from 'primereact/toast';
-
-const UnauthenticatedRoutes = ({showToast}) => (
+const UnauthenticatedRoutes = () => (
   <div className="mx-3 my-7 md:mx-6">
     <Switch>
       <Route path={url.LOGIN}>
-        <LogIn showToast={showToast}/>
+        <LogIn />
       </Route>
       <Route path="*">
         <PageNotFound />
@@ -57,7 +53,7 @@ const AuthenticatedRoute = ({ children, ...rest }) => {
     ></Route>
   );
 };
-
+/*
 const AdminRoute = ({ children, ...rest }) => {
   const auth = useContext(AuthContext);
   return (
@@ -72,7 +68,8 @@ const AdminRoute = ({ children, ...rest }) => {
       }
     ></Route>
   );
-};
+};*/
+//por el momento no se usa, pero lo dejo a futuro
 
 const ConsigneeRoute = ({ children, ...rest }) => {
   const auth = useContext(AuthContext);
@@ -95,56 +92,47 @@ function App() {
 
   PrimeReact.ripple = true;
 
-  const toast = useRef(null);
-  const showToast = (severity, summary, message, sticky) => {
-    toast.current.show({severity:severity, summary: summary, detail:message, sticky:sticky});
-  }
-
   const AppRoutes = () => (
     <Switch>
       
       <AuthenticatedRoute exact path={url.HOME}>
-        <HomePage showToast={showToast}/>
+        <HomePage />
       </AuthenticatedRoute>
 
       <ConsigneeRoute exact path={url.AUCTION_CRUD}>
-        <AuctionCRUD showToast={showToast}/>
+        <AuctionCRUD />
       </ConsigneeRoute>
       <AuthenticatedRoute exact path={url.AUCTION_HISTORY}>
-        <HomePage showToast={showToast}/>
+        <HomePage />
       </AuthenticatedRoute>
       <AuthenticatedRoute exact path={url.AUCTION}>
-        <Auction showToast={showToast}/>
+        <Auction />
       </AuthenticatedRoute>
 
       <AuthenticatedRoute exact path={url.CLIENT}>
-        <HomePage showToast={showToast}/>
+        <HomePage />
       </AuthenticatedRoute>
       <AuthenticatedRoute exact path={url.CLIENT_LIST}>
-        <HomePage showToast={showToast}/>
+        <HomePage />
       </AuthenticatedRoute>
 
       <AuthenticatedRoute exact path={url.PROFILE}>
-        <Profile showToast={showToast}/>
+        <Profile />
       </AuthenticatedRoute>
       <AuthenticatedRoute exact path={url.PASSWORD_CHANGE}>
-        <PasswordChange showToast={showToast}/>
+        <PasswordChange/>
       </AuthenticatedRoute>
-      
       <ConsigneeRoute exact path={url.LOCALITIES}>
-        <LocalityList showToast={showToast}/>
+        <LocalityList />
       </ConsigneeRoute>
       <ConsigneeRoute exact path={url.CATEGORIES}>
-        <CategoryList showToast={showToast}/>
+        <CategoryList />
       </ConsigneeRoute>
       <ConsigneeRoute exact path={url.USERS}>
-        <UserList showToast={showToast}/>
+        <HomePage />
       </ConsigneeRoute>
-      <AdminRoute exact path={url.USER_CRUD}>
-        <UserCRUD showToast={showToast}/>
-      </AdminRoute>
 
-      <UnauthenticatedRoutes showToast={showToast}/>
+      <UnauthenticatedRoutes />
     </Switch>
   )
 
@@ -152,7 +140,6 @@ function App() {
     <Router>
       <AuthProvider>
         <FetchProvider>
-          <Toast ref={toast} />
           <AppRoutes />
         </FetchProvider>
       </AuthProvider>
