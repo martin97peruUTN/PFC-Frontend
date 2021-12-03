@@ -9,22 +9,17 @@ import { Menu } from 'primereact/menu';
 import { TabView, TabPanel } from 'primereact/tabview';
 import { confirmDialog } from 'primereact/confirmdialog';
 
-import { AuthContext } from '../context/AuthContext';
 import { FetchContext } from '../context/FetchContext';
 import * as url from '../util/url';
 
 import Card from '../components/cards/Card'
 import BatchCard from '../components/cards/BatchCard'
 
-const Auction = () => {
+const Auction = ({showToast}) => {
 
-    const authContext = useContext(AuthContext)
     const fetchContext = useContext(FetchContext)
     const history = useHistory();
-    const toast = useRef(null);
-    const showToast = (severity, summary, message) => {
-        toast.current.show({severity:severity, summary: summary, detail:message});
-    }
+    
     const menu = useRef(null);
 
     const [loadingStart, setLoadingStart] = useState(false)
@@ -38,9 +33,7 @@ const Auction = () => {
         setLoadingStart(true)
         if(!history.location.state){
             showToast('error', 'Error', 'No se encontro el remate')
-            setTimeout(() => {
-                history.goBack();
-            }, 3000)
+            history.goBack();
         }else{
             setAuctionId(history.location.state.auctionId)
             setLoadingStart(false)
@@ -51,9 +44,7 @@ const Auction = () => {
             })
             .catch(error => {
                 showToast('error', 'Error', 'No se pudo obtener los lotes del remate')
-                setTimeout(() => {
-                    history.goBack();
-                }, 3000)
+                history.goBack();
             })*/
         }
     }, [])
@@ -78,9 +69,7 @@ const Auction = () => {
         fetchContext.authAxios.patch(`${url.AUCTION_API}/${auctionId}`, {finished : true})
         .then(response => {
             showToast('success', 'Exito', 'Remate finalizado')
-            setTimeout(() => {
-                history.goBack();
-            }, 2000)
+            history.goBack();
         })
         .catch(error => {
             showToast('error', 'Error', 'No se pudo finalizar el remate')
@@ -171,7 +160,6 @@ const Auction = () => {
 
     return (
         <>
-            <Toast ref={toast} />
             <ScrollTop />
             <Menu 
                 className='w-auto' 
