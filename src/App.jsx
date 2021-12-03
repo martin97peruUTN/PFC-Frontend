@@ -120,10 +120,10 @@ function App() {
       </AuthenticatedRoute>
 
       <AuthenticatedRoute exact path={url.CLIENT_CRUD}>
-        <ClientList showToast={showToast}/>
+        <ClientCRUD showToast={showToast}/>
       </AuthenticatedRoute>
       <AuthenticatedRoute exact path={url.CLIENT_LIST}>
-        <ClientCRUD showToast={showToast}/>
+        <ClientList showToast={showToast}/>
       </AuthenticatedRoute>
 
       <AuthenticatedRoute exact path={url.PROFILE}>

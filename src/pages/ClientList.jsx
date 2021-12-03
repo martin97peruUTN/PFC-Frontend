@@ -5,7 +5,7 @@ import SimpleItemList from '../components/SimpleItemList';
 const ClientList = ({showToast}) => {
     return (
         <SimpleItemList
-            urlAPI = {url.LOCALITY_API}
+            urlAPI = {url.CLIENT_API}
             itemNameUppercase = 'Cliente'
             itemNameLowercase = 'cliente'
             showToast ={showToast}
