@@ -106,7 +106,11 @@ const Auction = ({showToast}) => {
         {
             label: 'Agregar participante',
             icon: 'pi pi-fw pi-user-plus',
-            url: url.HOME
+            command: () => history.push(url.ADD_PARTICIPANT,
+                {
+                    auctionId: auctionId
+                }
+            )
         },
         {
             label: 'Informacion del remate',

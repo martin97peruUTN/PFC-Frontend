@@ -13,6 +13,7 @@ import './Components.css'
 import { FetchProvider } from './context/FetchContext';
 import { AuthProvider, AuthContext } from './context/AuthContext';
 import * as url from './util/url'
+import { Toast } from 'primereact/toast';
 
 import AppShell from './AppShell'
 import HomePage from "./pages/HomePage";
@@ -28,8 +29,7 @@ import UserList from "./pages/UserList";
 import UserCRUD from "./pages/UserCRUD";
 import ClientList from "./pages/ClientList";
 import ClientCRUD from "./pages/ClientCRUD";
-
-import { Toast } from 'primereact/toast';
+import AddParticipant from "./pages/AddParticipant";
 
 const UnauthenticatedRoutes = ({showToast}) => (
   <div className="mx-3 my-7 md:mx-6">
@@ -118,6 +118,9 @@ function App() {
       <AuthenticatedRoute exact path={url.AUCTION}>
         <Auction showToast={showToast}/>
       </AuthenticatedRoute>
+      <ConsigneeRoute exact path={url.ADD_PARTICIPANT}>
+        <AddParticipant showToast={showToast}/>
+      </ConsigneeRoute>
 
       <AuthenticatedRoute exact path={url.CLIENT_CRUD}>
         <ClientCRUD showToast={showToast}/>
