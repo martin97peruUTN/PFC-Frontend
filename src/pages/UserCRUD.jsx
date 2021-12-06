@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef, useContext} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import { useHistory } from "react-router-dom";
 
 import { InputText } from 'primereact/inputtext';
@@ -8,7 +8,6 @@ import { confirmDialog } from 'primereact/confirmdialog';
 import { Dropdown } from 'primereact/dropdown';
 import { Password } from 'primereact/password';
 
-import { AuthContext } from '../context/AuthContext';
 import { FetchContext } from '../context/FetchContext';
 import * as url from '../util/url';
 import * as constants from '../util/constants';
@@ -18,7 +17,6 @@ import Card from '../components/cards/Card'
 
 const UserCRUD = ({showToast}) => {
 
-    const authContext = useContext(AuthContext)
     const fetchContext = useContext(FetchContext)
     const history = useHistory();
 
@@ -63,7 +61,7 @@ const UserCRUD = ({showToast}) => {
                 }
                 setLoadingStart(false)
             })
-            .catch(err => {
+            .catch(() => {
                 showToast('error', 'Error', 'No se encontro el usuario')
                 history.goBack();
             })
@@ -137,7 +135,7 @@ const UserCRUD = ({showToast}) => {
         //Si no hay id es que estoy creando, si hay es que estoy editando
         if(!userId){
             fetchContext.authAxios.post(url.USER_API, data)
-            .then(res => {
+            .then(() => {
                 showToast('success', 'Exito', 'Usuario creado')
                 history.goBack();
             })
@@ -151,7 +149,7 @@ const UserCRUD = ({showToast}) => {
             })
         }else{
             fetchContext.authAxios.patch(`${url.USER_API}/admin-patch/${userId}`, data)
-            .then(res => {
+            .then(() => {
                 showToast('success', 'Exito', 'Usuario ha sido actualizado')
                 history.goBack();
             })
@@ -184,11 +182,11 @@ const UserCRUD = ({showToast}) => {
 
     const deleteUser = () => {
         fetchContext.authAxios.delete(`${url.USER_API}/${userId}`)
-        .then(response => {
+        .then(() => {
             showToast('success', 'Exito', 'El usuario ha sido eliminado')
             history.goBack();
         })
-        .catch(error => {
+        .catch(() => {
             showToast('error', 'Error', 'No se pudo eliminar el usuario')
         })
     }
