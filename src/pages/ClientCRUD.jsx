@@ -95,7 +95,7 @@ const ClientCRUD = ({showToast}) => {
         provenances.forEach(p => {
             if(!p.reference || !p.locality){
                 //Renspa es opcional
-                invalidProvenances+=`${provenances.indexOf(p)+1}, `
+                invalidProvenances+=`${provenances.indexOf(p)+1}°, `
             }
         })
         return invalidProvenances.substring(0, invalidProvenances.length-2)
