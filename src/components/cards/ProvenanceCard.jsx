@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useContext} from 'react'
+import React, {useState, useContext} from 'react'
 
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
@@ -13,19 +13,7 @@ const ProvenanceCard = props => {
 
     const fetchContext = useContext(FetchContext)
 
-    const [reference, setReference] = useState('')
-    const [renspaNumber, setRenspaNumber] = useState('')
-    const [locality, setLocality] = useState(null)
-
     const [filteredLocalityList, setFilteredLocalityList] = useState([])
-
-    useEffect(() => {
-        if(props.id){
-            setReference(props.reference)
-            setRenspaNumber(props.renspaNumber)
-            setLocality(props.locality)
-        }
-    }, [])
 
     //Busqueda de localidades por nombre para el autocomplete
     const searchLocality = (event) => {
@@ -38,33 +26,18 @@ const ProvenanceCard = props => {
         })
     }
 
-    const setReferenceHandler = (value) => {
-        setReference(value)
-        props.updateProvenance(props.id, reference, renspaNumber, locality)
-    }
-
-    const setRenspaNumberHandler = (value) => {
-        setRenspaNumber(value)
-        props.updateProvenance(props.id, reference, renspaNumber, locality)
-    }
-
-    const setLocalityHandler = (value) => {
-        setLocality(value)
-        props.updateProvenance(props.id, reference, renspaNumber, locality)
-    }
-
     return (
         <CardSecondary
             footer={
-                <Button className="p-button-danger" icon="pi pi-trash" onClick={() => props.deleteProvenance(props.id)} label="Eliminar"></Button>
+                <Button className="p-button-danger" icon="pi pi-trash" onClick={props.deleteProvenance} label="Eliminar"></Button>
             }
         >
             <span className="p-float-label">
                 <InputText
                     id="reference"
                     className='w-full' 
-                    value={reference} 
-                    onChange={e => setReferenceHandler(e.target.value)}
+                    value={props.reference} 
+                    onChange={e => props.updateProvenance(e.target.value, 'reference')}
                     disabled={!props.enableEditing}
                 />
                 <label htmlFor="reference">Nombre</label>
@@ -72,26 +45,26 @@ const ProvenanceCard = props => {
             <br/>
             <span className="p-float-label">
                 <InputText
-                    id="reference"
+                    id="renspaNumber"
                     className='w-full' 
-                    value={renspaNumber} 
-                    onChange={e => setRenspaNumberHandler(e.target.value)}
+                    value={props.renspaNumber} 
+                    onChange={e => props.updateProvenance(e.target.value, 'renspaNumber')}
                     disabled={!props.enableEditing}
                 />
-                <label htmlFor="reference">Renspa (opcional)</label>
+                <label htmlFor="renspaNumber">Renspa (opcional)</label>
             </span>
             <br/>
             <span className="p-float-label">
                 <AutoComplete 
                     id='localityAutocompleteForm'
                     className='w-full'
-                    value={locality} 
+                    value={props.locality} 
                     suggestions={filteredLocalityList} 
                     completeMethod={searchLocality} 
                     field="name" 
                     dropdown 
                     forceSelection 
-                    onChange={(e) => setLocalityHandler(e.target.value)} 
+                    onChange={(e) => props.updateProvenance(e.target.value, 'locality')} 
                     disabled={!props.enableEditing}
                 />
                 <label htmlFor="localityAutocompleteForm">Localidad</label>

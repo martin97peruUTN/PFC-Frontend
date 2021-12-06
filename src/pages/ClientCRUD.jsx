@@ -22,10 +22,13 @@ const ClientCRUD = ({showToast}) => {
 
     const [enableEditing, setEnableEditing] = useState(true)
 
-    const [id, setId] = useState(null)
-    const [name, setName] = useState('')
+    const [clientId, setClientId] = useState(null)
+    const [clientName, setClientName] = useState('')
     //CUIT es opcional
-    const [cuit, setCuit] = useState('')
+    const [clientCuit, setClientCuit] = useState('')
+
+    //Pongo un valor negativo cualquiera, los que vienen desde el backend tienen un valor positivo
+    const [provenancesId, setProvenancesId] = useState(-101)
     const [provenances, setProvenances] = useState([])
 
     const [deletedProvenances, setDeletedProvenances] = useState([])
@@ -36,12 +39,12 @@ const ClientCRUD = ({showToast}) => {
             setLoadingStart(true)
             setEnableEditing(false)
             const {id} = history.location.state
-            setId(id)
+            setClientId(id)
             fetchContext.authAxios.get(`${url.CLIENT_API}/${id}`)
             .then(res => {
                 const {name, cuit, provenances} = res.data
-                setName(name)
-                setCuit(cuit)
+                setClientName(name)
+                setClientCuit(cuit)
                 setProvenances(provenances)
                 setLoadingStart(false)
             })
@@ -50,16 +53,19 @@ const ClientCRUD = ({showToast}) => {
                 history.goBack();
             })
         }else{
-            setProvenances([...provenances,
-            {
-                reference: '',
-                renspaNumber: '',
-                locality: null
-            }])
+            setProvenances([
+                {
+                    id: provenancesId+1,
+                    reference: '',
+                    renspaNumber: '',
+                    locality: null
+                }
+            ])
         }
     }, [history.location.state])
 
     const confirm = () => {
+        console.log(provenances)
         //TODO: validar (CUIT PUEDE SER NULL)
     }
 
@@ -67,46 +73,66 @@ const ClientCRUD = ({showToast}) => {
         //TODO
     }
 
-    const deleteProvenance = (id) => {
-        //Si viene id es porque es una que viene del backend
-        if(id){
-            //TODO agregar a la lista de eliminados
+    const deleteProvenance = (index) => {
+        //Si viene id positivo es porque es una que viene del backend
+        if(provenances[index].id>=0){
+            setDeletedProvenances([...deletedProvenances, provenances[index]])
         }
-        //TODO Sacar de la lista de provenances
+        const provenancesCopy = [...provenances]
+        provenancesCopy.splice(index, 1)
+        setProvenances(provenancesCopy)
     }
 
     const addProvenance = () => {
-        //TODO
+        setProvenances([...provenances, {'id':provenancesId, 'reference':'', 'renspaNumber':'', 'locality':null}])
+        setProvenancesId(provenancesId-1)
     }
 
-    const updateProvenance = (id, reference, renspaNumber, locality) => {
-        //TODO
+    const updateProvenance = (value, prop, id) => {
+        const provenancesIndex = provenances.findIndex(p => p.id === id)
+        const provenancesCopy = [... provenances]
+        provenancesCopy[provenancesIndex][prop] = value
+        setProvenances(provenancesCopy)
     }
 
-    const provenancesCardList = provenances.map((item) => {
+    const provenancesCardList = provenances.map((item, index) => (
         <ProvenanceCard
             key={item.id}
-            id={item.id}
             reference={item.reference}
             renspaNumber={item.renspaNumber}
             locality={item.locality}
             enableEditing={enableEditing}
-            deleteProvenance={deleteProvenance}
-            updateProvenance={updateProvenance}
+            deleteProvenance={() => deleteProvenance(index)}
+            updateProvenance={(value, prop) => updateProvenance(value, prop, item.id)}
             showToast={showToast}
         />
-    })
+    ))
 
     const cardFormClient = (
         <Card
-            title={id?'Informacion del cliente':'Nuevo cliente'}
+            title={
+                <div className="flex justify-content-between">
+                    <>{clientId?'Informacion del cliente':'Nuevo cliente'}</>
+                    {clientId?
+                        <Button 
+                            className="btn btn-primary" 
+                            icon="pi pi-plus" 
+                            onClick={()=> setEnableEditing(!enableEditing)} 
+                            label={`Habilitar edicion`}
+                        />
+                        :
+                        null
+                    }
+                    
+                </div>
+            }
         >
             <span className="p-float-label">
                 <InputText
                     id="name"
                     className='w-full' 
-                    value={name} 
-                    onChange={e => setName(e.target.value)}
+                    value={clientName} 
+                    onChange={e => setClientName(e.target.value)}
                     disabled={!enableEditing}
                 />
                 <label htmlFor="name">Nombre</label>
@@ -116,8 +142,8 @@ const ClientCRUD = ({showToast}) => {
                 <InputText
                     id="cuit"
                     className='w-full' 
-                    value={cuit} 
-                    onChange={e => setCuit(e.target.value)}
+                    value={clientCuit} 
+                    onChange={e => setClientCuit(e.target.value)}
                     disabled={!enableEditing}
                 />
                 <label htmlFor="cuit">CUIT (opcional)</label>
@@ -129,31 +155,40 @@ const ClientCRUD = ({showToast}) => {
         <Card
             title={'Procedencias'}
             footer={
-                <div className="flex justify-content-between">
-                    <div className="flex justify-content-start">
+                <div>
+                    <div className="flex justify-content-start pb-2">
                         <Button 
-                            className="p-button-danger mr-2" 
-                            onClick={()=> history.goBack()} 
-                            label="Cancelar"
+                            className="btn btn-primary"
+                            onClick={()=> addProvenance()} 
+                            label="Agregar"
                         />
-                        {id?
-                            <Button 
-                                className="p-button-danger" 
-                                onClick={()=> deleteHandler()} 
-                                label="Eliminar"
-                            />
-                        :
-                            null
-                            //No se muestra el boton eliminar si estoy creando
-                        }
                     </div>
-                    <Button 
-                        className="btn btn-primary" 
-                        icon="pi pi-check" 
-                        onClick={()=> confirm()} 
-                        label="Guardar" 
-                        loading={loadingAccept}
-                    />
+                    <div className="flex justify-content-between">
+                        <div className="flex justify-content-start">
+                            <Button 
+                                className="p-button-danger mr-2" 
+                                onClick={()=> history.goBack()} 
+                                label="Cancelar"
+                            />
+                            {clientId?
+                                <Button 
+                                    className="p-button-danger" 
+                                    onClick={()=> deleteHandler()} 
+                                    label="Eliminar"
+                                />
+                            :
+                                null
+                                //No se muestra el boton eliminar si estoy creando
+                            }
+                        </div>
+                        <Button 
+                            className="btn btn-primary" 
+                            icon="pi pi-check" 
+                            onClick={()=> confirm()} 
+                            label="Guardar" 
+                            loading={loadingAccept}
+                        />
+                    </div>
                 </div>
             }
         >
