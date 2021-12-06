@@ -35,7 +35,7 @@ const ClientList = ({showToast}) => {
     //Valor de la barra de busqueda
     const [searchValue, setSearchValue] = useState('');
 
-    /*useEffect(() => {
+    useEffect(() => {
         setLoadingStart(true)
         fetchContext.authAxios.get(`${url.CLIENT_API}?page=${paginatorPage}&limit=${paginatorRows}${searchValue ? `&name=${searchValue}` : ''}`)
         .then(response => {
@@ -47,10 +47,10 @@ const ClientList = ({showToast}) => {
             showToast('error', 'Error', 'No se pudo conectar al servidor')
             history.push(url.HOME);
         })
-    },[refresh, paginatorFirst, paginatorRows, searchValue])*/
+    },[refresh, paginatorFirst, paginatorRows, searchValue])
 
-    //PRUEBA //TODO sacar esto
-    useEffect(() => {
+    //TODO sacar esto una vez terminado todo
+    /*useEffect(() => {
         setLoadingStart(true)
         fetchContext.authAxios.get(`https://61895cd6d0821900178d795e.mockapi.io/api/client`)
         .then(response => {
@@ -62,7 +62,7 @@ const ClientList = ({showToast}) => {
             showToast('error', 'Error', 'No se pudo conectar al servidor')
             history.push(url.HOME);
         })
-    },[refresh, paginatorFirst, paginatorRows, searchValue])
+    },[refresh, paginatorFirst, paginatorRows, searchValue])*/
 
     const onPaginatorPageChange = (event) => {
         setPaginatorFirst(event.first);

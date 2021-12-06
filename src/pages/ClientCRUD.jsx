@@ -41,8 +41,9 @@ const ClientCRUD = ({showToast}) => {
             setEnableEditing(false)
             const {id} = history.location.state
             setClientId(id)
-            //fetchContext.authAxios.get(`${url.CLIENT_API}/${id}`)
-            fetchContext.authAxios.get(`https://61895cd6d0821900178d795e.mockapi.io/api/client/${id}`)
+            fetchContext.authAxios.get(`${url.CLIENT_API}/${id}`)
+            //TODO sacar una vez terminado todo la url de prueba
+            //fetchContext.authAxios.get(`https://61895cd6d0821900178d795e.mockapi.io/api/client/${id}`)
             .then(res => {
                 const {name, cuit, provenances} = res.data
                 setClientName(name)
@@ -66,18 +67,117 @@ const ClientCRUD = ({showToast}) => {
         }
     }, [history.location.state])
 
+    //Se dispara al tocar el boton guardar
     const confirm = () => {
-        console.log(provenances)
-        //TODO: validar (CUIT PUEDE SER NULL)
+        //(CUIT PUEDE SER NULL)
+        const invalidProvenances = validateProvenances()
+        if(!clientName){
+            showToast('error', 'Error', 'El nombre es obligatorio')
+        }else if(provenances.length === 0){
+            showToast('error', 'Error', 'Debe ingresar al menos una procedencia')
+        }else if(invalidProvenances.length > 0){
+            showToast('error', 'Error', `Las siguientes procedencias no son validas: ${invalidProvenances}`)
+        }else{
+            confirmDialog({
+                message: '¿Esta seguro que desea guardar los cambios?',
+                header: 'Guardar cliente',
+                icon: 'pi pi-exclamation-circle',
+                acceptLabel: 'Aceptar',
+                rejectLabel: 'Cancelar',
+                accept: () => handleSubmit()
+            })
+        }
+    }
+
+    //Valido las procedencias y armo un string con los subindices+1 de las invalidas
+    const validateProvenances = () => {
+        let invalidProvenances = ''
+        provenances.forEach(p => {
+            if(!p.reference || !p.locality){
+                //Renspa es opcional
+                invalidProvenances+=`${provenances.indexOf(p)+1}, `
+            }
+        })
+        return invalidProvenances.substring(0, invalidProvenances.length-2)
+    }
+
+    //Quito el id de las provenances que lo tengan negativo
+    //ya que lo uso en el front end solamente
+    const clearProvenancesId = () => {
+        let provenancesCopy = [...provenances]
+        provenancesCopy.forEach(p => {
+            if(p.id<0){
+                p.id = null
+            }
+        })
+        return provenancesCopy
+    }
+
+    //Se dispara al tocar el boton aceptar en el dialogo
+    const handleSubmit = () => {
+        setLoadingAccept(true)
+        let client = {
+            id: clientId,
+            name: clientName,
+            cuit: clientCuit,
+            provenances: clearProvenancesId()
+        }
+        //Si hay id es que estoy editando
+        if(clientId){
+            client = {...client, 'deletedProvenances': deletedProvenances}
+            console.log(client)
+            fetchContext.authAxios.put(`${url.CLIENT_API}/${clientId}`, client)
+            .then(res => {
+                showToast('success', 'Cliente guardado', 'El cliente fue guardado correctamente')
+                history.goBack();
+            })
+            .catch(() => {
+                showToast('error', 'Error', 'No se pudo guardar el cliente')
+                setLoadingAccept(false)
+            })
+        }else{
+            //Si no hay id es que estoy creando
+            fetchContext.authAxios.post(`${url.CLIENT_API}`, client)
+            .then(res => {
+                showToast('success', 'Cliente guardado', 'El cliente fue guardado correctamente')
+                history.goBack();
+            })
+            .catch(() => {
+                showToast('error', 'Error', 'No se pudo guardar el cliente')
+                setLoadingAccept(false)
+            })
+        }
     }
 
     const deleteHandler = () => {
-        //TODO
+        confirmDialog({
+            message: '¿Esta seguro que desea eliminar el cliente?',
+            header: 'Eliminar cliente',
+            icon: 'pi pi-exclamation-circle',
+            acceptLabel: 'Aceptar',
+            rejectLabel: 'Cancelar',
+            accept: () => handleDelete()
+        })
+    }
+
+    const handleDelete = () => {
+        setLoadingAccept(true)
+        fetchContext.authAxios.delete(`${url.CLIENT_API}/${clientId}`)
+        .then(res => {
+            showToast('success', 'Exito', 'El cliente ha sido eliminado')
+            history.goBack();
+        })
+        .catch(() => {
+            showToast('error', 'Error', 'No se pudo eliminar el cliente')
+        })
     }
 
     const deleteProvenance = (index) => {
         //Si viene id positivo es porque es una que viene del backend
-        if(provenances[index].id>=0){
+        //Si es null puede ser porque agrego una nueva, le dio a guardar, se seteo en null con el clearProvenancesId
+        //y si no reviso eso se agrega al listado este tambien (no se bien porque)
+        //asi que la agrego al listado de eliminadas
+        if(provenances[index].id!==null && provenances[index].id>=0){
             setDeletedProvenances([...deletedProvenances, provenances[index]])
         }
         const provenancesCopy = [...provenances]
@@ -217,11 +317,9 @@ const ClientCRUD = ({showToast}) => {
 
     const loadingScreen = (
         <div>
-            <Skeleton width="100%" height="3rem"/>
+            <Skeleton width="100%" height="13rem"/>
             <br/>
-            <Skeleton width="100%" height="3rem"/>
-            <br/>
-            <Skeleton width="100%" height="3rem"/>
+            <Skeleton width="100%" height="30rem"/>
         </div>
     )
 
