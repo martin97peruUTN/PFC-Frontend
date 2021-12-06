@@ -125,7 +125,6 @@ const ClientCRUD = ({showToast}) => {
         //Si hay id es que estoy editando
         if(clientId){
             client = {...client, 'deletedProvenances': deletedProvenances}
-            console.log(client)
             fetchContext.authAxios.put(`${url.CLIENT_API}/${clientId}`, client)
             .then(res => {
                 showToast('success', 'Cliente guardado', 'El cliente fue guardado correctamente')
