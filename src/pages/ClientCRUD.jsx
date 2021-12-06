@@ -171,6 +171,17 @@ const ClientCRUD = ({showToast}) => {
         })
     }
 
+    const deleteProvenanceHandler = () => {
+        confirmDialog({
+            message: '¿Esta seguro que desea eliminar la procedencia?',
+            header: 'Eliminar procedencia',
+            icon: 'pi pi-exclamation-circle',
+            acceptLabel: 'Aceptar',
+            rejectLabel: 'Cancelar',
+            accept: () => deleteProvenance()
+        })
+    }
+
     const deleteProvenance = (index) => {
         //Si viene id positivo es porque es una que viene del backend
         //Si es null puede ser porque agrego una nueva, le dio a guardar, se seteo en null con el clearProvenancesId
@@ -203,7 +214,7 @@ const ClientCRUD = ({showToast}) => {
             renspaNumber={item.renspaNumber}
             locality={item.locality}
             enableEditing={enableEditing}
-            deleteProvenance={() => deleteProvenance(index)}
+            deleteProvenance={() => deleteProvenanceHandler(index)}
             updateProvenance={(value, prop) => updateProvenance(value, prop, item.id)}
             showToast={showToast}
         />
