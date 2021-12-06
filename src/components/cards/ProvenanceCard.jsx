@@ -29,7 +29,10 @@ const ProvenanceCard = props => {
     return (
         <CardSecondary
             footer={
-                <Button className="p-button-danger" icon="pi pi-trash" onClick={props.deleteProvenance} label="Eliminar"></Button>
+                props.enableEditing?
+                    <Button className="p-button-danger" icon="pi pi-trash" onClick={props.deleteProvenance} label="Eliminar"></Button>
+                    :
+                    null
             }
         >
             <span className="p-float-label">

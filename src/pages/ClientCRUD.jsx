@@ -8,6 +8,7 @@ import { confirmDialog } from 'primereact/confirmdialog';
 
 import { FetchContext } from '../context/FetchContext';
 import * as url from '../util/url';
+import * as miscFunctions from '../util/miscFunctions';
 
 import Card from '../components/cards/Card'
 import ProvenanceCard from '../components/cards/ProvenanceCard';
@@ -40,7 +41,8 @@ const ClientCRUD = ({showToast}) => {
             setEnableEditing(false)
             const {id} = history.location.state
             setClientId(id)
-            fetchContext.authAxios.get(`${url.CLIENT_API}/${id}`)
+            //fetchContext.authAxios.get(`${url.CLIENT_API}/${id}`)
+            fetchContext.authAxios.get(`https://61895cd6d0821900178d795e.mockapi.io/api/client/${id}`)
             .then(res => {
                 const {name, cuit, provenances} = res.data
                 setClientName(name)
@@ -109,21 +111,34 @@ const ClientCRUD = ({showToast}) => {
     ))
 
     const cardFormClient = (
+        //En pantalla grande muestro el boton de editar a la derecha del titulo (primer caso)
+        //En pantalla pequeña muestro el boton de editar abajo del titulo (segundo caso)
         <Card
             title={
+                <div>
                 <div className="flex justify-content-between">
                     <>{clientId?'Informacion del cliente':'Nuevo cliente'}</>
-                    {clientId?
+                    {clientId && !miscFunctions.isSmallScreen()?
                         <Button 
                             className="btn btn-primary" 
-                            icon="pi pi-plus" 
+                            icon="pi pi-pencil" 
                             onClick={()=> setEnableEditing(!enableEditing)} 
-                            label={`Habilitar edicion`}
+                            label={enableEditing?"Dejar de editar":"Editar"}
                         />
                         :
                         null
                     }
-                    
+                </div>
+                    {clientId && miscFunctions.isSmallScreen()?
+                        <Button 
+                            className="btn btn-primary mt-2" 
+                            icon="pi pi-pencil" 
+                            onClick={()=> setEnableEditing(!enableEditing)} 
+                            label={enableEditing?"Dejar de editar":"Editar"}
+                        />
+                        :
+                        null
+                    }
                 </div>
             }
         >
@@ -156,13 +171,17 @@ const ClientCRUD = ({showToast}) => {
             title={'Procedencias'}
             footer={
                 <div>
-                    <div className="flex justify-content-start pb-2">
-                        <Button 
-                            className="btn btn-primary"
-                            onClick={()=> addProvenance()} 
-                            label="Agregar"
-                        />
-                    </div>
+                    {enableEditing?
+                        <div className="flex justify-content-start mb-2">
+                            <Button 
+                                className="btn btn-primary"
+                                onClick={()=> addProvenance()} 
+                                label="Agregar procedencia"
+                            />
+                        </div>
+                        :
+                        null    
+                    }
                     <div className="flex justify-content-between">
                         <div className="flex justify-content-start">
                             <Button 
