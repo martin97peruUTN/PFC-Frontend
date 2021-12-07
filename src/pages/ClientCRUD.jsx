@@ -41,9 +41,9 @@ const ClientCRUD = ({showToast}) => {
             setEnableEditing(false)
             const {id} = history.location.state
             setClientId(id)
-            //fetchContext.authAxios.get(`${url.CLIENT_API}/${id}`)
+            fetchContext.authAxios.get(`${url.CLIENT_API}/${id}`)
             //TODO sacar una vez terminado todo la url de prueba
-            fetchContext.authAxios.get(`https://61895cd6d0821900178d795e.mockapi.io/api/client/${id}`)
+            //fetchContext.authAxios.get(`https://61895cd6d0821900178d795e.mockapi.io/api/client/${id}`)
             .then(res => {
                 const {name, cuit, provenances} = res.data
                 setClientName(name)

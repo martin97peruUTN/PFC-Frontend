@@ -20,11 +20,10 @@ const AddParticipant = ({showToast}) => {
     const [loadingStart, setLoadingStart] = useState(false)
 
     const [auctionId, setAuctionId] = useState(null)
-    const [users, setUsers] = useState([]);
-    const [deletedUsers, setDeletedUsers] = useState([]);
 
-    //Pongo un valor negativo cualquiera, los que vienen desde el backend tienen un valor positivo
-    const [newUserId, setNewUserId] = useState(-101)
+    //Uso startingUsers para poder sacar la diferencia entre estos 2 listados al final
+    const [startingUsers, setStartingUsers] = useState([])
+    const [users, setUsers] = useState([]);
 
     useEffect(() => {
         if(history.location.state){
@@ -35,6 +34,7 @@ const AddParticipant = ({showToast}) => {
             fetchContext.authAxios.get(`https://61895cd6d0821900178d795e.mockapi.io/api/users`)
             .then(res => {
                 setUsers(res.data)
+                setStartingUsers(res.data)
                 setLoadingStart(false)
             })
             .catch(err => {
@@ -48,8 +48,7 @@ const AddParticipant = ({showToast}) => {
     },[])
 
     const addParticipant = () => {
-        setUsers([...users, {'id': newUserId, 'username': ''}])
-        setNewUserId(newUserId-1)
+        setUsers([...users, {'username': '', 'name': '', 'lastname': ''}])
     }
 
     const deleteParticipantHandler = (index) => {
@@ -64,23 +63,14 @@ const AddParticipant = ({showToast}) => {
     }
 
     const deleteParticipant = (index) => {
-        //Si viene id positivo es porque es una que viene del backend
-        //Si es null puede ser porque agrego una nueva, le dio a guardar, se seteo en null con el clearProvenancesId
-        //y si no reviso eso se agrega al listado este tambien (no se bien porque)
-        //asi que la agrego al listado de eliminadas
-        if(users[index].id!==null && users[index].id>=0){
-            setDeletedUsers([...deletedUsers, users[index]])
-        }
         const usersCopy = [...users]
         usersCopy.splice(index, 1)
         setUsers(usersCopy)
     }
 
-    //FIXME problemas con los id
-    const updateParticipant = (value, id) => {
-        const userIndex = users.findIndex(user => user.id === id)
+    const updateParticipant = (value, index) => {
         const usersCopy = [...users]
-        usersCopy[userIndex] = value
+        usersCopy[index] = value
         setUsers(usersCopy)
     }
 
@@ -88,16 +78,22 @@ const AddParticipant = ({showToast}) => {
         console.log(users)
     }
 
+    //En este caso a diferencia que en ClienteCRUD con las provenances no puedo usar los id
+    //porque aca los que cambio es el mismo objeto (el user), a diferencia del otro caso donde
+    //modifico algo que esta dentro del objeto (las localidades) y ese objeto no cambia su id
+    //en este caso si va a cambiar, asi que hago todo con el index
     const usersCardList = users.map((user, index) => (
         <AddParticipantCard
-            key={user.id}
+            key={index}
             user={user}
+            index={index}
             showToast={showToast}
             deleteParticipant={() => deleteParticipantHandler(index)}
-            updateParticipant={(value) => updateParticipant(value, user.id)}
+            updateParticipant={(value) => updateParticipant(value, index)}
         />
     ))
-
+    //TODO a la card del usuario logueado no deberia dejar que la toque
+    //TODO comprobar que no este el mismo usuario elegido 2 veces, o no dejar elegir, no se
     return (
         <Card
             title={`Participantes`}
