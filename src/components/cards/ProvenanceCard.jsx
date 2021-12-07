@@ -43,7 +43,7 @@ const ProvenanceCard = props => {
                     onChange={e => props.updateProvenance(e.target.value, 'reference')}
                     disabled={!props.enableEditing}
                 />
-                <label htmlFor="reference">Nombre</label>
+                <label htmlFor="reference">Nombre/Referencia</label>
             </span>
             <br/>
             <span className="p-float-label">

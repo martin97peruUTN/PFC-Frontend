@@ -42,8 +42,6 @@ const ClientCRUD = ({showToast}) => {
             const {id} = history.location.state
             setClientId(id)
             fetchContext.authAxios.get(`${url.CLIENT_API}/${id}`)
-            //TODO sacar una vez terminado todo la url de prueba
-            //fetchContext.authAxios.get(`https://61895cd6d0821900178d795e.mockapi.io/api/client/${id}`)
             .then(res => {
                 const {name, cuit, provenances} = res.data
                 setClientName(name)
@@ -124,8 +122,9 @@ const ClientCRUD = ({showToast}) => {
         }
         //Si hay id es que estoy editando
         if(clientId){
-            client = {...client, 'deletedProvenances': deletedProvenances}
-            fetchContext.authAxios.put(`${url.CLIENT_API}/${clientId}`, client)
+            client = {...client, 'provenancesDeleted': deletedProvenances}
+            console.log(client)
+            fetchContext.authAxios.patch(`${url.CLIENT_API}/${clientId}`, client)
             .then(res => {
                 showToast('success', 'Cliente guardado', 'El cliente fue guardado correctamente')
                 history.goBack();
@@ -209,7 +208,7 @@ const ClientCRUD = ({showToast}) => {
 
     const provenancesCardList = provenances.map((item, index) => (
         <ProvenanceCard
-            key={item.id}
+            key={index}
             reference={item.reference}
             renspaNumber={item.renspaNumber}
             locality={item.locality}
@@ -260,7 +259,7 @@ const ClientCRUD = ({showToast}) => {
                     onChange={e => setClientName(e.target.value)}
                     disabled={!enableEditing}
                 />
-                <label htmlFor="name">Nombre</label>
+                <label htmlFor="name">Nombre/Referencia</label>
             </span>
             <br/>
             <span className="p-float-label">

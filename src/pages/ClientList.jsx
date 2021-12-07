@@ -49,21 +49,6 @@ const ClientList = ({showToast}) => {
         })
     },[refresh, paginatorFirst, paginatorRows, searchValue])
 
-    //TODO sacar esto una vez terminado todo
-    /*useEffect(() => {
-        setLoadingStart(true)
-        fetchContext.authAxios.get(`https://61895cd6d0821900178d795e.mockapi.io/api/client`)
-        .then(response => {
-            setItemList(response.data)
-            //setTotalPages(response.data.totalPages)
-            setLoadingStart(false)
-        })
-        .catch(error => {
-            showToast('error', 'Error', 'No se pudo conectar al servidor')
-            history.push(url.HOME);
-        })
-    },[refresh, paginatorFirst, paginatorRows, searchValue])*/
-
     const onPaginatorPageChange = (event) => {
         setPaginatorFirst(event.first);
         setPaginatorRows(event.rows);
