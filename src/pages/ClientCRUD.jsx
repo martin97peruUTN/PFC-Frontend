@@ -41,9 +41,9 @@ const ClientCRUD = ({showToast}) => {
             setEnableEditing(false)
             const {id} = history.location.state
             setClientId(id)
-            fetchContext.authAxios.get(`${url.CLIENT_API}/${id}`)
+            //fetchContext.authAxios.get(`${url.CLIENT_API}/${id}`)
             //TODO sacar una vez terminado todo la url de prueba
-            //fetchContext.authAxios.get(`https://61895cd6d0821900178d795e.mockapi.io/api/client/${id}`)
+            fetchContext.authAxios.get(`https://61895cd6d0821900178d795e.mockapi.io/api/client/${id}`)
             .then(res => {
                 const {name, cuit, provenances} = res.data
                 setClientName(name)
@@ -72,11 +72,11 @@ const ClientCRUD = ({showToast}) => {
         //(CUIT PUEDE SER NULL)
         const invalidProvenances = validateProvenances()
         if(!clientName){
-            showToast('error', 'Error', 'El nombre es obligatorio')
+            showToast('warn', 'Error', 'El nombre es obligatorio')
         }else if(provenances.length === 0){
-            showToast('error', 'Error', 'Debe ingresar al menos una procedencia')
+            showToast('warn', 'Error', 'Debe ingresar al menos una procedencia')
         }else if(invalidProvenances.length > 0){
-            showToast('error', 'Error', `Las siguientes procedencias no son validas: ${invalidProvenances}`)
+            showToast('warn', 'Error', `Las siguientes procedencias no son validas: ${invalidProvenances}`)
         }else{
             confirmDialog({
                 message: '¿Esta seguro que desea guardar los cambios?',
@@ -171,14 +171,14 @@ const ClientCRUD = ({showToast}) => {
         })
     }
 
-    const deleteProvenanceHandler = () => {
+    const deleteProvenanceHandler = (index) => {
         confirmDialog({
             message: '¿Esta seguro que desea eliminar la procedencia?',
             header: 'Eliminar procedencia',
             icon: 'pi pi-exclamation-circle',
             acceptLabel: 'Aceptar',
             rejectLabel: 'Cancelar',
-            accept: () => deleteProvenance()
+            accept: () => deleteProvenance(index)
         })
     }
 

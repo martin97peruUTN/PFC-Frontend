@@ -52,14 +52,14 @@ const AddParticipant = ({showToast}) => {
         setNewUserId(newUserId-1)
     }
 
-    const deleteParticipantHandler = () => {
+    const deleteParticipantHandler = (index) => {
         confirmDialog({
             message: '¿Esta seguro que desea quitar este participante del remate?',
             header: 'Quitar participante',
             icon: 'pi pi-exclamation-circle',
             acceptLabel: 'Aceptar',
             rejectLabel: 'Cancelar',
-            accept: () => deleteParticipant()
+            accept: () => deleteParticipant(index)
         })
     }
 
