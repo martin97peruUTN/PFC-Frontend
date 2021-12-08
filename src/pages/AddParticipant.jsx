@@ -1,130 +1,195 @@
 import React, {useState, useEffect, useContext} from 'react';
 import { useHistory } from "react-router-dom";
-
-import { Button } from 'primereact/button';
-import { confirmDialog } from 'primereact/confirmdialog';
-
-import { AuthContext } from '../context/AuthContext';
-import { FetchContext } from '../context/FetchContext';
 import * as url from '../util/url';
 
-import Card from '../components/cards/Card'
-import AddParticipantCard from '../components/cards/AddParticipantCard'
+import { Button } from 'primereact/button';
+import { Skeleton } from 'primereact/skeleton';
+import { confirmDialog } from 'primereact/confirmdialog';
+import { Dialog } from 'primereact/dialog';
+import { ScrollTop } from 'primereact/scrolltop';
+import { AutoComplete } from 'primereact/autocomplete';
 
-const AddParticipant = ({showToast}) => {
+import { FetchContext } from '../context/FetchContext';
+
+import Card from '../components/cards/Card';
+import SimpleNameCard from '../components/cards/SimpleNameCard'
+
+const AddParticipant = ({showToast, ...props}) => {
 
     const fetchContext = useContext(FetchContext)
     const history = useHistory();
 
-    const [loadingAccept, setLoadingAccept] = useState(false)
     const [loadingStart, setLoadingStart] = useState(false)
+    
+    //uso este estado "comodin" para refrescar la pagina cuando hay un cambio
+    const [refresh, setRefresh] = useState(false);
 
-    const [auctionId, setAuctionId] = useState(null)
+    //Mostrar el dialogo de confirmacion o esconderlo
+    const [displayDialog, setDisplayDialog] = useState(false);
 
-    //Uso startingUsers para poder sacar la diferencia entre estos 2 listados al final
-    const [startingUsers, setStartingUsers] = useState([])
-    const [users, setUsers] = useState([]);
+    const [auctionId, setAuctionId] = useState(null);
+    const [userList, setUserList] = useState([]);
+
+    const [selectedUserItem, setSelectedUserItem] = useState(null);
+
+    //Para el autocomplete
+    const [filteredUserList, setFilteredUserList] = useState([])
 
     useEffect(() => {
         if(history.location.state){
+            setAuctionId(history.location.state.auctionId)
             setLoadingStart(true)
-            const {auctionId} = history.location.state
-            setAuctionId(auctionId)
             //fetchContext.authAxios.get(`${url.USER_AUCTIONS_API}/get-users/${auctionId}`)
             fetchContext.authAxios.get(`https://61895cd6d0821900178d795e.mockapi.io/api/users`)
-            .then(res => {
-                setUsers(res.data)
-                setStartingUsers(res.data)
+            .then(response => {
+                setUserList(response.data)
                 setLoadingStart(false)
             })
-            .catch(err => {
-                showToast('error', 'Error', 'No se pudo cargar la información')
-                history.goBack()
+            .catch(error => {
+                showToast('error', 'Error', 'No se pudo conectar al servidor')
+                history.push(url.HOME);
             })
         }else{
-            showToast('error', 'Error', 'No se pudo cargar la información')
-            history.goBack()
+            showToast('error', 'Error', 'No se pudo conectar al servidor')
+            history.push(url.HOME);
         }
-    },[])
+    }, [refresh, fetchContext.authAxios, history])
 
-    const addParticipant = () => {
-        setUsers([...users, {'username': '', 'name': '', 'lastname': ''}])
-    }
-
-    const deleteParticipantHandler = (index) => {
-        confirmDialog({
-            message: '¿Esta seguro que desea quitar este participante del remate?',
-            header: 'Quitar participante',
-            icon: 'pi pi-exclamation-circle',
-            acceptLabel: 'Aceptar',
-            rejectLabel: 'Cancelar',
-            accept: () => deleteParticipant(index)
+    //Busqueda de usuarios por nombre o apellido para el autocomplete
+    const searchUser = (event) => {
+        fetchContext.authAxios.get(`${url.USER_API}?name=${event.query}`)
+        //TODO es para pruebas este, sacar despues
+        //fetchContext.authAxios.get(`${url.USER_API}/user-list`)
+        .then(response => {
+            setFilteredUserList(response.data.content)
+        })
+        .catch(error => {
+            props.showToast('error','Error','No se pudo obtener la lista de usuarios')
         })
     }
 
-    const deleteParticipant = (index) => {
-        const usersCopy = [...users]
-        usersCopy.splice(index, 1)
-        setUsers(usersCopy)
+    //Se dispara al tocar el boton agregar, se abre el dialogo de creacion
+    const createItemHandler = () => {
+        setDisplayDialog(true)
+        setSelectedUserItem(null)
     }
 
-    const updateParticipant = (value, index) => {
-        const usersCopy = [...users]
-        usersCopy[index] = value
-        setUsers(usersCopy)
+    //Se dispara al tocar el boton aceptar en el dialogo
+    const saveItemHandler = () => {
+        if(selectedUserItem){
+            fetchContext.authAxios.post(`${url.USER_AUCTIONS_API}/${auctionId}/adduser/${selectedUserItem.id}`)
+            .then(response => {
+                showToast('success', 'Exito', `Participante agregado`)
+                setRefresh(!refresh)
+                setDisplayDialog(false)
+                setSelectedUserItem(null)
+            })
+            .catch(error => {
+                showToast('error', 'Error', `No se pudo agregar el participante`)
+            })
+        }else{
+            showToast('warn', 'Error', `Ingrese un participante`)
+        }
     }
 
-    const confirm = () => {
-        console.log(users)
+    //Se dispara al tocar el boton eliminar, abre un dialogo de confirmacion
+    const deleteHandler = (id) => {
+        confirmDialog({
+            header: 'Confirmación',
+            message: `¿Está seguro que desea quitar el participante?`,
+            acceptLabel: 'Si',
+            className: 'w-9 md:w-6',
+            rejectLabel: 'No',
+            acceptClassName: 'p-button-danger',
+            accept: () => {
+                fetchContext.authAxios.delete(`${url.USER_AUCTIONS_API}/${auctionId}/deleteuser/${id}`)
+                .then(response => {
+                    showToast('success', 'Éxito', `El participante ha sido quitado`)
+                    setRefresh(!refresh)
+                })
+                .catch(error => {
+                    showToast('error', 'Error', `No se pudo quitar al participante`)
+                })
+            }
+        });
     }
 
-    //En este caso a diferencia que en ClienteCRUD con las provenances no puedo usar los id
-    //porque aca los que cambio es el mismo objeto (el user), a diferencia del otro caso donde
-    //modifico algo que esta dentro del objeto (las localidades) y ese objeto no cambia su id
-    //en este caso si va a cambiar, asi que hago todo con el index
-    const usersCardList = users.map((user, index) => (
-        <AddParticipantCard
-            key={index}
-            user={user}
-            index={index}
-            showToast={showToast}
-            deleteParticipant={() => deleteParticipantHandler(index)}
-            updateParticipant={(value) => updateParticipant(value, index)}
+    //Listado de los items a mostrar en pantalla
+    const usersCardList = userList.map((item) => (
+        <SimpleNameCard
+            key={item.id}
+            id={item.id}
+            name={item.name}
+            deleteHandler={deleteHandler}
         />
     ))
-    //TODO a la card del usuario logueado no deberia dejar que la toque
-    //TODO comprobar que no este el mismo usuario elegido 2 veces, o no dejar elegir, no se
-    return (
-        <Card
-            title={`Participantes`}
+
+    const createDialog = (
+        <Dialog
+            header={`Agregar participante`}
+            visible={displayDialog}
+            className="w-11 md:w-6"
+            onHide={() => setDisplayDialog(false)}
             footer={
-                <div>
-                    <div className="flex justify-content-start mb-2">
-                        <Button 
-                            className="btn btn-primary"
-                            onClick={()=> addParticipant()} 
-                            label="Agregar participante"
-                        />
-                    </div>
-                    <div className="flex justify-content-between">
-                        <Button 
-                            className="p-button-danger mr-2" 
-                            onClick={()=> history.goBack()} 
-                            label="Cancelar"
-                        />
-                        <Button 
-                            className="btn btn-primary" 
-                            icon="pi pi-check" 
-                            onClick={()=> confirm()} 
-                            label="Guardar" 
-                            loading={loadingAccept}
-                        />
-                    </div>
+                <div className="">
+                    <Button label="Cancelar" icon="pi pi-times" onClick={() => setDisplayDialog(false)} className="p-button-danger" />
+                    <Button label="Guardar" icon="pi pi-check" onClick={() => saveItemHandler()} autoFocus className="btn btn-primary" />
                 </div>
             }
-        >
-            {usersCardList}
-        </Card>
+            >
+                <br/>
+                <span className="p-float-label">
+                    <AutoComplete 
+                        id='userAutocompleteForm'
+                        className='w-full'
+                        value={selectedUserItem}
+                        suggestions={filteredUserList} 
+                        completeMethod={searchUser} 
+                        field="name" 
+                        dropdown 
+                        forceSelection
+                        onChange={e => setSelectedUserItem(e.target.value)}
+                    />
+                    <label htmlFor="userAutocompleteForm">Nombre del participante</label>
+                </span>
+        </Dialog>
+    )
+
+    const loadingScreen = (
+        <div>
+            <Skeleton width="100%" height="8rem"/>
+            <br/>
+            <Skeleton width="100%" height="8rem"/>
+            <br/>
+            <Skeleton width="100%" height="8rem"/>
+            <br/>
+            <Skeleton width="100%" height="8rem"/>
+        </div>
+    )
+
+    return (
+        <>  
+            <ScrollTop />
+            {createDialog}
+            <Card
+                title={
+                    <div className="flex justify-content-between">
+                    <>Participantes</>
+                    <Button 
+                        className="btn btn-primary" 
+                        icon="pi pi-plus" 
+                        onClick={()=> createItemHandler()} 
+                        label={`Agregar`}/>
+                    </div>
+                }
+            >
+                {loadingStart?
+                    loadingScreen
+                    :
+                    usersCardList
+                }
+            </Card>     
+        </>
     )
 }
 

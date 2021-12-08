@@ -13,7 +13,11 @@ const SimpleNameCard = props => (
         }
         buttons = {
             <div className={CARD_TWO_COLUMNS_BUTTON_DIV}>
+                {props.editHandler?
                 <Button className={CARD_TWO_COLUMNS_BUTTON} icon="pi pi-pencil" onClick={()=> props.editHandler(props.id)} label="Editar"></Button>
+                :
+                null
+                }
                 <Button className="p-button-danger" icon="pi pi-trash" onClick={() => props.deleteHandler(props.id)} label="Borrar"></Button>
             </div>
         }

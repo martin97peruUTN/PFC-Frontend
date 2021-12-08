@@ -104,8 +104,8 @@ const Auction = ({showToast}) => {
             url: url.HOME
         },
         {
-            label: 'Agregar participante',
-            icon: 'pi pi-fw pi-user-plus',
+            label: 'Participantes',
+            icon: 'pi pi-fw pi-users',
             command: () => history.push(url.ADD_PARTICIPANT,
                 {
                     auctionId: auctionId
