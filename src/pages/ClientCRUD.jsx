@@ -122,7 +122,7 @@ const ClientCRUD = ({showToast}) => {
         }
         //Si hay id es que estoy editando
         if(clientId){
-            client = {...client, 'provenancesDeleted': deletedProvenances}
+            client = {...client, 'deletedProvenances': deletedProvenances}
             console.log(client)
             fetchContext.authAxios.patch(`${url.CLIENT_API}/${clientId}`, client)
             .then(res => {
