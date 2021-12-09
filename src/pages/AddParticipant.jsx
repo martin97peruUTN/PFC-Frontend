@@ -39,8 +39,9 @@ const AddParticipant = ({showToast, ...props}) => {
         if(history.location.state){
             setAuctionId(history.location.state.auctionId)
             setLoadingStart(true)
-            //fetchContext.authAxios.get(`${url.USER_AUCTIONS_API}/get-users/${auctionId}`)
-            fetchContext.authAxios.get(`https://61895cd6d0821900178d795e.mockapi.io/api/users`)
+            fetchContext.authAxios.get(`${url.USER_AUCTIONS_API}/get-users/${auctionId}`)
+            //TODO sacar este
+            //fetchContext.authAxios.get(`https://61895cd6d0821900178d795e.mockapi.io/api/users`)
             .then(response => {
                 setUserList(response.data)
                 setLoadingStart(false)
@@ -55,13 +56,24 @@ const AddParticipant = ({showToast, ...props}) => {
         }
     }, [refresh, fetchContext.authAxios, history])
 
+    //Agrego un label a cada user para que muestre nombre y apellido en el autocomplete
+    const setUserListWithLabel = data => {
+        const dataCopy = data.map(item => (
+            {
+                ...item,
+                'label': `${item.lastname} ${item.name}`
+            }
+        ))
+        setFilteredUserList(dataCopy)
+    }
+
     //Busqueda de usuarios por nombre o apellido para el autocomplete
     const searchUser = (event) => {
         fetchContext.authAxios.get(`${url.USER_API}?name=${event.query}`)
         //TODO es para pruebas este, sacar despues
         //fetchContext.authAxios.get(`${url.USER_API}/user-list`)
         .then(response => {
-            setFilteredUserList(response.data.content)
+            setUserListWithLabel(response.data.content)
         })
         .catch(error => {
             props.showToast('error','Error','No se pudo obtener la lista de usuarios')
@@ -145,7 +157,7 @@ const AddParticipant = ({showToast, ...props}) => {
                         value={selectedUserItem}
                         suggestions={filteredUserList} 
                         completeMethod={searchUser} 
-                        field="name" 
+                        field="label"
                         dropdown 
                         forceSelection
                         onChange={e => setSelectedUserItem(e.target.value)}
