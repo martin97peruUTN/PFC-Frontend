@@ -10,6 +10,7 @@ import { ScrollTop } from 'primereact/scrolltop';
 import { AutoComplete } from 'primereact/autocomplete';
 
 import { FetchContext } from '../context/FetchContext';
+import { AuthContext } from '../context/AuthContext';
 
 import Card from '../components/cards/Card';
 import SimpleNameCard from '../components/cards/SimpleNameCard'
@@ -17,6 +18,7 @@ import SimpleNameCard from '../components/cards/SimpleNameCard'
 const AddParticipant = ({showToast, ...props}) => {
 
     const fetchContext = useContext(FetchContext)
+    const authContext = useContext(AuthContext)
     const history = useHistory();
 
     const [loadingStart, setLoadingStart] = useState(false)
@@ -69,7 +71,7 @@ const AddParticipant = ({showToast, ...props}) => {
 
     //Busqueda de usuarios por nombre o apellido para el autocomplete
     const searchUser = (event) => {
-        fetchContext.authAxios.get(`${url.USER_API}?name=${event.query}`)
+        fetchContext.authAxios.get(`${url.USER_API}/user-list/${authContext.getUserInfo().id}?name=${event.query}`)
         //TODO es para pruebas este, sacar despues
         //fetchContext.authAxios.get(`${url.USER_API}/user-list`)
         .then(response => {
