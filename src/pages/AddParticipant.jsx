@@ -39,7 +39,7 @@ const AddParticipant = ({showToast, ...props}) => {
         if(history.location.state){
             setAuctionId(history.location.state.auctionId)
             setLoadingStart(true)
-            fetchContext.authAxios.get(`${url.USER_AUCTIONS_API}/get-users/${auctionId}`)
+            fetchContext.authAxios.get(`${url.USER_AUCTIONS_API}/users/${auctionId}`)
             //TODO sacar este
             //fetchContext.authAxios.get(`https://61895cd6d0821900178d795e.mockapi.io/api/users`)
             .then(response => {
