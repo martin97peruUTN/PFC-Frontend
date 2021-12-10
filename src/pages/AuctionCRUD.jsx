@@ -84,15 +84,18 @@ const AuctionCRUD = ({showToast}) => {
 
     const handleSubmit = () => {
         setLoadingAccept(true)
-        const body = {
+        let body = {
             senasaNumber,
             'date' : miscFunctions.parseDateFrontToBack(date, time),
-            locality: selectedLocality,
-            users: [
-                {
-                    "id" : authContext.getUserInfo().id
-                }
-            ]
+            locality: selectedLocality
+        }
+        if(!authContext.isAdmin()){
+            body = {...body, 'users': [
+                    {
+                        "id" : authContext.getUserInfo().id
+                    }
+                ]
+            }
         }
         //Si no hay id es que estoy creando, si hay es que estoy editando
         if(!auctionId){
