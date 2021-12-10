@@ -42,8 +42,6 @@ const AddParticipant = ({showToast, ...props}) => {
             setAuctionId(history.location.state.auctionId)
             setLoadingStart(true)
             fetchContext.authAxios.get(`${url.USER_AUCTIONS_API}/users/${auctionId}`)
-            //TODO sacar este
-            //fetchContext.authAxios.get(`https://61895cd6d0821900178d795e.mockapi.io/api/users`)
             .then(response => {
                 setUserList(response.data)
                 setLoadingStart(false)
@@ -72,8 +70,6 @@ const AddParticipant = ({showToast, ...props}) => {
     //Busqueda de usuarios por nombre o apellido para el autocomplete
     const searchUser = (event) => {
         fetchContext.authAxios.get(`${url.USER_API}/user-list/${authContext.getUserInfo().id}?name=${event.query}`)
-        //TODO es para pruebas este, sacar despues
-        //fetchContext.authAxios.get(`${url.USER_API}/user-list`)
         .then(response => {
             setUserListWithLabel(response.data.content)
         })
@@ -91,7 +87,7 @@ const AddParticipant = ({showToast, ...props}) => {
     //Se dispara al tocar el boton aceptar en el dialogo
     const saveItemHandler = () => {
         if(selectedUserItem){
-            fetchContext.authAxios.post(`${url.USER_AUCTIONS_API}/${auctionId}/adduser/${selectedUserItem.id}`)
+            fetchContext.authAxios.post(`${url.USER_AUCTIONS_API}/assignment/${auctionId}/adduser/${selectedUserItem.id}`)
             .then(response => {
                 showToast('success', 'Exito', `Participante agregado`)
                 setRefresh(!refresh)
@@ -116,7 +112,7 @@ const AddParticipant = ({showToast, ...props}) => {
             rejectLabel: 'No',
             acceptClassName: 'p-button-danger',
             accept: () => {
-                fetchContext.authAxios.delete(`${url.USER_AUCTIONS_API}/${auctionId}/deleteuser/${id}`)
+                fetchContext.authAxios.delete(`${url.USER_AUCTIONS_API}/assignment/${auctionId}/deleteuser/${id}`)
                 .then(response => {
                     showToast('success', 'Éxito', `El participante ha sido quitado`)
                     setRefresh(!refresh)
