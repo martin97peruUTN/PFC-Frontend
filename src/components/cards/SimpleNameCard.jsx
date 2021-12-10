@@ -18,7 +18,11 @@ const SimpleNameCard = props => (
                 :
                 null
                 }
+                {props.deleteHandler?
                 <Button className="p-button-danger" icon="pi pi-trash" onClick={() => props.deleteHandler(props.id)} label="Borrar"></Button>
+                :
+                null
+                }
             </div>
         }
     />

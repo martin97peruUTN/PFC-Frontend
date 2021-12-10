@@ -39,7 +39,8 @@ const AddParticipant = ({showToast, ...props}) => {
 
     useEffect(() => {
         if(history.location.state){
-            setAuctionId(history.location.state.auctionId)
+            const {auctionId} = history.location.state;
+            setAuctionId(auctionId)
             setLoadingStart(true)
             fetchContext.authAxios.get(`${url.USER_AUCTIONS_API}/users/${auctionId}`)
             .then(response => {
@@ -61,7 +62,7 @@ const AddParticipant = ({showToast, ...props}) => {
         const dataCopy = data.map(item => (
             {
                 ...item,
-                'label': `${item.lastname} ${item.name}`
+                'label': `${item.name} ${item.lastname}`
             }
         ))
         setFilteredUserList(dataCopy)
@@ -69,9 +70,9 @@ const AddParticipant = ({showToast, ...props}) => {
 
     //Busqueda de usuarios por nombre o apellido para el autocomplete
     const searchUser = (event) => {
-        fetchContext.authAxios.get(`${url.USER_API}/user-list/${authContext.getUserInfo().id}?name=${event.query}`)
+        fetchContext.authAxios.get(`${url.USER_API}/user-list/${authContext.getUserInfo().id}${event.query?`?name=${event.query}`:''}`)
         .then(response => {
-            setUserListWithLabel(response.data.content)
+            setUserListWithLabel(response.data)
         })
         .catch(error => {
             props.showToast('error','Error','No se pudo obtener la lista de usuarios')
@@ -129,8 +130,8 @@ const AddParticipant = ({showToast, ...props}) => {
         <SimpleNameCard
             key={item.id}
             id={item.id}
-            name={item.name}
-            deleteHandler={deleteHandler}
+            name={`${item.name} ${item.lastname}`}
+            deleteHandler={item.id!==authContext.getUserInfo().id? deleteHandler: null}
         />
     ))
 
