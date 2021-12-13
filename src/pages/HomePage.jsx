@@ -43,7 +43,7 @@ const HomePage = ({showToast}) => {
         })
         .catch(err => {
             showToast('error', 'Error', 'No se pudieron cargar lo remates')
-            history.goBack();
+            authContext.logout()
         })
     },[tabViewActiveIndex, paginatorFirst, paginatorRows, paginatorPage])
 

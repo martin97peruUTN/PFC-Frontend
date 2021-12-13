@@ -42,8 +42,6 @@ const ClientCRUD = ({showToast}) => {
             const {id} = history.location.state
             setClientId(id)
             fetchContext.authAxios.get(`${url.CLIENT_API}/${id}`)
-            //TODO sacar una vez terminado todo la url de prueba
-            //fetchContext.authAxios.get(`https://61895cd6d0821900178d795e.mockapi.io/api/client/${id}`)
             .then(res => {
                 const {name, cuit, provenances} = res.data
                 setClientName(name)
@@ -72,11 +70,11 @@ const ClientCRUD = ({showToast}) => {
         //(CUIT PUEDE SER NULL)
         const invalidProvenances = validateProvenances()
         if(!clientName){
-            showToast('error', 'Error', 'El nombre es obligatorio')
+            showToast('warn', 'Error', 'El nombre es obligatorio')
         }else if(provenances.length === 0){
-            showToast('error', 'Error', 'Debe ingresar al menos una procedencia')
+            showToast('warn', 'Error', 'Debe ingresar al menos una procedencia')
         }else if(invalidProvenances.length > 0){
-            showToast('error', 'Error', `Las siguientes procedencias no son validas: ${invalidProvenances}`)
+            showToast('warn', 'Error', `Las siguientes procedencias no son validas: ${invalidProvenances}`)
         }else{
             confirmDialog({
                 message: '¿Esta seguro que desea guardar los cambios?',
@@ -125,7 +123,7 @@ const ClientCRUD = ({showToast}) => {
         //Si hay id es que estoy editando
         if(clientId){
             client = {...client, 'deletedProvenances': deletedProvenances}
-            fetchContext.authAxios.put(`${url.CLIENT_API}/${clientId}`, client)
+            fetchContext.authAxios.patch(`${url.CLIENT_API}/${clientId}`, client)
             .then(res => {
                 showToast('success', 'Cliente guardado', 'El cliente fue guardado correctamente')
                 history.goBack();
@@ -171,6 +169,17 @@ const ClientCRUD = ({showToast}) => {
         })
     }
 
+    const deleteProvenanceHandler = (index) => {
+        confirmDialog({
+            message: '¿Esta seguro que desea eliminar la procedencia?',
+            header: 'Eliminar procedencia',
+            icon: 'pi pi-exclamation-circle',
+            acceptLabel: 'Aceptar',
+            rejectLabel: 'Cancelar',
+            accept: () => deleteProvenance(index)
+        })
+    }
+
     const deleteProvenance = (index) => {
         //Si viene id positivo es porque es una que viene del backend
         //Si es null puede ser porque agrego una nueva, le dio a guardar, se seteo en null con el clearProvenancesId
@@ -198,12 +207,12 @@ const ClientCRUD = ({showToast}) => {
 
     const provenancesCardList = provenances.map((item, index) => (
         <ProvenanceCard
-            key={item.id}
+            key={index}
             reference={item.reference}
             renspaNumber={item.renspaNumber}
             locality={item.locality}
             enableEditing={enableEditing}
-            deleteProvenance={() => deleteProvenance(index)}
+            deleteProvenance={() => deleteProvenanceHandler(index)}
             updateProvenance={(value, prop) => updateProvenance(value, prop, item.id)}
             showToast={showToast}
         />
@@ -249,7 +258,7 @@ const ClientCRUD = ({showToast}) => {
                     onChange={e => setClientName(e.target.value)}
                     disabled={!enableEditing}
                 />
-                <label htmlFor="name">Nombre</label>
+                <label htmlFor="name">Nombre/Referencia</label>
             </span>
             <br/>
             <span className="p-float-label">

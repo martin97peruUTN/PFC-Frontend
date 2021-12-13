@@ -10,6 +10,7 @@ import { TabView, TabPanel } from 'primereact/tabview';
 import { confirmDialog } from 'primereact/confirmdialog';
 
 import { FetchContext } from '../context/FetchContext';
+import { AuthContext } from './../context/AuthContext';
 import * as url from '../util/url';
 
 import Card from '../components/cards/Card'
@@ -18,6 +19,7 @@ import BatchCard from '../components/cards/BatchCard'
 const Auction = ({showToast}) => {
 
     const fetchContext = useContext(FetchContext)
+    const authContext = useContext(AuthContext);
     const history = useHistory();
     
     const menu = useRef(null);
@@ -94,15 +96,35 @@ const Auction = ({showToast}) => {
     )
 
     //TODO cambiar urls cuando las tengamos (url o command: () => hacerAlgo())
-    const menuItems = [
-        {
+    const menuItems = []
+    if(authContext.isAdmin() || authContext.isConsignee()){
+        menuItems.push({
             label: 'Agregar lote',
             icon: 'pi pi-fw pi-plus-circle',
             url: url.HOME
         },
         {
-            label: 'Agregar participante',
-            icon: 'pi pi-fw pi-user-plus',
+            label: 'Participantes',
+            icon: 'pi pi-fw pi-users',
+            command: () => history.push(url.ADD_PARTICIPANT,
+                {
+                    auctionId: auctionId
+                }
+            )
+        },
+        {
+            label: 'Informacion del remate',
+            icon: 'pi pi-fw pi-info-circle',
+            command: () => history.push(url.AUCTION_CRUD, 
+                {
+                    auctionId: auctionId
+                }
+            )
+        })
+    }else{
+        menuItems.push({
+            label: 'Agregar lote',
+            icon: 'pi pi-fw pi-plus-circle',
             url: url.HOME
         },
         {
@@ -113,7 +135,9 @@ const Auction = ({showToast}) => {
                     auctionId: auctionId
                 }
             )
-        },
+        })
+    }
+    menuItems.push(
         {separator: true},
         {
             label: 'Orden de salida',
@@ -136,9 +160,8 @@ const Auction = ({showToast}) => {
             label: 'Terminar remate',
             icon: 'pi pi-fw pi-check-square',
             command: () => confirmFinishAuction()
-        },
-        
-    ]
+        }
+    )
 
     const itemCardList = batches.map(batch => (
         <BatchCard
