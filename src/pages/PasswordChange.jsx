@@ -3,7 +3,6 @@ import { useHistory } from "react-router-dom";
 
 import { Password } from 'primereact/password';
 import { Button } from 'primereact/button';
-import { Toast } from 'primereact/toast';
 import { confirmDialog } from 'primereact/confirmdialog';
 
 import { FetchContext } from '../context/FetchContext';
@@ -13,15 +12,11 @@ import * as url from '../util/url';
 
 import Card from '../components/cards/Card'
 
-const PasswordChange = () => {
+const PasswordChange = ({showToast}) => {
 
     const fetchContext = useContext(FetchContext)
     const authContext = useContext(AuthContext)
     const history = useHistory();
-    const toast = useRef(null);
-    const showToast = (severity, summary, message) => {
-        toast.current.show({severity:severity, summary: summary, detail:message});
-    }
 
     const [loadingAccept, setLoadingAccept] = useState(false);
 
@@ -64,17 +59,12 @@ const PasswordChange = () => {
 
     const handleSubmit = () => {
         setLoadingAccept(true);
-        fetchContext.authAxios.patch(`${url.USER_API}/${authContext.getUserInfo().id}/modificarpass`, {
+        fetchContext.authAxios.patch(`${url.USER_API}/profile/${authContext.getUserInfo().id}/modificarpass`, {
             oldPassword: hash(currentPassword),
             newPassword: hash(newPassword)
         }).then(response => {
-            history.push(url.PROFILE,
-                {
-                    severity: 'success',
-                    summary: 'Exito',
-                    message:'La contraseña ha sido cambiada!'
-                }
-            );
+            showToast('success', 'Exito', 'Contraseña modificada con exito');
+            history.push(url.PROFILE);
         }).catch(error => {
             showToast('error', 'Error', 'Hubo un error al cambiar la contraseña');
             setLoadingAccept(false);
@@ -82,8 +72,6 @@ const PasswordChange = () => {
     }
 
     return (
-        <>
-        <Toast ref={toast} />
         <Card
             title="Cambio de contraseña"
             footer={
@@ -117,7 +105,7 @@ const PasswordChange = () => {
             <span className="p-float-label">
                 <Password 
                     id="newPassword" 
-                    className='w-full passwordFormInput' 
+                    className='w-full' 
                     inputClassName='w-full' 
                     feedback={false} 
                     toggleMask 
@@ -138,7 +126,6 @@ const PasswordChange = () => {
                 <label htmlFor="confirmNewPassword">Confirme la nueva contraseña</label>
             </span>
         </Card>
-        </>
     )
 }
 
