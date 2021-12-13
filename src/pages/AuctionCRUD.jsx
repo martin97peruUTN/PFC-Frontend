@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef, useContext} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import { useHistory } from "react-router-dom";
 
 import { InputText } from 'primereact/inputtext';
@@ -91,15 +91,18 @@ const AuctionCRUD = () => {
 
     const handleSubmit = () => {
         setLoadingAccept(true)
-        const body = {
+        let body = {
             senasaNumber,
             'date' : miscFunctions.parseDateFrontToBack(date, time),
-            locality: selectedLocality,
-            users: [
-                {
-                    "id" : authContext.getUserInfo().id
-                }
-            ]
+            locality: selectedLocality
+        }
+        if(!authContext.isAdmin()){
+            body = {...body, 'users': [
+                    {
+                        "id" : authContext.getUserInfo().id
+                    }
+                ]
+            }
         }
         //Si no hay id es que estoy creando, si hay es que estoy editando
         if(!auctionId){

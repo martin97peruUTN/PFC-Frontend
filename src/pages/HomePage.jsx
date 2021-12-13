@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef, useContext} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import { useHistory } from "react-router-dom";
 import * as url from '../util/url';
 
@@ -48,9 +48,13 @@ const HomePage = () => {
         })
         .catch(err => {
             showToast('error', 'Error', 'No se pudieron cargar lo remates')
+<<<<<<< HEAD
             setTimeout(() => {
                 history.goBack();
             },3000)
+=======
+            authContext.logout()
+>>>>>>> sprint-3
         })
     },[tabViewActiveIndex, paginatorFirst, paginatorRows, paginatorPage])
 

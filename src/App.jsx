@@ -1,6 +1,6 @@
 //Parte del codigo tomado del tutorial de Ryan Chenkie: https://github.com/chenkie/orbit
 
-import React, {useContext} from "react";
+import React, {useContext, useRef} from "react";
 import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
 
 //Prime React
@@ -13,6 +13,7 @@ import './Components.css'
 import { FetchProvider } from './context/FetchContext';
 import { AuthProvider, AuthContext } from './context/AuthContext';
 import * as url from './util/url'
+import { Toast } from 'primereact/toast';
 
 import AppShell from './AppShell'
 import HomePage from "./pages/HomePage";
@@ -24,12 +25,17 @@ import LocalityList from "./pages/LocalityList";
 import CategoryList from "./pages/CategoryList";
 import AuctionCRUD from "./pages/AuctionCRUD";
 import Auction from "./pages/Auction";
+import UserList from "./pages/UserList";
+import UserCRUD from "./pages/UserCRUD";
+import ClientList from "./pages/ClientList";
+import ClientCRUD from "./pages/ClientCRUD";
+import AddParticipant from "./pages/AddParticipant";
 
-const UnauthenticatedRoutes = () => (
+const UnauthenticatedRoutes = ({showToast}) => (
   <div className="mx-3 my-7 md:mx-6">
     <Switch>
       <Route path={url.LOGIN}>
-        <LogIn />
+        <LogIn showToast={showToast}/>
       </Route>
       <Route path="*">
         <PageNotFound />
@@ -53,7 +59,7 @@ const AuthenticatedRoute = ({ children, ...rest }) => {
     ></Route>
   );
 };
-/*
+
 const AdminRoute = ({ children, ...rest }) => {
   const auth = useContext(AuthContext);
   return (
@@ -68,8 +74,7 @@ const AdminRoute = ({ children, ...rest }) => {
       }
     ></Route>
   );
-};*/
-//por el momento no se usa, pero lo dejo a futuro
+};
 
 const ConsigneeRoute = ({ children, ...rest }) => {
   const auth = useContext(AuthContext);
@@ -92,47 +97,59 @@ function App() {
 
   PrimeReact.ripple = true;
 
+  const toast = useRef(null);
+  const showToast = (severity, summary, message, sticky) => {
+    toast.current.show({severity:severity, summary: summary, detail:message, sticky:sticky});
+  }
+
   const AppRoutes = () => (
     <Switch>
       
       <AuthenticatedRoute exact path={url.HOME}>
-        <HomePage />
+        <HomePage showToast={showToast}/>
       </AuthenticatedRoute>
 
       <ConsigneeRoute exact path={url.AUCTION_CRUD}>
-        <AuctionCRUD />
+        <AuctionCRUD showToast={showToast}/>
       </ConsigneeRoute>
       <AuthenticatedRoute exact path={url.AUCTION_HISTORY}>
-        <HomePage />
+        <HomePage showToast={showToast}/>
       </AuthenticatedRoute>
       <AuthenticatedRoute exact path={url.AUCTION}>
-        <Auction />
+        <Auction showToast={showToast}/>
       </AuthenticatedRoute>
+      <ConsigneeRoute exact path={url.ADD_PARTICIPANT}>
+        <AddParticipant showToast={showToast}/>
+      </ConsigneeRoute>
 
-      <AuthenticatedRoute exact path={url.CLIENT}>
-        <HomePage />
+      <AuthenticatedRoute exact path={url.CLIENT_CRUD}>
+        <ClientCRUD showToast={showToast}/>
       </AuthenticatedRoute>
       <AuthenticatedRoute exact path={url.CLIENT_LIST}>
-        <HomePage />
+        <ClientList showToast={showToast}/>
       </AuthenticatedRoute>
 
       <AuthenticatedRoute exact path={url.PROFILE}>
-        <Profile />
+        <Profile showToast={showToast}/>
       </AuthenticatedRoute>
       <AuthenticatedRoute exact path={url.PASSWORD_CHANGE}>
-        <PasswordChange/>
+        <PasswordChange showToast={showToast}/>
       </AuthenticatedRoute>
+      
       <ConsigneeRoute exact path={url.LOCALITIES}>
-        <LocalityList />
+        <LocalityList showToast={showToast}/>
       </ConsigneeRoute>
       <ConsigneeRoute exact path={url.CATEGORIES}>
-        <CategoryList />
+        <CategoryList showToast={showToast}/>
       </ConsigneeRoute>
       <ConsigneeRoute exact path={url.USERS}>
-        <HomePage />
+        <UserList showToast={showToast}/>
       </ConsigneeRoute>
+      <AdminRoute exact path={url.USER_CRUD}>
+        <UserCRUD showToast={showToast}/>
+      </AdminRoute>
 
-      <UnauthenticatedRoutes />
+      <UnauthenticatedRoutes showToast={showToast}/>
     </Switch>
   )
 
@@ -140,6 +157,7 @@ function App() {
     <Router>
       <AuthProvider>
         <FetchProvider>
+          <Toast ref={toast} />
           <AppRoutes />
         </FetchProvider>
       </AuthProvider>

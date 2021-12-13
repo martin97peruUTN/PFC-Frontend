@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef, useContext} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import { useHistory } from "react-router-dom";
 
 import { InputText } from 'primereact/inputtext';
