@@ -52,7 +52,6 @@ const Auction = ({showToast}) => {
             }else{
                 fetchURL = fetchURL.concat('&sold=true')
             }
-            console.log(fetchURL)
             fetchContext.authAxios.get(fetchURL)
             .then(response => {
                 setAnimalsOnGround(response.data.content)
@@ -73,8 +72,19 @@ const Auction = ({showToast}) => {
 
     const tabViewActiveIndexChange = (index) => {
         setTabViewActiveIndex(index)
-        //TODO llamar a la API para cargar lo que corresponda
+        //FIXME capaz no haga falta hacer nada aca, porque puse el tabViewActiveIndex en el useEffect
+    }
 
+    const sellHandler = (animalOnGroundd) => {
+
+    }
+
+    const notSoldHandler = (animalOnGroundd) => {
+        
+    }
+
+    const editHandler = (animalOnGroundd) => {
+        
     }
 
     //Se dispara al presionar Terminar remate
@@ -170,6 +180,10 @@ const Auction = ({showToast}) => {
     const itemCardList = animalsOnGround.map(animalOnGround => (
         <AnimalsOnGroundCard
             id={animalOnGround.id}
+            tabViewActiveIndex = {tabViewActiveIndex}
+            sellHandler = {sellHandler}
+            notSoldHandler = {notSoldHandler}
+            editHandler = {editHandler}
         />
     ))
 
