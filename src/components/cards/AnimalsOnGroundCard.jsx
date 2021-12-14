@@ -4,7 +4,7 @@ import { Button } from 'primereact/button';
 
 import CardTwoColumns from './CardTwoColumns'
 
-const BatchCard = (props) => (
+const AnimalsOnGroundCard = (props) => (
     <CardTwoColumns
         key = {props.id}
         leftSide = {
@@ -16,4 +16,4 @@ const BatchCard = (props) => (
     />
 )
 
-export default BatchCard
+export default AnimalsOnGroundCard
