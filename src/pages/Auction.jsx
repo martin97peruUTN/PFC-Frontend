@@ -28,7 +28,7 @@ const Auction = ({showToast}) => {
 
     //Paginator states
     const [paginatorFirst, setPaginatorFirst] = useState(0);
-    const [paginatorRows, setPaginatorRows] = useState(10);
+    const [paginatorRows, setPaginatorRows] = useState(20);
     const [paginatorPage, setPaginatorPage] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
 
@@ -54,7 +54,9 @@ const Auction = ({showToast}) => {
             }
             fetchContext.authAxios.get(fetchURL)
             .then(response => {
+                console.log(response.data.content)
                 setAnimalsOnGround(response.data.content)
+                setTotalPages(response.data.totalPages)
                 setLoadingStart(false)
             })
             .catch(error => {
@@ -180,6 +182,12 @@ const Auction = ({showToast}) => {
     const itemCardList = animalsOnGround.map(animalOnGround => (
         <AnimalsOnGroundCard
             id={animalOnGround.id}
+            key={animalOnGround.id}
+            amount={animalOnGround.amount}
+            soldAmount={animalOnGround.soldAmount}
+            seller={animalOnGround.seller.name}
+            category={animalOnGround.category.name}
+            corralNumber={animalOnGround.corralNumber}
             tabViewActiveIndex = {tabViewActiveIndex}
             sellHandler = {sellHandler}
             notSoldHandler = {notSoldHandler}
@@ -243,7 +251,7 @@ const Auction = ({showToast}) => {
                         first={paginatorFirst}
                         rows={paginatorRows}
                         totalRecords={totalPages*paginatorRows}
-                        rowsPerPageOptions={[10, 20, 30]}
+                        rowsPerPageOptions={[20,40,60]}
                         onPageChange={onPaginatorPageChange}
                     ></Paginator>
                 }
