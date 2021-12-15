@@ -14,6 +14,7 @@ export const CATEGORIES = '/categorias'
 export const USERS = '/usuarios'
 export const USER_CRUD = '/crear-editar-usuario'
 export const ADD_PARTICIPANT = '/agregar-participante'
+export const BATCH_CRUD = '/crear-editar-lote'
 
 //Backend
 export const LOGIN_API = '/login'

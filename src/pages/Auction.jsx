@@ -14,7 +14,7 @@ import { AuthContext } from './../context/AuthContext';
 import * as url from '../util/url';
 
 import Card from '../components/cards/Card'
-import AnimalsOnGroundCard from '../components/cards/AnimalsOnGroundCard'
+import AnimalsOnGroundShowCard from '../components/cards/AnimalsOnGroundShowCard'
 
 const Auction = ({showToast}) => {
 
@@ -33,7 +33,10 @@ const Auction = ({showToast}) => {
     const [totalPages, setTotalPages] = useState(0);
 
     const [auctionId, setAuctionId] = useState()
+
+    //0:Para venta 1:No vendido 2:Vendido
     const [tabViewActiveIndex, setTabViewActiveIndex] = useState(0);
+
     const [animalsOnGround, setAnimalsOnGround] = useState([])
 
     useEffect(() => {
@@ -77,16 +80,21 @@ const Auction = ({showToast}) => {
         //FIXME capaz no haga falta hacer nada aca, porque puse el tabViewActiveIndex en el useEffect
     }
 
-    const sellHandler = (animalOnGroundd) => {
+    const sellHandler = (animalOnGroundId) => {
 
     }
 
-    const notSoldHandler = (animalOnGroundd) => {
+    const notSoldHandler = (animalOnGroundId) => {
         
     }
 
-    const editHandler = (animalOnGroundd) => {
-        
+    const editHandler = (animalOnGroundId) => {
+        history.push(url.BATCH_CRUD, 
+            {
+                auctionId: auctionId,
+                animalOnGroundId: animalOnGroundId
+            }
+        )
     }
 
     //Se dispara al presionar Terminar remate
@@ -117,7 +125,11 @@ const Auction = ({showToast}) => {
         menuItems.push({
             label: 'Agregar lote',
             icon: 'pi pi-fw pi-plus-circle',
-            url: url.HOME
+            command: () => history.push(url.BATCH_CRUD, 
+                {
+                    auctionId: auctionId
+                }
+            )
         },
         {
             label: 'Participantes',
@@ -141,7 +153,11 @@ const Auction = ({showToast}) => {
         menuItems.push({
             label: 'Agregar lote',
             icon: 'pi pi-fw pi-plus-circle',
-            url: url.HOME
+            command: () => history.push(url.BATCH_CRUD, 
+                {
+                    auctionId: auctionId
+                }
+            )
         },
         {
             label: 'Informacion del remate',
@@ -180,7 +196,7 @@ const Auction = ({showToast}) => {
     )
 
     const itemCardList = animalsOnGround.map(animalOnGround => (
-        <AnimalsOnGroundCard
+        <AnimalsOnGroundShowCard
             id={animalOnGround.id}
             key={animalOnGround.id}
             amount={animalOnGround.amount}
@@ -195,6 +211,7 @@ const Auction = ({showToast}) => {
         />
     ))
 
+    //0:Para venta 1:No vendido 2:Vendido
     const tabView = (
         <TabView className='w-full' 
             activeIndex={tabViewActiveIndex} 

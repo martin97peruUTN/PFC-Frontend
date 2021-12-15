@@ -14,7 +14,7 @@ const SimpleNameCard = props => (
         buttons = {
             <div className={CARD_TWO_COLUMNS_BUTTON_DIV}>
                 {props.editHandler?
-                <Button className={CARD_TWO_COLUMNS_BUTTON} icon="pi pi-pencil" onClick={()=> props.editHandler(props.id)} label="Editar"></Button>
+                <Button className={CARD_TWO_COLUMNS_BUTTON} icon="pi pi-pencil" onClick={()=> props.editHandler(props.id)} label={props.editLabel?props.editLabel:"Editar"}></Button>
                 :
                 null
                 }
