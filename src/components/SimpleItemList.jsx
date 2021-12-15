@@ -34,9 +34,6 @@ const SimpleItemList = ({showToast, ...props}) => {
     //Mostrar el dialogo de confirmacion o esconderlo
     const [displayDialog, setDisplayDialog] = useState(false);
 
-    //Para mostrar un titulo u otro en el dialogo
-    const [isEditing, setIsEditing] = useState(false);
-
     //Paginator states
     const [paginatorFirst, setPaginatorFirst] = useState(0);
     const [paginatorRows, setPaginatorRows] = useState(10);
@@ -75,14 +72,12 @@ const SimpleItemList = ({showToast, ...props}) => {
     const createItemHandler = () => {
         setDisplayDialog(true)
         setEditingItem(null)
-        setIsEditing(false)
     }
 
     //Se dispara la tocar el boton editar, abre el dialogo de creacion/edicion y setea editingItem al que corresponde
     const editHandler = (id) => {
         setDisplayDialog(true)
         setEditingItem(itemList.find(item => item.id === id))
-        setIsEditing(true)
     }
 
     //Se dispara al tocar el boton aceptar en el dialogo
@@ -153,7 +148,7 @@ const SimpleItemList = ({showToast, ...props}) => {
 
     const editDialog = (
         <Dialog
-            header={isEditing?`Editar ${itemNameLowercase}`:`Crear ${itemNameLowercase}`}
+            header={editingItem?`Editar ${itemNameLowercase}`:`Crear ${itemNameLowercase}`}
             visible={displayDialog}
             className="w-11 md:w-6"
             onHide={() => setDisplayDialog(false)}
