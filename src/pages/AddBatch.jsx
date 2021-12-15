@@ -7,30 +7,37 @@ import { Skeleton } from 'primereact/skeleton';
 import { confirmDialog } from 'primereact/confirmdialog';
 import { AutoComplete } from 'primereact/autocomplete';
 import { Dialog } from 'primereact/dialog';
-import { ScrollTop } from 'primereact/scrolltop';
 import { Dropdown } from 'primereact/dropdown';
 
 import { FetchContext } from '../context/FetchContext';
 
 import Card from '../components/cards/Card'
+import AnimalsOnGroundCRUDCard from '../components/cards/AnimalsOnGroundCRUDCard'
 
 import * as url from '../util/url';
 import * as miscFunctions from '../util/miscFunctions';
 
-const AddBatch = ({showToast, ...props}) => {
+const AddBatch = ({showToast}) => {
 
     const fetchContext = useContext(FetchContext)
     const history = useHistory();
 
+    //uso este estado "comodin" para refrescar la pagina cuando hay un cambio
+    const [refresh, setRefresh] = useState(false);
+
+    const [loadingAccept, setLoadingAccept] = useState(false)
     const [loadingStart, setLoadingStart] = useState(false)
 
-    const [enableEditing, setEnableEditing] = useState(false)
+    const [enableEditing, setEnableEditing] = useState(true)
 
     //Mostrar el dialogo de agregar o esconderlo
     const [displayDialog, setDisplayDialog] = useState(false);
 
     //Item que se esta editando o creando (ver el Dialog)
     const [editingItem, setEditingItem] = useState(null);
+
+    //El auctionId sirve solo en el POST de batch, por lo que no se usa en el caso de un editar
+    const [auctionId, setAuctionId] = useState(null);
 
     //Estados del batch
     const [batchId, setBatchId] = useState(null);
@@ -47,10 +54,12 @@ const AddBatch = ({showToast, ...props}) => {
     const [provenanceList, setProvenanceList] = useState([])
 
     useEffect(() => {
-        setLoadingStart(true)
         //auctionId debe llegar siempre, si llega animalOnGroundId es que estoy editando
         const {auctionId, animalOnGroundId} = history.location.state
+        setAuctionId(auctionId)
         if(animalOnGroundId){
+            setLoadingStart(true)
+            //Editando
             fetchContext.authAxios.get(`${url.AUCTION_BATCH_API}/by-animals-on-ground/${animalOnGroundId}`)
             .then(response => {
                 setBatchId(response.data.id)
@@ -59,6 +68,7 @@ const AddBatch = ({showToast, ...props}) => {
                 setCorralNumber(response.data.corralNumber)
                 setDteNumber(response.data.dteNumber)
                 setAnimalsOnGroundList(response.data.animalsOnGround)
+                setEnableEditing(false)
                 setLoadingStart(false)
             })
             .catch(error => {
@@ -68,7 +78,8 @@ const AddBatch = ({showToast, ...props}) => {
         }
     },[])
 
-    //Searchs de los autocompletes
+    //>>>SEARCHS DE LOS AUTOCOMPLETES<<<
+    
     const searchCategory = (event) => {
         fetchContext.authAxios.get(`${url.CATEGORY_API}?name=${event.query}`)
         .then(response => {
@@ -99,15 +110,91 @@ const AddBatch = ({showToast, ...props}) => {
         }
     }
 
-    //Se dispara cuando se toca el boton guardar cuando se esta CREANDO un lote
-    const saveNewBatchHandler = () => {
-        //TODO
+    //>>>CRUD DE BATCH<<<
+
+    const setSoldAndNotSold = (list) => {
+        const returnList = list.map(item => (
+            {...item, 'sold': false, 'notSold': false}
+        ))
+        return returnList
     }
 
-    //Se dispara cuando se toca el boton guardar cuando se esta EDITANDO un lote
-    const saveEditBatchHandler = () => {
-        //TODO
+    //Se dispara al tocar el boton guardar
+    const createOrUpdateHandler = (isCreating) => {
+        if(!provenance || !corralNumber){
+            showToast('warn','Cuidado','Faltan campos por completar')
+        }else if(animalsOnGroundList.length === 0){
+            showToast('warn','Cuidado','No hay animales en el lote')
+        }else{
+            confirmDialog({
+                message: '¿Esta seguro de que desea proceder?',
+                header: 'Guardar lote',
+                icon: 'pi pi-exclamation-circle',
+                acceptLabel: 'Si',
+                accept: () => isCreating?createBatchHandler():editBatchHandler()
+            });
+        }
     }
+
+    //Se dispara cuando se toca el boton guardar, acepta en el dialogo y esta CREANDO un lote
+    const createBatchHandler = () => {
+        setLoadingAccept(true)
+        const body = {
+            provenance: provenance,
+            corralNumber: corralNumber,
+            dteNumber: dteNumber,
+            animalsOnGround: setSoldAndNotSold(animalsOnGroundList)
+        }
+        fetchContext.authAxios.post(`${url.AUCTION_BATCH_API}/${auctionId}`, body)
+        .then(response => {
+            showToast('success','Exito','Se creo el lote correctamente')
+            history.goBack()
+        })
+        .catch(error => {
+            showToast('error','Error','No se pudo crear el lote')
+            setLoadingAccept(false)
+        })
+    }
+
+    //Se dispara cuando se toca el boton guardar, acepta en el dialogo y esta EDITANDO un lote
+    const editBatchHandler = () => {
+        setLoadingAccept(true)
+        const body = {
+            provenance: provenance,
+            corralNumber: corralNumber,
+            dteNumber: dteNumber
+        }
+        fetchContext.authAxios.patch(`${url.AUCTION_BATCH_API}/${batchId}`, body)
+        .then(response => {
+            showToast('success','Exito','Se edito el lote correctamente')
+            history.goBack()
+        })
+        .catch(error => {
+            showToast('error','Error','No se pudo editar el lote')
+            setLoadingAccept(false)
+        })
+    }
+
+    const deleteBatchHandler = () => {
+        confirmDialog({
+            message: '¿Esta seguro de que desea eliminar el lote?',
+            header: 'Eliminar lote',
+            icon: 'pi pi-exclamation-circle',
+            acceptLabel: 'Si',
+            accept: () => {
+                fetchContext.authAxios.delete(`${url.AUCTION_BATCH_API}/${batchId}`)
+                .then(response => {
+                    showToast('success','Exito','Se elimino el lote correctamente')
+                    history.goBack()
+                })
+                .catch(error => {
+                    showToast('error','Error','No se pudo eliminar el lote')
+                })
+            }
+        })
+    }
+
+    //>>>CRUD DE ANIMALS ON GROUND<<<
 
     //Se dispara al tocar el boton agregar, se abre el dialogo
     const createItemHandler = () => {
@@ -116,7 +203,7 @@ const AddBatch = ({showToast, ...props}) => {
     }
 
     //Se dispara la tocar el boton editar, abre el dialogo y setea editingItem al que corresponde
-    const editHandler = (id) => {
+    const editItemHandler = (id) => {
         setDisplayDialog(true)
         setEditingItem(animalsOnGroundList.find(item => item.id === id))
     }
@@ -124,35 +211,37 @@ const AddBatch = ({showToast, ...props}) => {
     //Se dispara al tocar el boton aceptar en el dialogo
     const saveItemHandler = () => {
         if(editingItem && editingItem.amount && editingItem.category){
-        //Si tiene id es que estoy haciendo una edicion, caso contrario, estoy creando uno nuevo
-        if(editingItem.id){
-            fetchContext.authAxios.patch(`${url.ANIMALS_ON_GROUND_API}/${editingItem.id}`, editingItem)
-            .then(response => {
-                showToast('success', 'Exito', `Aminales guardados`)
-                setDisplayDialog(false)
-                setEditingItem(null)
-            })
-            .catch(error => {
-                showToast('error', 'Error', `No se pudieron guardar los animales`)
-            })
-        }else{
-            fetchContext.authAxios.post(`${url.AUCTION_BATCH_API}/${batchId}/animals-on-ground`, editingItem)
-            .then(response => {
-                showToast('success', 'Exito', `Animales guardados`)
-                setDisplayDialog(false)
-                setEditingItem(null)
-            })
-            .catch(error => {
-                showToast('error', 'Error', `No se pudieron guardar los animales`)
-            })
-        }
+            //Si tiene id es que estoy haciendo una edicion, caso contrario, estoy creando uno nuevo
+            if(editingItem.id){
+                fetchContext.authAxios.patch(`${url.ANIMALS_ON_GROUND_API}/${editingItem.id}`, editingItem)
+                .then(response => {
+                    showToast('success', 'Exito', `Aminales guardados`)
+                    setRefresh(!refresh)
+                    setDisplayDialog(false)
+                    setEditingItem(null)
+                })
+                .catch(error => {
+                    showToast('error', 'Error', `No se pudieron guardar los animales`)
+                })
+            }else{
+                fetchContext.authAxios.post(`${url.AUCTION_BATCH_API}/${batchId}/animals-on-ground`, editingItem)
+                .then(response => {
+                    showToast('success', 'Exito', `Animales guardados`)
+                    setRefresh(!refresh)
+                    setDisplayDialog(false)
+                    setEditingItem(null)
+                })
+                .catch(error => {
+                    showToast('error', 'Error', `No se pudieron guardar los animales`)
+                })
+            }
         }else{
             showToast('warn', 'Cuidado', 'Algun campo esta vacio')
         }
     }
 
     //Se dispara al tocar el boton eliminar, abre un dialogo de confirmacion
-    const deleteHandler = (animalsOnGroundId) => {
+    const deleteItemHandler = (animalsOnGroundId) => {
         confirmDialog({
             header: 'Confirmación',
             message: `¿Está seguro que desea eliminar estos animales?`,
@@ -164,6 +253,7 @@ const AddBatch = ({showToast, ...props}) => {
                 fetchContext.authAxios.delete(`${url.ANIMALS_ON_GROUND_API}/${animalsOnGroundId}`)
                 .then(response => {
                     showToast('success', 'Éxito', `Los animales fueron eliminados`)
+                    setRefresh(!refresh)
                 })
                 .catch(error => {
                     showToast('error', 'Error', `No se pudieron eliminar los animales`)
@@ -248,9 +338,9 @@ const AddBatch = ({showToast, ...props}) => {
             footer={
                 //Si estoy editando pongo los botones aca, sino al final de la otra card
                 batchId?
-                <div className="">
+                <div className="flex justify-content-between">
                     <Button label="Cancelar" icon="pi pi-times" onClick={() => history.goBack()} className="p-button-danger" />
-                    <Button label="Guardar" icon="pi pi-check" onClick={() => saveEditBatchHandler()} className="btn btn-primary" />
+                    <Button label="Guardar" icon="pi pi-check" loading={loadingAccept} onClick={() => createOrUpdateHandler(/*isCreating*/false)} className="btn btn-primary" />
                 </div>
                 :
                 null
@@ -266,6 +356,7 @@ const AddBatch = ({showToast, ...props}) => {
                     field="name" 
                     dropdown 
                     forceSelection 
+                    disabled={!enableEditing}
                     onChange={(e) => setClientSeller(e.target.value)}
                 />
                 <label htmlFor="sellerAutocompleteForm">Vendedor</label>
@@ -278,6 +369,8 @@ const AddBatch = ({showToast, ...props}) => {
                     value={provenance} 
                     options={provenanceList}
                     optionLabel="reference"
+                    emptyMessage="Primero seleccione un vendedor"
+                    disabled={!enableEditing}
                     onChange={(e) => setProvenance(e.target.value)}
                 />
                 <label htmlFor="provenanceAutocompleteForm">Procedencia</label>
@@ -288,7 +381,8 @@ const AddBatch = ({showToast, ...props}) => {
                     id="corralNumber" 
                     className='w-full'
                     keyfilter="int" 
-                    value={corralNumber} 
+                    value={corralNumber?corralNumber:''} 
+                    disabled={!enableEditing}
                     onChange={e => setCorralNumber(e.target.value)}
                 />
                 <label htmlFor="corralNumber">Numero de corral</label>
@@ -298,7 +392,8 @@ const AddBatch = ({showToast, ...props}) => {
                 <InputText 
                     id="dte" 
                     className='w-full'
-                    value={dteNumber} 
+                    value={dteNumber?dteNumber:''} 
+                    disabled={!enableEditing}
                     onChange={e => setDteNumber(e.target.value)}
                 />
                 <label htmlFor="dte">Numero de DT-e (opcional)</label>
@@ -306,49 +401,51 @@ const AddBatch = ({showToast, ...props}) => {
         </Card>
     )
 
+    const animalsOnGroundCardList = animalsOnGroundList.map(animal => (
+        <AnimalsOnGroundCRUDCard
+            key={animal.id}
+            id={animal.id}
+            category={animal.category}
+            amount={animal.amount}
+            enableEditing={enableEditing}
+            editItemHandler={editItemHandler}
+            deleteItemHandler={deleteItemHandler}
+        />
+    ))
+
     const cardFormAnimalsOnGround = (
         <Card
             title={
-                //En pantalla grande muestro el boton de agregar a la derecha del titulo (primer caso)
-                //En pantalla pequeña muestro el boton de agregar abajo del titulo (segundo caso)
-                <div>
                 <div className="flex justify-content-between">
                     <>{'Animales'}</>
-                    {!miscFunctions.isSmallScreen()?
-                        <Button 
-                            className="btn btn-primary" 
-                            icon="pi pi-plus" 
-                            onClick={()=> createItemHandler()} 
-                            label="Agregar"
-                        />
-                        :
-                        null
-                    }
-                </div>
-                    {miscFunctions.isSmallScreen()?
-                        <Button 
-                            className="btn btn-primary mt-2" 
-                            icon="pi pi-plus" 
-                            onClick={()=> createItemHandler()} 
-                            label="Agregar"
-                        />
-                        :
-                        null
-                    }
+                    {enableEditing?
+                    <Button 
+                        className="btn btn-primary" 
+                        icon="pi pi-plus" 
+                        onClick={()=> createItemHandler()} 
+                        label="Agregar"
+                    />
+                    :
+                    null}
                 </div>
             }
             footer={
-                //Si estoy creando pongo los botones aca, sino al final de la primera card
+                //Si estoy creando pongo los botones aca, sino al final de la primera card y aca el boton de eliminar batch
                 batchId?
-                null
+                <div className="flex justify-content-between">
+                    <Button label="Eliminar Lote" icon="pi pi-times" onClick={() => deleteBatchHandler()} className="p-button-danger" />
+                </div>
                 :
-                <div className="">
+                <div className="flex justify-content-between">
                     <Button label="Cancelar" icon="pi pi-times" onClick={() => history.goBack()} className="p-button-danger" />
-                    <Button label="Guardar" icon="pi pi-check" onClick={() => saveNewBatchHandler()} className="btn btn-primary" />
+                    <Button label="Guardar" icon="pi pi-check" loading={loadingAccept} onClick={() => createOrUpdateHandler(/*isCreating*/true)} className="btn btn-primary" />
                 </div>
             }
         >
-
+            {animalsOnGroundList.length>0?
+            animalsOnGroundCardList
+            :
+            <div className="text-2xl flex justify-content-center">Aun no hay animales agregados a este lote</div>}
         </Card>
     )
 
@@ -362,7 +459,6 @@ const AddBatch = ({showToast, ...props}) => {
     
     return (
         <>  
-            <ScrollTop />
             {editDialog}
             {loadingStart?
                 loadingScreen
