@@ -65,7 +65,7 @@ const AddBatch = ({showToast}) => {
             .then(response => {
                 setBatchId(response.data.id)
                 setSeller(response.data.client)
-                setProvenanceList([])//FIXME solucionar esto, que el cliente traiga su lista de provenances
+                setProvenanceList(response.data.client.provenances)
                 setProvenance(response.data.provenance)
                 setCorralNumber(response.data.corralNumber)
                 setDteNumber(response.data.dteNumber)
