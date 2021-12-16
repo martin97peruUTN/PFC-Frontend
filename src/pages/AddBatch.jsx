@@ -46,6 +46,7 @@ const AddBatch = ({showToast}) => {
     const [corralNumber, setCorralNumber] = useState(null);
     const [dteNumber, setDteNumber] = useState(null);
 
+    const [newItemsOnCreateBatchId, setNewItemsOnCreateBatchId] = useState(-100);
     const [animalsOnGroundList, setAnimalsOnGroundList] = useState([]);
     
     //Estados de autocompletes
@@ -112,15 +113,15 @@ const AddBatch = ({showToast}) => {
 
     //>>>CRUD DE BATCH<<<
 
-    const setSoldAndNotSold = (list) => {
+    const setSoldNotSoldAndId = (list) => {
         const returnList = list.map(item => (
-            {...item, 'sold': false, 'notSold': false}
+            {...item, 'sold': false, 'notSold': false, 'id': null}
         ))
         return returnList
     }
 
     //Se dispara al tocar el boton guardar
-    const createOrUpdateHandler = (isCreating) => {
+    const createOrUpdateHandler = () => {
         if(!provenance || !corralNumber){
             showToast('warn','Cuidado','Faltan campos por completar')
         }else if(animalsOnGroundList.length === 0){
@@ -131,7 +132,7 @@ const AddBatch = ({showToast}) => {
                 header: 'Guardar lote',
                 icon: 'pi pi-exclamation-circle',
                 acceptLabel: 'Si',
-                accept: () => isCreating?createBatchHandler():editBatchHandler()
+                accept: () => batchId?createBatchHandler():editBatchHandler()
             });
         }
     }
@@ -143,7 +144,7 @@ const AddBatch = ({showToast}) => {
             provenance: provenance,
             corralNumber: corralNumber,
             dteNumber: dteNumber,
-            animalsOnGround: setSoldAndNotSold(animalsOnGroundList)
+            animalsOnGround: setSoldNotSoldAndId(animalsOnGroundList)
         }
         fetchContext.authAxios.post(`${url.AUCTION_BATCH_API}/${auctionId}`, body)
         .then(response => {
@@ -212,7 +213,8 @@ const AddBatch = ({showToast}) => {
     const saveItemHandler = () => {
         if(editingItem && editingItem.amount && editingItem.category){
             //Si tiene id es que estoy haciendo una edicion, caso contrario, estoy creando uno nuevo
-            if(editingItem.id){
+            //Si hay batchId lo mando a guardar, sino lo agrego a la lista y despues mando del batch nuevo completo
+            if(editingItem.id && batchId){
                 fetchContext.authAxios.patch(`${url.ANIMALS_ON_GROUND_API}/${editingItem.id}`, editingItem)
                 .then(response => {
                     showToast('success', 'Exito', `Aminales guardados`)
@@ -223,7 +225,7 @@ const AddBatch = ({showToast}) => {
                 .catch(error => {
                     showToast('error', 'Error', `No se pudieron guardar los animales`)
                 })
-            }else{
+            }else if(!editingItem.id && batchId){
                 fetchContext.authAxios.post(`${url.AUCTION_BATCH_API}/${batchId}/animals-on-ground`, editingItem)
                 .then(response => {
                     showToast('success', 'Exito', `Animales guardados`)
@@ -234,6 +236,20 @@ const AddBatch = ({showToast}) => {
                 .catch(error => {
                     showToast('error', 'Error', `No se pudieron guardar los animales`)
                 })
+            }else if(editingItem.id && !batchId){
+                const modifiedItemIndex = animalsOnGroundList.findIndex(item => item.id === editingItem.id)
+                const modifiedItem = {...animalsOnGroundList[modifiedItemIndex], ...editingItem}
+                const modifiedList = [...animalsOnGroundList]
+                modifiedList[modifiedItemIndex] = modifiedItem
+                setAnimalsOnGroundList(modifiedList)
+                setDisplayDialog(false)
+                setEditingItem(null)
+            }else{//!editingItem.id && !batchId
+                const newItem = {...editingItem, id: newItemsOnCreateBatchId}
+                setNewItemsOnCreateBatchId(newItemsOnCreateBatchId - 1)
+                setAnimalsOnGroundList([...animalsOnGroundList, newItem])
+                setDisplayDialog(false)
+                setEditingItem(null)
             }
         }else{
             showToast('warn', 'Cuidado', 'Algun campo esta vacio')
@@ -250,14 +266,23 @@ const AddBatch = ({showToast}) => {
             rejectLabel: 'No',
             acceptClassName: 'p-button-danger',
             accept: () => {
-                fetchContext.authAxios.delete(`${url.ANIMALS_ON_GROUND_API}/${animalsOnGroundId}`)
-                .then(response => {
+                if(batchId && animalsOnGroundId>0){
+                    fetchContext.authAxios.delete(`${url.ANIMALS_ON_GROUND_API}/${animalsOnGroundId}`)
+                    .then(response => {
+                        showToast('success', 'Éxito', `Los animales fueron eliminados`)
+                        setRefresh(!refresh)
+                    })
+                    .catch(error => {
+                        showToast('error', 'Error', `No se pudieron eliminar los animales`)
+                    })
+                }else{
+                    //(batchId && animalsOnGroundId<=0) no se puede dar, porque ni bien creo un animalsOnGround se guarda en el back si hay batchId
+                    //Si no hay batchId es que estoy creando el batch, asi que simplemente lo elimino de la lista
+                    const modifiedList = animalsOnGroundList.filter(item => item.id !== animalsOnGroundId)
+                    setAnimalsOnGroundList(modifiedList)
                     showToast('success', 'Éxito', `Los animales fueron eliminados`)
                     setRefresh(!refresh)
-                })
-                .catch(error => {
-                    showToast('error', 'Error', `No se pudieron eliminar los animales`)
-                })
+                }
             }
         });
     }
@@ -340,7 +365,7 @@ const AddBatch = ({showToast}) => {
                 batchId?
                 <div className="flex justify-content-between">
                     <Button label="Cancelar" icon="pi pi-times" onClick={() => history.goBack()} className="p-button-danger" />
-                    <Button label="Guardar" icon="pi pi-check" loading={loadingAccept} onClick={() => createOrUpdateHandler(/*isCreating*/false)} className="btn btn-primary" />
+                    <Button label="Guardar" icon="pi pi-check" loading={loadingAccept} onClick={() => createOrUpdateHandler()} className="btn btn-primary" />
                 </div>
                 :
                 null
@@ -438,7 +463,7 @@ const AddBatch = ({showToast}) => {
                 :
                 <div className="flex justify-content-between">
                     <Button label="Cancelar" icon="pi pi-times" onClick={() => history.goBack()} className="p-button-danger" />
-                    <Button label="Guardar" icon="pi pi-check" loading={loadingAccept} onClick={() => createOrUpdateHandler(/*isCreating*/true)} className="btn btn-primary" />
+                    <Button label="Guardar" icon="pi pi-check" loading={loadingAccept} onClick={() => createOrUpdateHandler()} className="btn btn-primary" />
                 </div>
             }
         >
