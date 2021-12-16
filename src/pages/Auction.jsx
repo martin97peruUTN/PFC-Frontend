@@ -57,7 +57,6 @@ const Auction = ({showToast}) => {
             }
             fetchContext.authAxios.get(fetchURL)
             .then(response => {
-                console.log(response.data.content)
                 setAnimalsOnGround(response.data.content)
                 setTotalPages(response.data.totalPages)
                 setLoadingStart(false)

@@ -28,7 +28,7 @@ const AddBatch = ({showToast}) => {
     const [loadingAccept, setLoadingAccept] = useState(false)
     const [loadingStart, setLoadingStart] = useState(false)
 
-    const [enableEditing, setEnableEditing] = useState(true)
+    const [enableEditing, setEnableEditing] = useState(false)
 
     //Mostrar el dialogo de agregar o esconderlo
     const [displayDialog, setDisplayDialog] = useState(false);
@@ -65,19 +65,21 @@ const AddBatch = ({showToast}) => {
             .then(response => {
                 setBatchId(response.data.id)
                 setSeller(response.data.client)
+                setProvenanceList([])//FIXME solucionar esto, que el cliente traiga su lista de provenances
                 setProvenance(response.data.provenance)
                 setCorralNumber(response.data.corralNumber)
                 setDteNumber(response.data.dteNumber)
                 setAnimalsOnGroundList(response.data.animalsOnGround)
-                setEnableEditing(false)
                 setLoadingStart(false)
             })
             .catch(error => {
                 showToast('error', 'Error', 'No se pudo conectar al servidor')
                 history.goBack()
             })
+        }else{
+            setEnableEditing(true)
         }
-    },[])
+    },[refresh])
 
     //>>>SEARCHS DE LOS AUTOCOMPLETES<<<
     
@@ -113,13 +115,6 @@ const AddBatch = ({showToast}) => {
 
     //>>>CRUD DE BATCH<<<
 
-    const setSoldNotSoldAndId = (list) => {
-        const returnList = list.map(item => (
-            {...item, 'sold': false, 'notSold': false, 'id': null}
-        ))
-        return returnList
-    }
-
     //Se dispara al tocar el boton guardar
     const createOrUpdateHandler = () => {
         if(!provenance || !corralNumber){
@@ -132,7 +127,7 @@ const AddBatch = ({showToast}) => {
                 header: 'Guardar lote',
                 icon: 'pi pi-exclamation-circle',
                 acceptLabel: 'Si',
-                accept: () => batchId?createBatchHandler():editBatchHandler()
+                accept: () => !batchId?createBatchHandler():editBatchHandler()
             });
         }
     }
@@ -144,7 +139,9 @@ const AddBatch = ({showToast}) => {
             provenance: provenance,
             corralNumber: corralNumber,
             dteNumber: dteNumber,
-            animalsOnGround: setSoldNotSoldAndId(animalsOnGroundList)
+            animalsOnGround: animalsOnGroundList.map(item => (
+                {...item, 'sold': false, 'notSold': false, 'id': null}
+            ))
         }
         fetchContext.authAxios.post(`${url.AUCTION_BATCH_API}/${auctionId}`, body)
         .then(response => {
@@ -168,7 +165,7 @@ const AddBatch = ({showToast}) => {
         fetchContext.authAxios.patch(`${url.AUCTION_BATCH_API}/${batchId}`, body)
         .then(response => {
             showToast('success','Exito','Se edito el lote correctamente')
-            history.goBack()
+            setLoadingAccept(false)
         })
         .catch(error => {
             showToast('error','Error','No se pudo editar el lote')
@@ -189,7 +186,11 @@ const AddBatch = ({showToast}) => {
                     history.goBack()
                 })
                 .catch(error => {
-                    showToast('error','Error','No se pudo eliminar el lote')
+                    if (error.response.status === 403) {
+                        showToast('error','Error','No se pueden eliminar lotes que tengan animales vendidos')
+                    }else{
+                        showToast('error','Error','No se pudo eliminar el lote')
+                    }
                 })
             }
         })
@@ -215,7 +216,8 @@ const AddBatch = ({showToast}) => {
             //Si tiene id es que estoy haciendo una edicion, caso contrario, estoy creando uno nuevo
             //Si hay batchId lo mando a guardar, sino lo agrego a la lista y despues mando del batch nuevo completo
             if(editingItem.id && batchId){
-                fetchContext.authAxios.patch(`${url.ANIMALS_ON_GROUND_API}/${editingItem.id}`, editingItem)
+                const data = {...editingItem, 'sold': false, 'notSold': false, 'id': null}
+                fetchContext.authAxios.patch(`${url.ANIMALS_ON_GROUND_API}/${editingItem.id}`, data)
                 .then(response => {
                     showToast('success', 'Exito', `Aminales guardados`)
                     setRefresh(!refresh)
@@ -226,7 +228,8 @@ const AddBatch = ({showToast}) => {
                     showToast('error', 'Error', `No se pudieron guardar los animales`)
                 })
             }else if(!editingItem.id && batchId){
-                fetchContext.authAxios.post(`${url.AUCTION_BATCH_API}/${batchId}/animals-on-ground`, editingItem)
+                const data = {...editingItem, 'sold': false, 'notSold': false, 'id': null}
+                fetchContext.authAxios.post(`${url.AUCTION_BATCH_API}/${batchId}/animals-on-ground`, data)
                 .then(response => {
                     showToast('success', 'Exito', `Animales guardados`)
                     setRefresh(!refresh)
@@ -245,7 +248,7 @@ const AddBatch = ({showToast}) => {
                 setDisplayDialog(false)
                 setEditingItem(null)
             }else{//!editingItem.id && !batchId
-                const newItem = {...editingItem, id: newItemsOnCreateBatchId}
+                const newItem = {...editingItem, 'id': newItemsOnCreateBatchId}
                 setNewItemsOnCreateBatchId(newItemsOnCreateBatchId - 1)
                 setAnimalsOnGroundList([...animalsOnGroundList, newItem])
                 setDisplayDialog(false)
@@ -289,7 +292,7 @@ const AddBatch = ({showToast}) => {
 
     const editDialog = (
         <Dialog
-            header={editingItem?`Editar animales`:`Agregar animales`}
+            header={(editingItem && editingItem.id)?`Editar animales`:`Agregar animales`}
             visible={displayDialog}
             className="w-11 md:w-6"
             onHide={() => setDisplayDialog(false)}
@@ -364,7 +367,7 @@ const AddBatch = ({showToast}) => {
                 //Si estoy editando pongo los botones aca, sino al final de la otra card
                 batchId?
                 <div className="flex justify-content-between">
-                    <Button label="Cancelar" icon="pi pi-times" onClick={() => history.goBack()} className="p-button-danger" />
+                    <Button label="Volver" icon="pi pi-arrow-left" onClick={() => history.goBack()} className="btn btn-primary" />
                     <Button label="Guardar" icon="pi pi-check" loading={loadingAccept} onClick={() => createOrUpdateHandler()} className="btn btn-primary" />
                 </div>
                 :
