@@ -216,7 +216,7 @@ const AddBatch = ({showToast}) => {
             //Si tiene id es que estoy haciendo una edicion, caso contrario, estoy creando uno nuevo
             //Si hay batchId lo mando a guardar, sino lo agrego a la lista y despues mando del batch nuevo completo
             if(editingItem.id && batchId){
-                const data = {...editingItem, 'sold': false, 'notSold': false, 'id': null}
+                const data = editingItem
                 fetchContext.authAxios.patch(`${url.ANIMALS_ON_GROUND_API}/${editingItem.id}`, data)
                 .then(response => {
                     showToast('success', 'Exito', `Aminales guardados`)
@@ -269,7 +269,7 @@ const AddBatch = ({showToast}) => {
             rejectLabel: 'No',
             acceptClassName: 'p-button-danger',
             accept: () => {
-                if(batchId && animalsOnGroundId>0){
+                if(batchId && animalsOnGroundId>=0){
                     fetchContext.authAxios.delete(`${url.ANIMALS_ON_GROUND_API}/${animalsOnGroundId}`)
                     .then(response => {
                         showToast('success', 'Éxito', `Los animales fueron eliminados`)
@@ -279,7 +279,7 @@ const AddBatch = ({showToast}) => {
                         showToast('error', 'Error', `No se pudieron eliminar los animales`)
                     })
                 }else{
-                    //(batchId && animalsOnGroundId<=0) no se puede dar, porque ni bien creo un animalsOnGround se guarda en el back si hay batchId
+                    //(batchId && animalsOnGroundId<0) no se puede dar, porque ni bien creo un animalsOnGround se guarda en el back si hay batchId
                     //Si no hay batchId es que estoy creando el batch, asi que simplemente lo elimino de la lista
                     const modifiedList = animalsOnGroundList.filter(item => item.id !== animalsOnGroundId)
                     setAnimalsOnGroundList(modifiedList)
