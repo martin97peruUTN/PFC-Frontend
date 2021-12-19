@@ -30,6 +30,7 @@ import UserCRUD from "./pages/UserCRUD";
 import ClientList from "./pages/ClientList";
 import ClientCRUD from "./pages/ClientCRUD";
 import AddParticipant from "./pages/AddParticipant";
+import AddBatch from "./pages/AddBatch";
 
 const UnauthenticatedRoutes = ({showToast}) => (
   <div className="mx-3 my-7 md:mx-6">
@@ -118,6 +119,9 @@ function App() {
       <AuthenticatedRoute exact path={url.AUCTION}>
         <Auction showToast={showToast}/>
       </AuthenticatedRoute>
+      <AuthenticatedRoute exact path={url.BATCH_CRUD}>
+        <AddBatch showToast={showToast}/>
+      </AuthenticatedRoute>
       <ConsigneeRoute exact path={url.ADD_PARTICIPANT}>
         <AddParticipant showToast={showToast}/>
       </ConsigneeRoute>
@@ -127,13 +131,6 @@ function App() {
       </AuthenticatedRoute>
       <AuthenticatedRoute exact path={url.CLIENT_LIST}>
         <ClientList showToast={showToast}/>
-      </AuthenticatedRoute>
-
-      <AuthenticatedRoute exact path={url.PROFILE}>
-        <Profile showToast={showToast}/>
-      </AuthenticatedRoute>
-      <AuthenticatedRoute exact path={url.PASSWORD_CHANGE}>
-        <PasswordChange showToast={showToast}/>
       </AuthenticatedRoute>
       
       <ConsigneeRoute exact path={url.LOCALITIES}>
@@ -148,6 +145,13 @@ function App() {
       <AdminRoute exact path={url.USER_CRUD}>
         <UserCRUD showToast={showToast}/>
       </AdminRoute>
+
+      <AuthenticatedRoute exact path={url.PROFILE}>
+        <Profile showToast={showToast}/>
+      </AuthenticatedRoute>
+      <AuthenticatedRoute exact path={url.PASSWORD_CHANGE}>
+        <PasswordChange showToast={showToast}/>
+      </AuthenticatedRoute>
 
       <UnauthenticatedRoutes showToast={showToast}/>
     </Switch>

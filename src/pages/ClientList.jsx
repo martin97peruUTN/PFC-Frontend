@@ -90,6 +90,7 @@ const ClientList = ({showToast}) => {
             key={item.id}
             id={item.id}
             name={item.name}
+            editLabel="Ver/Editar"
             editHandler={editHandler}
             deleteHandler={deleteHandler}
         />
