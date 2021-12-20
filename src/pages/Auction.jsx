@@ -33,6 +33,7 @@ const Auction = ({showToast}) => {
     const [totalPages, setTotalPages] = useState(0);
 
     const [auctionId, setAuctionId] = useState()
+    const [auctionIsFinished, setAuctionIsFinished] = useState()
 
     //0:Para venta 1:No vendido 2:Vendido
     const [tabViewActiveIndex, setTabViewActiveIndex] = useState(0);
@@ -55,10 +56,14 @@ const Auction = ({showToast}) => {
             }else{
                 fetchURL = fetchURL.concat('&sold=true')
             }
-            fetchContext.authAxios.get(fetchURL)
-            .then(response => {
-                setAnimalsOnGround(response.data.content)
-                setTotalPages(response.data.totalPages)
+            const p1 = fetchContext.authAxios.get(url.AUCTION_API+'/'+auctionId)
+            const p2 = fetchContext.authAxios.get(fetchURL)
+            Promise.all([p1, p2]).then(values => {
+                const auction = values[0].data
+                const animals = values[1].data
+                setAuctionIsFinished(auction.finished)
+                setAnimalsOnGround(animals.content)
+                setTotalPages(animals.totalPages)
                 setLoadingStart(false)
             })
             .catch(error => {
