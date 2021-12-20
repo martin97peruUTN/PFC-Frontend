@@ -175,10 +175,12 @@ const AddBatch = ({showToast}) => {
 
     const deleteBatchHandler = () => {
         confirmDialog({
-            message: '¿Esta seguro de que desea eliminar el lote?',
-            header: 'Eliminar lote',
-            icon: 'pi pi-exclamation-circle',
+            header: 'Confirmación',
+            message: `¿Está seguro que desea eliminar estos animales?`,
             acceptLabel: 'Si',
+            className: 'w-9 md:w-6',
+            rejectLabel: 'No',
+            acceptClassName: 'p-button-danger',
             accept: () => {
                 fetchContext.authAxios.delete(`${url.AUCTION_BATCH_API}/${batchId}`)
                 .then(response => {
