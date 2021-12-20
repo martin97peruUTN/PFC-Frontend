@@ -85,20 +85,26 @@ const Auction = ({showToast}) => {
     }
 
     const sellHandler = (animalOnGroundId) => {
+        if(auctionIsFinished){
 
+        }
     }
 
     const notSoldHandler = (animalOnGroundId) => {
-        
+        if(auctionIsFinished){
+            
+        }
     }
 
     const editHandler = (animalOnGroundId) => {
-        history.push(url.BATCH_CRUD, 
-            {
-                auctionId: auctionId,
-                animalOnGroundId: animalOnGroundId
-            }
-        )
+        if(auctionIsFinished){
+            history.push(url.BATCH_CRUD, 
+                {
+                    auctionId: auctionId,
+                    animalOnGroundId: animalOnGroundId
+                }
+            )
+        }
     }
 
     //Se dispara al presionar Terminar remate
@@ -125,54 +131,45 @@ const Auction = ({showToast}) => {
 
     //TODO cambiar urls cuando las tengamos (url o command: () => hacerAlgo())
     const menuItems = []
-    if(authContext.isAdmin() || authContext.isConsignee()){
-        menuItems.push({
-            label: 'Agregar lote',
-            icon: 'pi pi-fw pi-plus-circle',
-            command: () => history.push(url.BATCH_CRUD, 
-                {
-                    auctionId: auctionId
-                }
-            )
-        },
-        {
-            label: 'Participantes',
-            icon: 'pi pi-fw pi-users',
-            command: () => history.push(url.ADD_PARTICIPANT,
-                {
-                    auctionId: auctionId
-                }
-            )
-        },
-        {
-            label: 'Informacion del remate',
-            icon: 'pi pi-fw pi-info-circle',
-            command: () => history.push(url.AUCTION_CRUD, 
-                {
-                    auctionId: auctionId
-                }
-            )
-        })
-    }else{
-        menuItems.push({
-            label: 'Agregar lote',
-            icon: 'pi pi-fw pi-plus-circle',
-            command: () => history.push(url.BATCH_CRUD, 
-                {
-                    auctionId: auctionId
-                }
-            )
-        },
-        {
-            label: 'Informacion del remate',
-            icon: 'pi pi-fw pi-info-circle',
-            command: () => history.push(url.AUCTION_CRUD, 
-                {
-                    auctionId: auctionId
-                }
-            )
-        })
+    if(!auctionIsFinished){
+        menuItems.push(
+            {
+                label: 'Agregar lote',
+                icon: 'pi pi-fw pi-plus-circle',
+                command: () => history.push(url.BATCH_CRUD, 
+                    {
+                        auctionId: auctionId
+                    }
+                )
+            }
+        )
     }
+    if(authContext.isAdmin() || authContext.isConsignee()){
+        menuItems.push(
+            {
+                label: 'Participantes',
+                icon: 'pi pi-fw pi-users',
+                command: () => history.push(url.ADD_PARTICIPANT,
+                    {
+                        auctionId: auctionId,
+                        auctionIsFinished: auctionIsFinished
+                    }
+                )
+            }
+        )
+    }
+    menuItems.push(
+        {
+            label: 'Informacion del remate',
+            icon: 'pi pi-fw pi-info-circle',
+            command: () => history.push(url.AUCTION_CRUD, 
+                {
+                    auctionId: auctionId,
+                    auctionIsFinished: auctionIsFinished
+                }
+            )
+        }
+    )
     menuItems.push(
         {separator: true},
         {
@@ -188,16 +185,20 @@ const Auction = ({showToast}) => {
         {
             label: 'Lotes vendidos',
             icon: 'pi pi-fw pi-shopping-cart',
-            url: url.HOME
-        },
-        {separator: true},
-        {separator: true},
-        {
-            label: 'Terminar remate',
-            icon: 'pi pi-fw pi-check-square',
-            command: () => confirmFinishAuction()
+            url: url.HOME//TODO mandar el auctionIsFinished capaz
         }
     )
+    if(!auctionIsFinished){
+        menuItems.push(
+            {separator: true},
+            {separator: true},
+            {
+                label: 'Terminar remate',
+                icon: 'pi pi-fw pi-check-square',
+                command: () => confirmFinishAuction()
+            }
+        )
+    }
 
     const itemCardList = animalsOnGround.map(animalOnGround => (
         <AnimalsOnGroundShowCard
@@ -209,6 +210,7 @@ const Auction = ({showToast}) => {
             category={animalOnGround.category.name}
             corralNumber={animalOnGround.corralNumber}
             tabViewActiveIndex = {tabViewActiveIndex}
+            auctionIsFinished={auctionIsFinished}
             sellHandler = {sellHandler}
             notSoldHandler = {notSoldHandler}
             editHandler = {editHandler}

@@ -33,13 +33,16 @@ const AuctionCRUD = ({showToast}) => {
     const [filteredLocalityList, setFilteredLocalityList] = useState([])
     const [selectedLocality, setSelectedLocality] = useState()
 
+    const [auctionIsFinished, setAuctionIsFinished] = useState(false)
+
     useEffect(() => {
         //Si esta editando me llega esto desde la otra pantalla
         if(history.location.state){
             setLoadingStart(true)
             setEnableEditing(false)
-            const {auctionId} = history.location.state
+            const {auctionId, auctionIsFinished} = history.location.state
             setAuctionId(auctionId)
+            setAuctionIsFinished(auctionIsFinished)
             fetchContext.authAxios.get(`${url.AUCTION_API}/${auctionId}`)
             .then(response => {
                 const {senasaNumber, date, locality} = response.data
@@ -206,7 +209,7 @@ const AuctionCRUD = ({showToast}) => {
                 />
                 <label htmlFor="localityAutocompleteForm">Localidad</label>
             </span>
-            {auctionId?
+            {auctionId && !auctionIsFinished?
                 <>
                     <br/>
                     <Button 
@@ -244,7 +247,7 @@ const AuctionCRUD = ({showToast}) => {
                             onClick={()=> history.goBack()} 
                             label="Cancelar"
                         />
-                        {auctionId?
+                        {auctionId && !auctionIsFinished?
                             <Button 
                                 className="p-button-danger" 
                                 onClick={()=> deleteHandler()} 
