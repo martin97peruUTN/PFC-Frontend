@@ -463,6 +463,7 @@ const AddBatch = ({showToast}) => {
                 //Si estoy creando pongo los botones aca, sino al final de la primera card y aca el boton de eliminar batch
                 batchId?
                 <div className="flex justify-content-between">
+                    <Button label="Volver" icon="pi pi-arrow-left" onClick={() => history.goBack()} className="btn btn-primary" />
                     <Button label="Eliminar Lote" icon="pi pi-times" onClick={() => deleteBatchHandler()} className="p-button-danger" />
                 </div>
                 :
