@@ -1,8 +1,6 @@
 import React, {useState, useEffect, useRef, useContext} from 'react';
 import { useHistory } from "react-router-dom";
 
-import { InputText } from 'primereact/inputtext';
-import { AutoComplete } from 'primereact/autocomplete';
 import { Button } from 'primereact/button';
 import { Paginator } from 'primereact/paginator';
 import { Skeleton } from 'primereact/skeleton';
@@ -10,7 +8,6 @@ import { ScrollTop } from 'primereact/scrolltop';
 import { Menu } from 'primereact/menu';
 import { TabView, TabPanel } from 'primereact/tabview';
 import { confirmDialog } from 'primereact/confirmdialog';
-import { Dialog } from 'primereact/dialog';
 
 import { FetchContext } from '../context/FetchContext';
 import { AuthContext } from './../context/AuthContext';
@@ -18,6 +15,7 @@ import * as url from '../util/url';
 
 import Card from '../components/cards/Card'
 import AnimalsOnGroundShowCard from '../components/cards/AnimalsOnGroundShowCard'
+import SellDialog from '../components/SellDialog'
 
 const Auction = ({showToast}) => {
 
@@ -52,9 +50,6 @@ const Auction = ({showToast}) => {
 
     //Item de la lista que estoy queriendo vender en este caso
     const [editingItem, setEditingItem] = useState({mustWeigh: true});
-
-    //Para el autocomplete de comprador en el dialogo de vender
-    const [filteredClientList, setFilteredClientList] = useState([])
 
     useEffect(() => {
         setLoadingStart(true)
@@ -93,17 +88,6 @@ const Auction = ({showToast}) => {
         setPaginatorFirst(event.first);
         setPaginatorRows(event.rows);
         setPaginatorPage(event.page);
-    }
-
-    //Para el autocomplete de comprador en el dialogo de vender
-    const searchClient = (event) => {
-        fetchContext.authAxios.get(`${url.CLIENT_API}?name=${event.query}`)
-        .then(response => {
-            setFilteredClientList(response.data.content)
-        })
-        .catch(error => {
-            showToast('error','Error','No se pudo obtener la lista de clientes')
-        })
     }
 
     const tabViewActiveIndexChange = (index) => {
@@ -314,63 +298,16 @@ const Auction = ({showToast}) => {
     )
 
     const sellDialog = (
-        <Dialog
-            header={`Vender animales`}
-            visible={displayDialog}
-            className="w-11 md:w-6"
-            onHide={() => setDisplayDialog(false)}
-            footer={
-                <div className="">
-                    <Button label="Cancelar" icon="pi pi-times" onClick={() => setDisplayDialog(false)} className="p-button-danger" />
-                    <Button label="Aceptar" icon="pi pi-check" onClick={() => sellAnimalsHandler()} autoFocus className="btn btn-primary" />
-                </div>
-            }
-            >
-                <br/>
-                <span className="p-float-label">
-                    <AutoComplete 
-                        id='buyerAutocompleteForm'
-                        className='w-full'
-                        value={editingItem?editingItem.client:null} 
-                        suggestions={filteredClientList} 
-                        completeMethod={searchClient} 
-                        field="name" 
-                        dropdown 
-                        forceSelection
-                        onChange={(e) => setEditingItem({...editingItem, client:e.target.value})}
-                    />
-                    <label htmlFor="buyerAutocompleteForm">Comprador</label>
-                </span>
-                <br/>
-                <span className="p-float-label">
-                    <InputText 
-                        id="price" 
-                        className='w-full' 
-                        value={editingItem?editingItem.price:null}
-                        keyfilter="num"
-                        onChange={e => setEditingItem({...editingItem, price:e.target.value})}
-                    />
-                    <label htmlFor="price">Precio</label>
-                </span>
-                <br/>
-                <span className="p-float-label">
-                    <InputText 
-                        id="amount" 
-                        className='w-full' 
-                        value={editingItem?editingItem.amount:null}
-                        keyfilter="pint"
-                        onChange={e => setEditingItem({...editingItem, amount:e.target.value})}
-                    />
-                    <label htmlFor="amount">Cantidad</label>
-                </span>
-                <br/>
-                <Button 
-                    className="btn btn-primary" 
-                    icon={editingItem && editingItem.mustWeigh?"pi pi-check-circle":"pi pi-times-circle"}
-                    onClick={() => setEditingItem({...editingItem, mustWeigh:!editingItem.mustWeigh})}
-                    label={editingItem && editingItem.mustWeigh?"Se pesa":"No se pesa"}
-                />
-        </Dialog>
+        <SellDialog
+            sellAnimalsHandler = {sellAnimalsHandler}
+            setDisplayDialog = {setDisplayDialog}
+            displayDialog = {displayDialog}
+            url = {url}
+            fetchContext = {fetchContext}
+            showToast = {showToast}
+            editingItem = {editingItem}
+            setEditingItem = {setEditingItem}
+        />
     )
 
     const loadingScreen = (
