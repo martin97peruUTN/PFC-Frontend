@@ -1,6 +1,8 @@
 import React, {useState, useEffect, useRef, useContext} from 'react';
 import { useHistory } from "react-router-dom";
 
+import { InputText } from 'primereact/inputtext';
+import { AutoComplete } from 'primereact/autocomplete';
 import { Button } from 'primereact/button';
 import { Paginator } from 'primereact/paginator';
 import { Skeleton } from 'primereact/skeleton';
@@ -8,6 +10,7 @@ import { ScrollTop } from 'primereact/scrolltop';
 import { Menu } from 'primereact/menu';
 import { TabView, TabPanel } from 'primereact/tabview';
 import { confirmDialog } from 'primereact/confirmdialog';
+import { Dialog } from 'primereact/dialog';
 
 import { FetchContext } from '../context/FetchContext';
 import { AuthContext } from './../context/AuthContext';
@@ -35,13 +38,23 @@ const Auction = ({showToast}) => {
     //uso este estado "comodin" para refrescar la pagina cuando hay un cambio
     const [refresh, setRefresh] = useState(false);
 
+    //Mostrar el dialogo de vender o esconderlo
+    const [displayDialog, setDisplayDialog] = useState(false);
+
     const [auctionId, setAuctionId] = useState()
     const [auctionIsFinished, setAuctionIsFinished] = useState()
 
     //0:Para venta 1:No vendido 2:Vendido
     const [tabViewActiveIndex, setTabViewActiveIndex] = useState(0);
 
+    //Listado de animales en pista
     const [animalsOnGround, setAnimalsOnGround] = useState([])
+
+    //Item de la lista que estoy queriendo vender en este caso
+    const [editingItem, setEditingItem] = useState({mustWeigh: true});
+
+    //Para el autocomplete de comprador en el dialogo de vender
+    const [filteredClientList, setFilteredClientList] = useState([])
 
     useEffect(() => {
         setLoadingStart(true)
@@ -82,14 +95,60 @@ const Auction = ({showToast}) => {
         setPaginatorPage(event.page);
     }
 
+    //Para el autocomplete de comprador en el dialogo de vender
+    const searchClient = (event) => {
+        fetchContext.authAxios.get(`${url.CLIENT_API}?name=${event.query}`)
+        .then(response => {
+            setFilteredClientList(response.data.content)
+        })
+        .catch(error => {
+            showToast('error','Error','No se pudo obtener la lista de clientes')
+        })
+    }
+
     const tabViewActiveIndexChange = (index) => {
         setTabViewActiveIndex(index)
         //FIXME capaz no haga falta hacer nada aca, porque puse el tabViewActiveIndex en el useEffect
     }
 
+    //Se dispara al tocar algun boton vender
     const sellHandler = (animalOnGroundId) => {
         if(!auctionIsFinished){
+            setDisplayDialog(true)
+            setEditingItem({...editingItem, 'id':animalOnGroundId})
+        }
+    }
 
+    //Se dispara al tocar el boton aceptar del dialogo de vender
+    const sellAnimalsHandler = () => {
+        if(!auctionIsFinished){
+            if(editingItem.id && editingItem.client && editingItem.price && editingItem.amount && editingItem.mustWeigh!==null){
+                const actualAnimals = animalsOnGround.find(animal => animal.id === editingItem.id)
+                //Si la cantidad que quiero vender es menor o igual a la cantidad del animalsOnGround
+                //menos la cantidad ya vendida (los que quedan por vender), lo dejo seguir
+                if(editingItem.amount<=actualAnimals.amount - actualAnimals.soldAmount){
+                    const data = {
+                        'client': editingItem.client,
+                        'price': editingItem.price,
+                        'amount': editingItem.amount,
+                        'mustWeigh': editingItem.mustWeigh
+                    }
+                    fetchContext.authAxios.post(`${url.SOLD_BATCH_API}/${editingItem.id}`, data)
+                    .then(response => {
+                        showToast('success','Exito','Se vendieron los animales correctamente')
+                        setDisplayDialog(false)
+                        setEditingItem({mustWeigh: true})
+                        setRefresh(!refresh)
+                    })
+                    .catch(error => {
+                        showToast('error','Error','No se pudieron vender los animales')
+                    })
+                }else{
+                    showToast('warn','Error','La cantidad que quiere vender no puede ser mayor a la cantidad restante')
+                }
+            }else{
+                showToast('warn','Error','Debe completar todos los campos')
+            }
         }
     }
 
@@ -254,6 +313,66 @@ const Auction = ({showToast}) => {
         </TabView>
     )
 
+    const sellDialog = (
+        <Dialog
+            header={`Vender animales`}
+            visible={displayDialog}
+            className="w-11 md:w-6"
+            onHide={() => setDisplayDialog(false)}
+            footer={
+                <div className="">
+                    <Button label="Cancelar" icon="pi pi-times" onClick={() => setDisplayDialog(false)} className="p-button-danger" />
+                    <Button label="Aceptar" icon="pi pi-check" onClick={() => sellAnimalsHandler()} autoFocus className="btn btn-primary" />
+                </div>
+            }
+            >
+                <br/>
+                <span className="p-float-label">
+                    <AutoComplete 
+                        id='buyerAutocompleteForm'
+                        className='w-full'
+                        value={editingItem?editingItem.client:null} 
+                        suggestions={filteredClientList} 
+                        completeMethod={searchClient} 
+                        field="name" 
+                        dropdown 
+                        forceSelection
+                        onChange={(e) => setEditingItem({...editingItem, client:e.target.value})}
+                    />
+                    <label htmlFor="buyerAutocompleteForm">Comprador</label>
+                </span>
+                <br/>
+                <span className="p-float-label">
+                    <InputText 
+                        id="price" 
+                        className='w-full' 
+                        value={editingItem?editingItem.price:null}
+                        keyfilter="num"
+                        onChange={e => setEditingItem({...editingItem, price:e.target.value})}
+                    />
+                    <label htmlFor="price">Precio</label>
+                </span>
+                <br/>
+                <span className="p-float-label">
+                    <InputText 
+                        id="amount" 
+                        className='w-full' 
+                        value={editingItem?editingItem.amount:null}
+                        keyfilter="pint"
+                        onChange={e => setEditingItem({...editingItem, amount:e.target.value})}
+                    />
+                    <label htmlFor="amount">Cantidad</label>
+                </span>
+                <br/>
+                <Button 
+                    className="btn btn-primary" 
+                    icon={editingItem && editingItem.mustWeigh?"pi pi-check-circle":"pi pi-times-circle"}
+                    onClick={() => setEditingItem({...editingItem, mustWeigh:!editingItem.mustWeigh})}
+                    label={editingItem && editingItem.mustWeigh?"Se pesa":"No se pesa"}
+                />
+        </Dialog>
+    )
+
     const loadingScreen = (
         <div>
             <Skeleton width="100%" height="8rem"/>
@@ -269,6 +388,7 @@ const Auction = ({showToast}) => {
     return (
         <>
             <ScrollTop />
+            {sellDialog}
             <Menu 
                 className='w-auto' 
                 model={menuItems} 

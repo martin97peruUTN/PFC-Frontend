@@ -26,3 +26,4 @@ export const AUCTION_API = '/auction'
 export const USER_AUCTIONS_API = '/auction-user'
 export const AUCTION_BATCH_API = '/auction-batch'
 export const ANIMALS_ON_GROUND_API = `${AUCTION_BATCH_API}/animals-on-ground`
+export const SOLD_BATCH_API = '/sold-batch'
