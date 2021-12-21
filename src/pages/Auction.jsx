@@ -32,6 +32,9 @@ const Auction = ({showToast}) => {
     const [paginatorPage, setPaginatorPage] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
 
+    //uso este estado "comodin" para refrescar la pagina cuando hay un cambio
+    const [refresh, setRefresh] = useState(false);
+
     const [auctionId, setAuctionId] = useState()
     const [auctionIsFinished, setAuctionIsFinished] = useState()
 
@@ -71,7 +74,7 @@ const Auction = ({showToast}) => {
                 history.goBack();
             })
         }
-    }, [tabViewActiveIndex, paginatorFirst, paginatorRows, paginatorPage])
+    }, [tabViewActiveIndex, paginatorFirst, paginatorRows, paginatorPage, refresh])
 
     const onPaginatorPageChange = (event) => {
         setPaginatorFirst(event.first);
@@ -85,19 +88,35 @@ const Auction = ({showToast}) => {
     }
 
     const sellHandler = (animalOnGroundId) => {
-        if(auctionIsFinished){
+        if(!auctionIsFinished){
 
         }
     }
 
     const notSoldHandler = (animalOnGroundId) => {
-        if(auctionIsFinished){
-            
+        if(!auctionIsFinished){
+            confirmDialog({
+                message: '¿Esta seguro de que desea proceder?',
+                header: 'Marcar como no vendido',
+                icon: 'pi pi-exclamation-circle',
+                acceptLabel: 'Si',
+                accept: () => {
+                    console.log(animalOnGroundId)
+                    fetchContext.authAxios.patch(`${url.ANIMALS_ON_GROUND_API}/${animalOnGroundId}`, {'notSold': true})
+                    .then(response => {
+                        showToast('success', 'Exito', 'Animales marcados como no vendido')
+                        setRefresh(!refresh)
+                    })
+                    .catch(error => {
+                        showToast('error', 'Error', 'No se pudieron marcar como no vendidos')
+                    })
+                }
+            });
         }
     }
 
     const editHandler = (animalOnGroundId) => {
-        if(auctionIsFinished){
+        if(!auctionIsFinished){
             history.push(url.BATCH_CRUD, 
                 {
                     auctionId: auctionId,
