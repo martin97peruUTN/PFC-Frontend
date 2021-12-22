@@ -65,7 +65,7 @@ const FinalBatches = ({showToast}) => {
         }else{
             const {auctionId} = history.location.state
             setAuctionId(auctionId)
-            let fetchURL = `${url.SOLD_BATCH_API}/by-auction/${auctionId}/${tabViewActiveIndex===0?'sold':'notSold'}?limit=${paginatorRows}&page=${paginatorPage}`
+            let fetchURL = `${url.SOLD_BATCH_API}/by-auction/${auctionId}/${tabViewActiveIndex===0?'sold':'not-sold'}?limit=${paginatorRows}&page=${paginatorPage}`
             const p1 = fetchContext.authAxios.get(url.AUCTION_API+'/'+auctionId)
             const p2 = fetchContext.authAxios.get(fetchURL)
             Promise.all([p1, p2]).then(values => {
