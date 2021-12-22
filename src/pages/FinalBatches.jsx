@@ -65,16 +65,14 @@ const FinalBatches = ({showToast}) => {
         }else{
             const {auctionId} = history.location.state
             setAuctionId(auctionId)
-            //FIXME sacar la url de mock
-            let fetchURL = 'https://61895cd6d0821900178d795e.mockapi.io/api/soldBatch'
-            //let fetchURL = `${url.SOLD_BATCH_API}/by-auction/${auctionId}/${tabViewActiveIndex===0?'sold':'notSold'}?limit=${paginatorRows}&page=${paginatorPage}`
+            let fetchURL = `${url.SOLD_BATCH_API}/by-auction/${auctionId}/${tabViewActiveIndex===0?'sold':'notSold'}?limit=${paginatorRows}&page=${paginatorPage}`
             const p1 = fetchContext.authAxios.get(url.AUCTION_API+'/'+auctionId)
             const p2 = fetchContext.authAxios.get(fetchURL)
             Promise.all([p1, p2]).then(values => {
                 const auction = values[0].data
                 const batches = values[1].data
                 setAuctionIsFinished(auction.finished)
-                setBatchList(batches/*.content*/)//FIXME
+                setBatchList(batches.content)
                 setTotalPages(batches.totalPages)
                 setLoadingStart(false)
             })
@@ -122,7 +120,7 @@ const FinalBatches = ({showToast}) => {
 
     //Se dispara al tocar algun boton cargar DTe
     const dteNumberSetHandler = (batchId) => {
-        //TODO proximamente
+        //TODO proximamente un nuevo dialogo
     }
 
     //Se dispara al tocar algun boton boleta
@@ -147,7 +145,7 @@ const FinalBatches = ({showToast}) => {
                 showToast('warn', 'Error', 'El precio debe ser mayor a 0')
             }else{
                 const data = {
-                    'buyer': editingItem.buyer,
+                    'client': editingItem.buyer,
                     'price': editingItem.price,
                     'amount': editingItem.amount,
                     'mustWeigh': editingItem.mustWeigh
@@ -160,7 +158,7 @@ const FinalBatches = ({showToast}) => {
                     setRefresh(!refresh)
                 })
                 .catch(error => {
-                    //TODO poner el mensaje del back
+                    //TODO poner el mensaje del back, aca me va a decir tambien si la cantidad es mayor a la cantidad disponible
                     showToast('error','Error','No se pudieron guardar los cambios')
                 })
             }
@@ -194,9 +192,11 @@ const FinalBatches = ({showToast}) => {
     //Se dispara al presionar Terminar remate
     const confirmFinishAuction = () => {
         confirmDialog({
-            message: '¿Esta seguro de terminar el remate? Si lo termina ya no podra realizar mas cambios',
+            message: `¿Esta seguro de terminar el remate? Si lo termina se generaran los lotes finales
+                no vendidos y ya no podra realizar mas cambios, solo cargar los DTe y generar las boletas.`,
             header: 'Terminar remate',
             icon: 'pi pi-exclamation-circle',
+            className: 'w-11 md:w-7',
             acceptLabel: 'Si',
             accept: () => {
                 fetchContext.authAxios.patch(`${url.AUCTION_API}/${auctionId}`, {finished : true})
