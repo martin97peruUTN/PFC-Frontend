@@ -30,7 +30,7 @@ const AnimalsOnGroundShowCard = (props) => (
             </div>
         }
         buttons = {
-            //0:Para venta 1:No vendido 2:Vendido
+            //tabViewActiveIndex => 0:Para venta 1:No vendido 2:Vendido
             <div className={CARD_TWO_COLUMNS_BUTTON_DIV}>
                 {(props.tabViewActiveIndex === 0 || props.tabViewActiveIndex === 1) && !props.auctionIsFinished ?
                     <Button className={CARD_TWO_COLUMNS_BUTTON} icon={isSmallScreen()?null:"pi pi-check-circle"} onClick={()=> props.sellHandler(props.id)} label="Vender"></Button>

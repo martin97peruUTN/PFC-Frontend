@@ -90,11 +90,6 @@ const Auction = ({showToast}) => {
         setPaginatorPage(event.page);
     }
 
-    const tabViewActiveIndexChange = (index) => {
-        setTabViewActiveIndex(index)
-        //FIXME capaz no haga falta hacer nada aca, porque puse el tabViewActiveIndex en el useEffect
-    }
-
     //Se dispara al tocar algun boton vender
     const sellHandler = (animalOnGroundId) => {
         if(!auctionIsFinished){
@@ -292,7 +287,7 @@ const Auction = ({showToast}) => {
     const tabView = (
         <TabView className='w-full' 
             activeIndex={tabViewActiveIndex} 
-            onTabChange={(e) => tabViewActiveIndexChange(e.index)}
+            onTabChange={(e) => setTabViewActiveIndex(e.index)}
         >
             <TabPanel header="Para venta">
                 {itemCardList}
@@ -308,7 +303,8 @@ const Auction = ({showToast}) => {
 
     const sellDialog = (
         <SellDialog
-            sellAnimalsHandler = {sellAnimalsHandler}
+            isCreating={true}
+            acceptHandler = {sellAnimalsHandler}
             setDisplayDialog = {setDisplayDialog}
             displayDialog = {displayDialog}
             url = {url}

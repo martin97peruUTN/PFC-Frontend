@@ -5,7 +5,9 @@ import { AutoComplete } from 'primereact/autocomplete';
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 
-const SellDialog = ({sellAnimalsHandler, setDisplayDialog, displayDialog, url, fetchContext, showToast, editingItem, setEditingItem}) => {
+//Mas alla del nombre, este dialogo se usa tanto en la pantalla Auction para vender como en la FinalBatches para editar
+
+const SellDialog = ({isCreating, acceptHandler, setDisplayDialog, displayDialog, url, fetchContext, showToast, editingItem, setEditingItem}) => {
 
     //Para el autocomplete de comprador en el dialogo de vender
     const [filteredClientList, setFilteredClientList] = useState([])
@@ -23,14 +25,14 @@ const SellDialog = ({sellAnimalsHandler, setDisplayDialog, displayDialog, url, f
 
     return (
         <Dialog
-            header={`Vender animales`}
+            header={isCreating?`Vender animales`:`Editar lote`}
             visible={displayDialog}
             className="w-11 md:w-6"
             onHide={() => setDisplayDialog(false)}
             footer={
                 <div className="">
                     <Button label="Cancelar" icon="pi pi-times" onClick={() => setDisplayDialog(false)} className="p-button-danger" />
-                    <Button label="Aceptar" icon="pi pi-check" onClick={() => sellAnimalsHandler()} autoFocus className="btn btn-primary" />
+                    <Button label="Aceptar" icon="pi pi-check" onClick={() => acceptHandler()} autoFocus className="btn btn-primary" />
                 </div>
             }
             >
@@ -39,13 +41,14 @@ const SellDialog = ({sellAnimalsHandler, setDisplayDialog, displayDialog, url, f
                     <AutoComplete 
                         id='buyerAutocompleteForm'
                         className='w-full'
-                        value={editingItem?editingItem.client:null} 
+                        //Por tema de nombres, si esta creando trabajo con client, si esta editando, con buyer
+                        value={editingItem?(isCreating?editingItem.client:editingItem.buyer):null}
                         suggestions={filteredClientList} 
                         completeMethod={searchClient} 
                         field="name" 
                         dropdown 
                         forceSelection
-                        onChange={(e) => setEditingItem({...editingItem, client:e.target.value})}
+                        onChange={(e) => setEditingItem(isCreating?{...editingItem, client:e.target.value}:{...editingItem, buyer:e.target.value})}
                     />
                     <label htmlFor="buyerAutocompleteForm">Comprador</label>
                 </span>
