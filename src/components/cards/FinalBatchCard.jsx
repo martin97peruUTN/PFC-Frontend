@@ -48,7 +48,7 @@ const FinalBatchCard = (props) => (
                 }
             </div>
         }
-        buttons = {
+        buttons = {!props.auctionIsFinished?
             //tabViewActiveIndex => 0:Vendido 1:No vendido
             !isSmallScreen() || (isSmallScreen() && props.tabViewActiveIndex===1)?//Pantalla grande (las 2 pesatañas) y los no vendidos en pantalla chica (los no vendidos tienen 1 solo boton)
                 <div className={CARD_TWO_COLUMNS_BUTTON_DIV}>
@@ -72,6 +72,8 @@ const FinalBatchCard = (props) => (
                 <div className={CARD_TWO_COLUMNS_BUTTON_DIV}>
                     
                 </div>
+        ://Si esta terminado el remate no muestro botones
+            null
         }
     />
 )

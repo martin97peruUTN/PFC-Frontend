@@ -8,6 +8,8 @@ import { ScrollTop } from 'primereact/scrolltop';
 import { Menu } from 'primereact/menu';
 import { TabView, TabPanel } from 'primereact/tabview';
 import { confirmDialog } from 'primereact/confirmdialog';
+import { Dialog } from 'primereact/dialog';
+import { InputText } from 'primereact/inputtext';
 
 import { FetchContext } from '../context/FetchContext';
 import { AuthContext } from './../context/AuthContext';
@@ -37,8 +39,11 @@ const FinalBatches = ({showToast}) => {
     //uso este estado "comodin" para refrescar la pagina cuando hay un cambio
     const [refresh, setRefresh] = useState(false);
 
-    //Mostrar el dialogo de vender o esconderlo
-    const [displayDialog, setDisplayDialog] = useState(false);
+    //Mostrar el dialogo de editar o esconderlo
+    const [displayEditDialog, setDisplayEditDialog] = useState(false);
+
+    //Mostrar el dialogo de pesar o esconderlo
+    const [displayWeighDialog, setDisplayWeighDialog] = useState(false);
 
     const [auctionId, setAuctionId] = useState()
     const [auctionIsFinished, setAuctionIsFinished] = useState()
@@ -88,7 +93,31 @@ const FinalBatches = ({showToast}) => {
 
     //Se dispara al tocar algun boton pesar
     const weighHandler = (batchId) => {
-        //TODO
+        setDisplayWeighDialog(true)
+        setEditingItem(batchList.find(batch => batch.id === batchId))
+    }
+
+    const saveWeighHandler = () => {
+        if(!editingItem.weight){
+            showToast('error', 'Error', 'Debe ingresar un peso')
+        }else if(editingItem.weight<=0){
+            showToast('error', 'Error', 'El peso debe ser mayor a 0')
+        }else{
+            fetchContext.authAxios.patch(`${url.SOLD_BATCH_API}/${editingItem.id}`, 
+            {
+                weight: editingItem.weight
+            })
+            .then(response => {
+                showToast('success','Exito','Se guardo el peso correctamente')
+                setDisplayWeighDialog(false)
+                setEditingItem(null)
+                setRefresh(!refresh)
+            })
+            .catch(error => {
+                //TODO poner el mensaje del back
+                showToast('error','Error','No se pudo guardar el peso')
+            })
+        }
     }
 
     //Se dispara al tocar algun boton cargar DTe
@@ -104,7 +133,7 @@ const FinalBatches = ({showToast}) => {
     //Se dispara al tocar algun boton editar
     const editHandler = (batchId) => {
         if(!auctionIsFinished){
-            setDisplayDialog(true)
+            setDisplayEditDialog(true)
             setEditingItem(batchList.find(batch => batch.id === batchId))
         }
     }
@@ -126,7 +155,7 @@ const FinalBatches = ({showToast}) => {
                 fetchContext.authAxios.patch(`${url.SOLD_BATCH_API}/${editingItem.id}`, data)
                 .then(response => {
                     showToast('success','Exito','Se guardaron los cambios correctamente')
-                    setDisplayDialog(false)
+                    setDisplayEditDialog(false)
                     setEditingItem(null)
                     setRefresh(!refresh)
                 })
@@ -165,7 +194,7 @@ const FinalBatches = ({showToast}) => {
     //Se dispara al presionar Terminar remate
     const confirmFinishAuction = () => {
         confirmDialog({
-            message: '¿Esta seguro de que desea proceder?',
+            message: '¿Esta seguro de terminar el remate? Si lo termina ya no podra realizar mas cambios',
             header: 'Terminar remate',
             icon: 'pi pi-exclamation-circle',
             acceptLabel: 'Si',
@@ -216,7 +245,7 @@ const FinalBatches = ({showToast}) => {
                 icon="pi pi-file"
                 label="Resumen"
                 className="btn btn-primary mr-1"
-                //TODO onClick={}
+                //TODO onClick={} proximamente
             />
             <Button 
                 icon="pi pi-check-square"
@@ -236,7 +265,7 @@ const FinalBatches = ({showToast}) => {
         {
             icon: "pi pi-file",
             label: "Resumen",
-            //TODO command: () => {},
+            //TODO command: () => {} proximamente
         },
         {separator: true},
         {separator: true},
@@ -266,14 +295,41 @@ const FinalBatches = ({showToast}) => {
         <SellDialog
             isCreating={false}
             acceptHandler = {saveEditedItemHandler}
-            setDisplayDialog = {setDisplayDialog}
-            displayDialog = {displayDialog}
+            setDisplayDialog = {setDisplayEditDialog}
+            displayDialog = {displayEditDialog}
             url = {url}
             fetchContext = {fetchContext}
             showToast = {showToast}
             editingItem = {editingItem}
             setEditingItem = {setEditingItem}
         />
+    )
+
+    const weighDialog = (
+        <Dialog
+            header="Pesar lote"
+            visible={displayWeighDialog}
+            className="w-11 md:w-6"
+            onHide={() => setDisplayWeighDialog(false)}
+            footer={
+                <div className="">
+                    <Button label="Cancelar" icon="pi pi-times" onClick={() => setDisplayWeighDialog(false)} className="p-button-danger" />
+                    <Button label="Aceptar" icon="pi pi-check" onClick={() => saveWeighHandler()} autoFocus className="btn btn-primary" />
+                </div>
+            }
+        >
+            <br/>
+            <span className="p-float-label">
+                <InputText 
+                    id="weight" 
+                    className='w-full' 
+                    value={editingItem?editingItem.weight:null}
+                    keyfilter="num"
+                    onChange={e => setEditingItem({...editingItem, weight:e.target.value})}
+                />
+                <label htmlFor="weight">Peso</label>
+            </span>
+        </Dialog>
     )
 
     const loadingScreen = (
@@ -292,6 +348,7 @@ const FinalBatches = ({showToast}) => {
         <>
             <ScrollTop />
             {sellDialog}
+            {weighDialog}
             <Menu 
                 className='w-auto' 
                 model={menuItems} 
@@ -302,7 +359,7 @@ const FinalBatches = ({showToast}) => {
             <Card
                 title={
                     <div className="flex justify-content-between">
-                        <>{"Lotes finales"}</>
+                        <>{auctionIsFinished?"Lotes finales":"Lotes vendidos"}</>
                         {!isSmallScreen()?//Pantalla grande: botones a la derecha del titulo
                             topButtons
                         ://Pantalla chica: menu desplegable
@@ -328,7 +385,10 @@ const FinalBatches = ({showToast}) => {
                 {loadingStart?
                     loadingScreen
                 :
-                    tabView
+                    auctionIsFinished?//Si no termino directamente muestra las cards, si total no hay no vendidos todavia
+                        tabView
+                        :
+                        itemCardList
                 }
             </Card>
         </>

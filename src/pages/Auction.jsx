@@ -169,26 +169,6 @@ const Auction = ({showToast}) => {
         }
     }
 
-    //Se dispara al presionar Terminar remate
-    const confirmFinishAuction = () => {
-        confirmDialog({
-            message: '¿Esta seguro de que desea proceder?',
-            header: 'Terminar remate',
-            icon: 'pi pi-exclamation-circle',
-            acceptLabel: 'Si',
-            accept: () => {
-                fetchContext.authAxios.patch(`${url.AUCTION_API}/${auctionId}`, {finished : true})
-                .then(response => {
-                    showToast('success', 'Exito', 'Remate finalizado')
-                    history.goBack();
-                })
-                .catch(error => {
-                    showToast('error', 'Error', 'No se pudo finalizar el remate')
-                })
-            }
-        });
-    }
-
     //TODO cambiar urls cuando las tengamos (url o command: () => hacerAlgo())
     const menuItems = []
     if(!auctionIsFinished){
@@ -252,17 +232,6 @@ const Auction = ({showToast}) => {
             )
         }
     )
-    if(!auctionIsFinished){
-        menuItems.push(
-            {separator: true},
-            {separator: true},
-            {
-                label: 'Terminar remate',
-                icon: 'pi pi-fw pi-check-square',
-                command: () => confirmFinishAuction()
-            }
-        )
-    }
 
     const itemCardList = animalsOnGround.map(animalOnGround => (
         <AnimalsOnGroundShowCard
