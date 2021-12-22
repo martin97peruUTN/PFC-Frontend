@@ -107,28 +107,34 @@ const Auction = ({showToast}) => {
     const sellAnimalsHandler = () => {
         if(!auctionIsFinished){
             if(editingItem.id && editingItem.client && editingItem.price && editingItem.amount && editingItem.mustWeigh!==null){
-                const actualAnimals = animalsOnGround.find(animal => animal.id === editingItem.id)
-                //Si la cantidad que quiero vender es menor o igual a la cantidad del animalsOnGround
-                //menos la cantidad ya vendida (los que quedan por vender), lo dejo seguir
-                if(editingItem.amount<=actualAnimals.amount - actualAnimals.soldAmount){
-                    const data = {
-                        'client': editingItem.client,
-                        'price': editingItem.price,
-                        'amount': editingItem.amount,
-                        'mustWeigh': editingItem.mustWeigh
-                    }
-                    fetchContext.authAxios.post(`${url.SOLD_BATCH_API}/${editingItem.id}`, data)
-                    .then(response => {
-                        showToast('success','Exito','Se vendieron los animales correctamente')
-                        setDisplayDialog(false)
-                        setEditingItem({mustWeigh: true})
-                        setRefresh(!refresh)
-                    })
-                    .catch(error => {
-                        showToast('error','Error','No se pudieron vender los animales')
-                    })
+                if(editingItem.amount<=0){
+                    showToast('warn', 'Error', 'La cantidad debe ser mayor a 0')
+                }else if(editingItem.price<=0){
+                    showToast('warn', 'Error', 'El precio debe ser mayor a 0')
                 }else{
-                    showToast('warn','Error','La cantidad que quiere vender no puede ser mayor a la cantidad restante')
+                    const actualAnimals = animalsOnGround.find(animal => animal.id === editingItem.id)
+                    //Si la cantidad que quiero vender es menor o igual a la cantidad del animalsOnGround
+                    //menos la cantidad ya vendida (los que quedan por vender), lo dejo seguir
+                    if(editingItem.amount<=actualAnimals.amount - actualAnimals.soldAmount){
+                        const data = {
+                            'client': editingItem.client,
+                            'price': editingItem.price,
+                            'amount': editingItem.amount,
+                            'mustWeigh': editingItem.mustWeigh
+                        }
+                        fetchContext.authAxios.post(`${url.SOLD_BATCH_API}/${editingItem.id}`, data)
+                        .then(response => {
+                            showToast('success','Exito','Se vendieron los animales correctamente')
+                            setDisplayDialog(false)
+                            setEditingItem({mustWeigh: true})
+                            setRefresh(!refresh)
+                        })
+                        .catch(error => {
+                            showToast('error','Error','No se pudieron vender los animales')
+                        })
+                    }else{
+                        showToast('warn','Error','La cantidad que quiere vender no puede ser mayor a la cantidad restante')
+                    }
                 }
             }else{
                 showToast('warn','Error','Debe completar todos los campos')
@@ -144,7 +150,6 @@ const Auction = ({showToast}) => {
                 icon: 'pi pi-exclamation-circle',
                 acceptLabel: 'Si',
                 accept: () => {
-                    console.log(animalOnGroundId)
                     fetchContext.authAxios.patch(`${url.ANIMALS_ON_GROUND_API}/${animalOnGroundId}`, {'notSold': true})
                     .then(response => {
                         showToast('success', 'Exito', 'Animales marcados como no vendido')
@@ -245,9 +250,13 @@ const Auction = ({showToast}) => {
             url: url.HOME
         },
         {
-            label: 'Lotes vendidos',
+            label: `${auctionIsFinished?'Lotes finales':'Lotes vendidos'}`,
             icon: 'pi pi-fw pi-shopping-cart',
-            url: url.HOME//TODO mandar el auctionIsFinished capaz
+            command: () => history.push(url.FINAL_BATCHES,
+                {
+                    auctionId: auctionId
+                }
+            )
         }
     )
     if(!auctionIsFinished){
