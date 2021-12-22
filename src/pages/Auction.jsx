@@ -176,19 +176,17 @@ const Auction = ({showToast}) => {
             header: 'Terminar remate',
             icon: 'pi pi-exclamation-circle',
             acceptLabel: 'Si',
-            accept: () => finishAuction()
+            accept: () => {
+                fetchContext.authAxios.patch(`${url.AUCTION_API}/${auctionId}`, {finished : true})
+                .then(response => {
+                    showToast('success', 'Exito', 'Remate finalizado')
+                    history.goBack();
+                })
+                .catch(error => {
+                    showToast('error', 'Error', 'No se pudo finalizar el remate')
+                })
+            }
         });
-    }
-
-    const finishAuction = () => {
-        fetchContext.authAxios.patch(`${url.AUCTION_API}/${auctionId}`, {finished : true})
-        .then(response => {
-            showToast('success', 'Exito', 'Remate finalizado')
-            history.goBack();
-        })
-        .catch(error => {
-            showToast('error', 'Error', 'No se pudo finalizar el remate')
-        })
     }
 
     //TODO cambiar urls cuando las tengamos (url o command: () => hacerAlgo())

@@ -53,22 +53,22 @@ const FinalBatchCard = (props) => (
             !isSmallScreen() || (isSmallScreen() && props.tabViewActiveIndex===1)?//Pantalla grande (las 2 pesatañas) y los no vendidos en pantalla chica (los no vendidos tienen 1 solo boton)
                 <div className={CARD_TWO_COLUMNS_BUTTON_DIV}>
                     {props.mustWeigh && props.tabViewActiveIndex===0?//Solo si se deben pesar muestro el boton
-                        <Button className={CARD_TWO_COLUMNS_BUTTON} icon="pi pi-sort" onClick={()=> props.weighHandler(props.id)} label="Pesar"/>
+                        <Button className={CARD_TWO_COLUMNS_BUTTON} icon="pi pi-sort" onClick={()=> props.weighHandler(props.id)} label={props.weight?"Editar peso":"Pesar"}/>
                         :
                         null
                     }
-                    <Button className={CARD_TWO_COLUMNS_BUTTON} icon="pi pi-tag" onClick={()=> props.dteNumberSetHandler(props.id)} label="Cargar DTe"/>
+                    <Button className={CARD_TWO_COLUMNS_BUTTON} icon="pi pi-tag" onClick={()=> props.dteNumberSetHandler(props.id)} label={props.dteNumber?"Editar DTe":"Cargar DTe"}/>
                     {props.tabViewActiveIndex===0?//Solo los vendidos tienen boleta y se pueden editar o eliminar
                         <div className={CARD_TWO_COLUMNS_BUTTON_DIV}>
                             <Button className={CARD_TWO_COLUMNS_BUTTON} icon="pi pi-print" onClick={()=> props.getBillHandler(props.id)} label="Boleta"/>
-                            <Button className={CARD_TWO_COLUMNS_BUTTON} icon="pi pi-pencil" onClick={()=> props.editHandler(props.id)} label="Editar"/>
-                            <Button className="btn btn-primary" icon="pi pi-times" onClick={()=> props.deleteHandler(props.id)} label="Eliminar"/>
+                            <Button className={CARD_TWO_COLUMNS_BUTTON} icon="pi pi-pencil" onClick={()=> props.editHandler(props.id)} label="Editar lote"/>
+                            <Button className="p-button-danger" icon="pi pi-times" onClick={()=> props.deleteHandler(props.id)} label="Eliminar"/>
                         </div>
                         :
                         null
                     }
                 </div>
-            ://Pantalla chica de los vendidos
+            ://TODO Pantalla chica de los vendidos
                 <div className={CARD_TWO_COLUMNS_BUTTON_DIV}>
                     
                 </div>

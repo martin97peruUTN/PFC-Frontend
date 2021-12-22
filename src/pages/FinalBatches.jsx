@@ -24,6 +24,8 @@ const FinalBatches = ({showToast}) => {
     const authContext = useContext(AuthContext);
     const history = useHistory();
 
+    const menu = useRef(null);
+
     const [loadingStart, setLoadingStart] = useState(false)
 
     //Paginator states
@@ -84,14 +86,17 @@ const FinalBatches = ({showToast}) => {
         setPaginatorPage(event.page);
     }
 
+    //Se dispara al tocar algun boton pesar
     const weighHandler = (batchId) => {
         //TODO
     }
 
+    //Se dispara al tocar algun boton cargar DTe
     const dteNumberSetHandler = (batchId) => {
-        //TODO
+        //TODO proximamente
     }
 
+    //Se dispara al tocar algun boton boleta
     const getBillHandler = (batchId) => {
         //TODO proximamente
     }
@@ -106,11 +111,75 @@ const FinalBatches = ({showToast}) => {
 
     //Se dispara al tocar el boton aceptar del dialogo de editar
     const saveEditedItemHandler = () => {
-        //TODO
+        if(editingItem.id && editingItem.buyer && editingItem.price && editingItem.amount && editingItem.mustWeigh!==null){
+            if(editingItem.amount<=0){
+                showToast('warn', 'Error', 'La cantidad debe ser mayor a 0')
+            }else if(editingItem.price<=0){
+                showToast('warn', 'Error', 'El precio debe ser mayor a 0')
+            }else{
+                const data = {
+                    'buyer': editingItem.buyer,
+                    'price': editingItem.price,
+                    'amount': editingItem.amount,
+                    'mustWeigh': editingItem.mustWeigh
+                }
+                fetchContext.authAxios.patch(`${url.SOLD_BATCH_API}/${editingItem.id}`, data)
+                .then(response => {
+                    showToast('success','Exito','Se guardaron los cambios correctamente')
+                    setDisplayDialog(false)
+                    setEditingItem(null)
+                    setRefresh(!refresh)
+                })
+                .catch(error => {
+                    //TODO poner el mensaje del back
+                    showToast('error','Error','No se pudieron guardar los cambios')
+                })
+            }
+        }else{
+            showToast('warn','Error','Debe completar todos los campos')
+        }
     }
 
+    //Se dispara al tocar algun boton eliminar
     const deleteHandler = (batchId) => {
-        //TODO
+        confirmDialog({
+            header: 'Confirmación',
+            message: `¿Está seguro que desea eliminar el lote?`,
+            acceptLabel: 'Si',
+            className: 'w-9 md:w-6',
+            rejectLabel: 'No',
+            acceptClassName: 'p-button-danger',
+            accept: () => {
+                fetchContext.authAxios.delete(`${url.SOLD_BATCH_API}/${batchId}`)
+                .then(response => {
+                    showToast('success', 'Éxito', `El lote ha sido eliminado`)
+                    setRefresh(!refresh)
+                })
+                .catch(error => {
+                    showToast('error', 'Error', `No se pudo eliminar el lote`)
+                })
+            }
+        });
+    }
+
+    //Se dispara al presionar Terminar remate
+    const confirmFinishAuction = () => {
+        confirmDialog({
+            message: '¿Esta seguro de que desea proceder?',
+            header: 'Terminar remate',
+            icon: 'pi pi-exclamation-circle',
+            acceptLabel: 'Si',
+            accept: () => {
+                fetchContext.authAxios.patch(`${url.AUCTION_API}/${auctionId}`, {finished : true})
+                .then(response => {
+                    showToast('success', 'Exito', 'Remate finalizado')
+                    history.goBack();
+                })
+                .catch(error => {
+                    showToast('error', 'Error', 'No se pudo finalizar el remate')
+                })
+            }
+        });
     }
 
     const itemCardList = batchList.map(batch => (
@@ -135,6 +204,49 @@ const FinalBatches = ({showToast}) => {
         />
     ))
 
+    const topButtons = (
+        <div>
+            <Button 
+                icon="pi pi-arrow-left"
+                label="Lotes de venta"
+                className="btn btn-primary mr-1"
+                onClick={() => history.push(url.AUCTION, {auctionId: auctionId})}
+            />
+            <Button 
+                icon="pi pi-file"
+                label="Resumen"
+                className="btn btn-primary mr-1"
+                //TODO onClick={}
+            />
+            <Button 
+                icon="pi pi-check-square"
+                label="Terminar remate"
+                className="btn btn-primary"
+                onClick={() => confirmFinishAuction()}
+            />
+        </div>
+    )
+
+    const menuItems = [
+        {
+            icon: "pi pi-arrow-left",
+            label: "Lotes de venta",
+            command: () => history.push(url.AUCTION, {auctionId: auctionId}),
+        },
+        {
+            icon: "pi pi-file",
+            label: "Resumen",
+            //TODO command: () => {},
+        },
+        {separator: true},
+        {separator: true},
+        {
+            label: 'Terminar remate',
+            icon: 'pi pi-fw pi-check-square',
+            command: () => confirmFinishAuction()
+        }
+    ]
+
     //0:Vendidos 1:No vendidos
     const tabView = (
         <TabView className='w-full' 
@@ -148,23 +260,6 @@ const FinalBatches = ({showToast}) => {
                 {itemCardList}
             </TabPanel>
         </TabView>
-    )
-    
-    const topButtons = (
-        <div>
-            <Button 
-                icon="pi pi-file"
-                label="Resumen"
-                className="btn btn-primary mr-1"
-                //TODO onClick={}
-            />
-            <Button 
-                icon="pi pi-arrow-left"
-                label="Lotes de venta"
-                className="btn btn-primary"
-                onClick={() => history.push(url.AUCTION, {auctionId: auctionId})}
-            />
-        </div>
     )
 
     const sellDialog = (
@@ -197,14 +292,26 @@ const FinalBatches = ({showToast}) => {
         <>
             <ScrollTop />
             {sellDialog}
+            <Menu 
+                className='w-auto' 
+                model={menuItems} 
+                popup 
+                ref={menu} 
+                id="popup_menu"
+            />
             <Card
                 title={
                     <div className="flex justify-content-between">
                         <>{"Lotes finales"}</>
                         {!isSmallScreen()?//Pantalla grande: botones a la derecha del titulo
                             topButtons
-                        :
-                            null
+                        ://Pantalla chica: menu desplegable
+                            <Button 
+                                icon="pi pi-bars"
+                                label="Menu"
+                                className="sm-menubar-button m-0"
+                                onClick={(event) => menu.current.toggle(event)}
+                            />
                         }
                     </div>
                 }
@@ -221,14 +328,7 @@ const FinalBatches = ({showToast}) => {
                 {loadingStart?
                     loadingScreen
                 :
-                    <div>
-                        {isSmallScreen()?//Pantalla chica: botones abajo del titulo
-                            topButtons
-                        :
-                            null
-                        }
-                        {tabView}
-                    </div>
+                    tabView
                 }
             </Card>
         </>
