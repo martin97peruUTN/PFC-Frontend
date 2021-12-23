@@ -209,7 +209,7 @@ const AuctionCRUD = ({showToast}) => {
                 />
                 <label htmlFor="localityAutocompleteForm">Localidad</label>
             </span>
-            {auctionId && !auctionIsFinished?
+            {auctionId && !auctionIsFinished && (authContext.isAdmin() || authContext.isConsignee())?
                 <>
                     <br/>
                     <Button 
@@ -245,9 +245,9 @@ const AuctionCRUD = ({showToast}) => {
                         <Button 
                             className="p-button-danger mr-2" 
                             onClick={()=> history.goBack()} 
-                            label="Cancelar"
+                            label={auctionIsFinished || (!authContext.isAdmin() && !authContext.isConsignee())?"Volver":"Cancelar"}
                         />
-                        {auctionId && !auctionIsFinished?
+                        {auctionId && !auctionIsFinished && (authContext.isAdmin() || authContext.isConsignee())?
                             <Button 
                                 className="p-button-danger" 
                                 onClick={()=> deleteHandler()} 
@@ -258,13 +258,17 @@ const AuctionCRUD = ({showToast}) => {
                             //No se muestra el boton eliminar si estoy creando
                         }
                     </div>
-                    <Button 
-                        className="btn btn-primary" 
-                        icon="pi pi-check" 
-                        onClick={()=> confirm()} 
-                        label="Guardar" 
-                        loading={loadingAccept}
-                    />
+                    {!auctionIsFinished && (authContext.isAdmin() || authContext.isConsignee())?
+                        <Button 
+                            className="btn btn-primary" 
+                            icon="pi pi-check" 
+                            onClick={()=> confirm()} 
+                            label="Guardar" 
+                            loading={loadingAccept}
+                        />
+                    :
+                        null
+                    }
                 </div>
             }
         >

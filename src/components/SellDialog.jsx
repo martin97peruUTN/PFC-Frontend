@@ -53,16 +53,19 @@ const SellDialog = ({isCreating, acceptHandler, setDisplayDialog, displayDialog,
                     <label htmlFor="buyerAutocompleteForm">Comprador</label>
                 </span>
                 <br/>
-                <span className="p-float-label">
-                    <InputText 
-                        id="price" 
-                        className='w-full' 
-                        value={editingItem?editingItem.price:null}
-                        keyfilter="num"
-                        onChange={e => setEditingItem({...editingItem, price:e.target.value})}
-                    />
-                    <label htmlFor="price">Precio</label>
-                </span>
+                <div className="p-inputgroup">
+                    <span className="p-inputgroup-addon">$</span>
+                    <span className="p-float-label">
+                        <InputText 
+                            id="price" 
+                            className='w-full' 
+                            value={editingItem?editingItem.price:null}
+                            keyfilter="num"
+                            onChange={e => setEditingItem({...editingItem, price:e.target.value})}
+                        />
+                        <label htmlFor="price">Precio</label>
+                    </span>
+                </div>
                 <br/>
                 <span className="p-float-label">
                     <InputText 

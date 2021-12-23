@@ -64,37 +64,39 @@ const FinalBatchCard = (props) => {
                 content = {
                     <div className={isSmallScreen()?"text-xl":"text-2xl"}>
                         {props.buyer?//Solo los vendidos tienen comprador
-                            <div>
+                            <div className="mb-1">
                                 {`Comprador: ${props.buyer}`}
-                                <br/>
-                            </div>
-                        :
-                        null
-                        }
-                        {`Vendedor: ${props.seller}`/*Siempre*/}
-                        <br/>
-                        {`Cantidad: ${props.amount}`/*Siempre*/}
-                        <br/>
-                        {`Categoria: ${props.category}`/*Siempre*/}
-                        <br/>
-                        {props.weight?//Depende si debe pesarse, y si debe, depende de si ya fue pesado o no
-                            <div>
-                                {`Peso: ${props.weight}`}
-                                <br/>
                             </div>
                         :
                             null
                         }
+                        <div className="mb-1">
+                            {`Vendedor: ${props.seller}`/*Siempre*/}
+                        </div>
+                        <div className="mb-1">
+                            {`Cantidad: ${props.amount}`/*Siempre*/}
+                        </div>
+                        <div className="mb-1">
+                            {`Categoria: ${props.category}`/*Siempre*/}
+                        </div>
                         {props.price?//Solo los vendidos tienen precio
-                            <div>
-                                {`Precio: ${props.price}`}
-                                <br/>
+                            <div className="mb-1">
+                                {`Precio: $${props.price}`}
+                            </div>
+                        :
+                            null
+                        }
+                        {props.weight?//Depende si debe pesarse, y si debe, depende de si ya fue pesado o no
+                            <div className="mb-1">
+                                {`Peso: ${props.weight}`}
                             </div>
                         :
                             null
                         }
                         {props.dteNumber?//Depende de si ya se le cargo el DTe o no
-                            `DTe: ${props.dteNumber}`
+                            <div className="mb-1">
+                                {`DTe: ${props.dteNumber}`}
+                            </div>
                         :
                             null
                         }

@@ -192,17 +192,17 @@ const FinalBatches = ({showToast}) => {
     //Se dispara al presionar Terminar remate
     const confirmFinishAuction = () => {
         confirmDialog({
-            message: `¿Esta seguro de terminar el remate? Si lo termina se generaran los lotes finales
-                no vendidos y ya no podra realizar mas cambios, solo cargar los DTe y generar las boletas.`,
+            message: `¿Está seguro de terminar el remate? Si lo termina se generarán los lotes finales
+                no vendidos y ya no podrá realizar mas cambios, solo cargar los DTe y generar las boletas y resúmenes.`,
             header: 'Terminar remate',
             icon: 'pi pi-exclamation-circle',
             className: 'w-11 md:w-7',
             acceptLabel: 'Si',
             accept: () => {
-                fetchContext.authAxios.patch(`${url.AUCTION_API}/${auctionId}`, {finished : true})
+                fetchContext.authAxios.post(`${url.AUCTION_API}/finish/${auctionId}`)
                 .then(response => {
                     showToast('success', 'Exito', 'Remate finalizado')
-                    history.goBack();
+                    setRefresh(!refresh)
                 })
                 .catch(error => {
                     showToast('error', 'Error', 'No se pudo finalizar el remate')
@@ -215,7 +215,7 @@ const FinalBatches = ({showToast}) => {
         <FinalBatchCard
             id={batch.id}
             key={batch.id}
-            buyer={batch.buyer.name}
+            buyer={batch.buyer?batch.buyer.name:null}
             seller={batch.seller.name}
             amount={batch.amount}
             category={batch.category.name}
@@ -238,21 +238,25 @@ const FinalBatches = ({showToast}) => {
             <Button 
                 icon="pi pi-arrow-left"
                 label="Lotes de venta"
-                className="btn btn-primary mr-1"
+                className="btn btn-primary mr-3"
                 onClick={() => history.push(url.AUCTION, {auctionId: auctionId})}
             />
             <Button 
                 icon="pi pi-file"
                 label="Resumen"
-                className="btn btn-primary mr-1"
+                className="btn btn-primary mr-3"
                 //TODO onClick={} proximamente
             />
-            <Button 
-                icon="pi pi-check-square"
-                label="Terminar remate"
-                className="btn btn-primary"
-                onClick={() => confirmFinishAuction()}
-            />
+            {(authContext.isAdmin() || authContext.isConsignee()) && !auctionIsFinished?
+                <Button 
+                    icon="pi pi-check-square"
+                    label="Terminar remate"
+                    className="p-button-danger"
+                    onClick={() => confirmFinishAuction()}
+                />
+            :
+                null
+            }
         </div>
     )
 
@@ -266,15 +270,20 @@ const FinalBatches = ({showToast}) => {
             icon: "pi pi-file",
             label: "Resumen",
             //TODO command: () => {} proximamente
-        },
-        {separator: true},
-        {separator: true},
-        {
-            label: 'Terminar remate',
-            icon: 'pi pi-fw pi-check-square',
-            command: () => confirmFinishAuction()
         }
     ]
+    if((authContext.isAdmin() || authContext.isConsignee()) && !auctionIsFinished){
+        menuItems.push(
+            {separator: true},
+            {separator: true},
+            {
+                label: 'Terminar remate',
+                icon: 'pi pi-fw pi-check-square',
+                command: () => confirmFinishAuction()
+            }
+        )
+    }
+    
 
     //0:Vendidos 1:No vendidos
     const tabView = (
@@ -319,16 +328,19 @@ const FinalBatches = ({showToast}) => {
             }
         >
             <br/>
-            <span className="p-float-label">
-                <InputText 
-                    id="weight" 
-                    className='w-full' 
-                    value={editingItem?editingItem.weight:null}
-                    keyfilter="num"
-                    onChange={e => setEditingItem({...editingItem, weight:e.target.value})}
-                />
-                <label htmlFor="weight">Peso</label>
-            </span>
+            <div className="p-inputgroup">
+                <span className="p-float-label">
+                    <InputText 
+                        id="weight" 
+                        className='w-full' 
+                        value={editingItem?editingItem.weight:null}
+                        keyfilter="num"
+                        onChange={e => setEditingItem({...editingItem, weight:e.target.value})}
+                    />
+                    <label htmlFor="weight">Peso</label>
+                </span>
+                <span className="p-inputgroup-addon">Kg</span>
+            </div>
         </Dialog>
     )
 

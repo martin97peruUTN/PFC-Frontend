@@ -145,7 +145,7 @@ const Auction = ({showToast}) => {
                 icon: 'pi pi-exclamation-circle',
                 acceptLabel: 'Si',
                 accept: () => {
-                    fetchContext.authAxios.patch(`${url.ANIMALS_ON_GROUND_API}/${animalOnGroundId}`, {'notSold': true})
+                    fetchContext.authAxios.patch(`${url.ANIMALS_ON_GROUND_API}/${animalOnGroundId}`, {notSold: true})
                     .then(response => {
                         showToast('success', 'Exito', 'Animales marcados como no vendido')
                         setRefresh(!refresh)

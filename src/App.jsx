@@ -111,9 +111,9 @@ function App() {
         <HomePage showToast={showToast}/>
       </AuthenticatedRoute>
 
-      <ConsigneeRoute exact path={url.AUCTION_CRUD}>
+      <AuthenticatedRoute exact path={url.AUCTION_CRUD}>
         <AuctionCRUD showToast={showToast}/>
-      </ConsigneeRoute>
+      </AuthenticatedRoute>
       <AuthenticatedRoute exact path={url.AUCTION_HISTORY}>
         <HomePage showToast={showToast}/>
       </AuthenticatedRoute>
@@ -126,9 +126,9 @@ function App() {
       <ConsigneeRoute exact path={url.ADD_PARTICIPANT}>
         <AddParticipant showToast={showToast}/>
       </ConsigneeRoute>
-      <ConsigneeRoute exact path={url.FINAL_BATCHES}>
+      <AuthenticatedRoute exact path={url.FINAL_BATCHES}>
         <FinalBatches showToast={showToast}/>
-      </ConsigneeRoute>
+      </AuthenticatedRoute>
 
       <AuthenticatedRoute exact path={url.CLIENT_CRUD}>
         <ClientCRUD showToast={showToast}/>
