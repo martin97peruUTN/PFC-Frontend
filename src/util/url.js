@@ -14,6 +14,8 @@ export const CATEGORIES = '/categorias'
 export const USERS = '/usuarios'
 export const USER_CRUD = '/crear-editar-usuario'
 export const ADD_PARTICIPANT = '/agregar-participante'
+export const BATCH_CRUD = '/crear-editar-lote'
+export const FINAL_BATCHES = '/lotes-finales'
 
 //Backend
 export const LOGIN_API = '/login'
@@ -22,5 +24,7 @@ export const LOCALITY_API = '/locality'
 export const CATEGORY_API = '/category'
 export const CLIENT_API = '/client'
 export const AUCTION_API = '/auction'
-export const AUCTION_BATCHES_API = '/auction-batches'
 export const USER_AUCTIONS_API = '/auction-user'
+export const AUCTION_BATCH_API = '/auction-batch'
+export const ANIMALS_ON_GROUND_API = `${AUCTION_BATCH_API}/animals-on-ground`
+export const SOLD_BATCH_API = '/sold-batch'

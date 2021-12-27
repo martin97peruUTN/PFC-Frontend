@@ -33,13 +33,16 @@ const AuctionCRUD = ({showToast}) => {
     const [filteredLocalityList, setFilteredLocalityList] = useState([])
     const [selectedLocality, setSelectedLocality] = useState()
 
+    const [auctionIsFinished, setAuctionIsFinished] = useState(false)
+
     useEffect(() => {
         //Si esta editando me llega esto desde la otra pantalla
         if(history.location.state){
             setLoadingStart(true)
             setEnableEditing(false)
-            const {auctionId} = history.location.state
+            const {auctionId, auctionIsFinished} = history.location.state
             setAuctionId(auctionId)
+            setAuctionIsFinished(auctionIsFinished)
             fetchContext.authAxios.get(`${url.AUCTION_API}/${auctionId}`)
             .then(response => {
                 const {senasaNumber, date, locality} = response.data
@@ -206,7 +209,7 @@ const AuctionCRUD = ({showToast}) => {
                 />
                 <label htmlFor="localityAutocompleteForm">Localidad</label>
             </span>
-            {auctionId?
+            {auctionId && !auctionIsFinished && (authContext.isAdmin() || authContext.isConsignee())?
                 <>
                     <br/>
                     <Button 
@@ -242,9 +245,9 @@ const AuctionCRUD = ({showToast}) => {
                         <Button 
                             className="p-button-danger mr-2" 
                             onClick={()=> history.goBack()} 
-                            label="Cancelar"
+                            label={auctionIsFinished || (!authContext.isAdmin() && !authContext.isConsignee())?"Volver":"Cancelar"}
                         />
-                        {auctionId?
+                        {auctionId && !auctionIsFinished && (authContext.isAdmin() || authContext.isConsignee())?
                             <Button 
                                 className="p-button-danger" 
                                 onClick={()=> deleteHandler()} 
@@ -255,13 +258,17 @@ const AuctionCRUD = ({showToast}) => {
                             //No se muestra el boton eliminar si estoy creando
                         }
                     </div>
-                    <Button 
-                        className="btn btn-primary" 
-                        icon="pi pi-check" 
-                        onClick={()=> confirm()} 
-                        label="Guardar" 
-                        loading={loadingAccept}
-                    />
+                    {!auctionIsFinished && (authContext.isAdmin() || authContext.isConsignee())?
+                        <Button 
+                            className="btn btn-primary" 
+                            icon="pi pi-check" 
+                            onClick={()=> confirm()} 
+                            label="Guardar" 
+                            loading={loadingAccept}
+                        />
+                    :
+                        null
+                    }
                 </div>
             }
         >

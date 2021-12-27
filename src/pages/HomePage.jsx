@@ -54,9 +54,12 @@ const HomePage = ({showToast}) => {
     }
 
     const addBatchHandler = (auctionId) => {
-        //TODO terminar cuando se tenga el endpoint
         if(authContext.isAdmin() || tabViewActiveIndex === 0){
-            
+            history.push(url.BATCH_CRUD, 
+                {
+                    auctionId: auctionId
+                }
+            )
         }
     }
 
