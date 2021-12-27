@@ -30,19 +30,24 @@ const AnimalsOnGroundShowCard = (props) => (
             </div>
         }
         buttons = {
-            //0:Para venta 1:No vendido 2:Vendido
+            //tabViewActiveIndex => 0:Para venta 1:No vendido 2:Vendido
             <div className={CARD_TWO_COLUMNS_BUTTON_DIV}>
-                {props.tabViewActiveIndex === 0 || props.tabViewActiveIndex === 1 ?
-                <Button className={CARD_TWO_COLUMNS_BUTTON} icon={isSmallScreen()?null:"pi pi-check-circle"} onClick={()=> props.sellHandler(props.id)} label="Vender"></Button>
-                :
-                null
+                {(props.tabViewActiveIndex === 0 || props.tabViewActiveIndex === 1) && !props.auctionIsFinished ?
+                    <Button className={CARD_TWO_COLUMNS_BUTTON} icon={isSmallScreen()?null:"pi pi-check-circle"} onClick={()=> props.sellHandler(props.id)} label="Vender"></Button>
+                    :
+                    null
                 }
-                {props.tabViewActiveIndex === 0 ?
-                <Button className={CARD_TWO_COLUMNS_BUTTON} icon={isSmallScreen()?null:"pi pi-times-circle"} onClick={()=> props.notSoldHandler(props.id)} label="No vendido"></Button>
-                :
-                null
+                {props.tabViewActiveIndex === 0  && !props.auctionIsFinished?
+                    <Button className={CARD_TWO_COLUMNS_BUTTON} icon={isSmallScreen()?null:"pi pi-times-circle"} onClick={()=> props.notSoldHandler(props.id)} label="No vendido"></Button>
+                    :
+                    null
                 }
-                <Button className="btn btn-primary" icon={"pi pi-pencil"} onClick={() => props.editHandler(props.id)} label={isSmallScreen()?null:"Editar"}></Button>
+                {!props.auctionIsFinished?
+                    <Button className="btn btn-primary" icon={"pi pi-pencil"} onClick={() => props.editHandler(props.id)} label={isSmallScreen()?null:"Editar"}></Button>
+                    :
+                    null
+                }
+                
             </div>
         }
     />

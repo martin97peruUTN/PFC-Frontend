@@ -31,6 +31,7 @@ import ClientList from "./pages/ClientList";
 import ClientCRUD from "./pages/ClientCRUD";
 import AddParticipant from "./pages/AddParticipant";
 import AddBatch from "./pages/AddBatch";
+import FinalBatches from "./pages/FinalBatches";
 
 const UnauthenticatedRoutes = ({showToast}) => (
   <div className="mx-3 my-7 md:mx-6">
@@ -110,9 +111,9 @@ function App() {
         <HomePage showToast={showToast}/>
       </AuthenticatedRoute>
 
-      <ConsigneeRoute exact path={url.AUCTION_CRUD}>
+      <AuthenticatedRoute exact path={url.AUCTION_CRUD}>
         <AuctionCRUD showToast={showToast}/>
-      </ConsigneeRoute>
+      </AuthenticatedRoute>
       <AuthenticatedRoute exact path={url.AUCTION_HISTORY}>
         <HomePage showToast={showToast}/>
       </AuthenticatedRoute>
@@ -125,6 +126,9 @@ function App() {
       <ConsigneeRoute exact path={url.ADD_PARTICIPANT}>
         <AddParticipant showToast={showToast}/>
       </ConsigneeRoute>
+      <AuthenticatedRoute exact path={url.FINAL_BATCHES}>
+        <FinalBatches showToast={showToast}/>
+      </AuthenticatedRoute>
 
       <AuthenticatedRoute exact path={url.CLIENT_CRUD}>
         <ClientCRUD showToast={showToast}/>

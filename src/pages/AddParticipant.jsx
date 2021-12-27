@@ -37,10 +37,13 @@ const AddParticipant = ({showToast, ...props}) => {
     //Para el autocomplete
     const [filteredUserList, setFilteredUserList] = useState([])
 
+    const [auctionIsFinished, setAuctionIsFinished] = useState(false)
+
     useEffect(() => {
         if(history.location.state){
-            const {auctionId} = history.location.state;
+            const {auctionId, auctionIsFinished} = history.location.state;
             setAuctionId(auctionId)
+            setAuctionIsFinished(auctionIsFinished)
             setLoadingStart(true)
             fetchContext.authAxios.get(`${url.USER_AUCTIONS_API}/users/${auctionId}`)
             .then(response => {
@@ -87,7 +90,7 @@ const AddParticipant = ({showToast, ...props}) => {
 
     //Se dispara al tocar el boton aceptar en el dialogo
     const saveItemHandler = () => {
-        if(selectedUserItem){
+        if(selectedUserItem && !auctionIsFinished){
             fetchContext.authAxios.post(`${url.USER_AUCTIONS_API}/assignment/${auctionId}/adduser/${selectedUserItem.id}`)
             .then(response => {
                 showToast('success', 'Exito', `Participante agregado`)
@@ -113,14 +116,16 @@ const AddParticipant = ({showToast, ...props}) => {
             rejectLabel: 'No',
             acceptClassName: 'p-button-danger',
             accept: () => {
-                fetchContext.authAxios.delete(`${url.USER_AUCTIONS_API}/assignment/${auctionId}/deleteuser/${id}`)
-                .then(response => {
-                    showToast('success', 'Éxito', `El participante ha sido quitado`)
-                    setRefresh(!refresh)
-                })
-                .catch(error => {
-                    showToast('error', 'Error', `No se pudo quitar al participante`)
-                })
+                if(!auctionIsFinished){
+                    fetchContext.authAxios.delete(`${url.USER_AUCTIONS_API}/assignment/${auctionId}/deleteuser/${id}`)
+                    .then(response => {
+                        showToast('success', 'Éxito', `El participante ha sido quitado`)
+                        setRefresh(!refresh)
+                    })
+                    .catch(error => {
+                        showToast('error', 'Error', `No se pudo quitar al participante`)
+                    })
+                }
             }
         });
     }
@@ -131,6 +136,7 @@ const AddParticipant = ({showToast, ...props}) => {
             key={item.id}
             id={item.id}
             name={`${item.name} ${item.lastname}`}
+            auctionIsFinished={auctionIsFinished}
             deleteHandler={item.id!==authContext.getUserInfo().id? deleteHandler: null}
         />
     ))
@@ -186,11 +192,16 @@ const AddParticipant = ({showToast, ...props}) => {
                 title={
                     <div className="flex justify-content-between">
                     <>Participantes</>
-                    <Button 
-                        className="btn btn-primary" 
-                        icon="pi pi-plus" 
-                        onClick={()=> createItemHandler()} 
-                        label={`Agregar`}/>
+                    {!auctionIsFinished?
+                        <Button 
+                            className="btn btn-primary" 
+                            icon="pi pi-plus" 
+                            onClick={()=> createItemHandler()} 
+                            label={`Agregar`}
+                        />
+                        :
+                        null
+                    }
                     </div>
                 }
             >

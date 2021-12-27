@@ -15,6 +15,7 @@ import * as url from '../util/url';
 
 import Card from '../components/cards/Card'
 import AnimalsOnGroundShowCard from '../components/cards/AnimalsOnGroundShowCard'
+import SellDialog from '../components/SellDialog'
 
 const Auction = ({showToast}) => {
 
@@ -32,13 +33,23 @@ const Auction = ({showToast}) => {
     const [paginatorPage, setPaginatorPage] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
 
+    //uso este estado "comodin" para refrescar la pagina cuando hay un cambio
+    const [refresh, setRefresh] = useState(false);
+
+    //Mostrar el dialogo de vender o esconderlo
+    const [displayDialog, setDisplayDialog] = useState(false);
+
     const [auctionId, setAuctionId] = useState()
     const [auctionIsFinished, setAuctionIsFinished] = useState()
 
     //0:Para venta 1:No vendido 2:Vendido
     const [tabViewActiveIndex, setTabViewActiveIndex] = useState(0);
 
+    //Listado de animales en pista
     const [animalsOnGround, setAnimalsOnGround] = useState([])
+
+    //Item de la lista que estoy queriendo vender en este caso
+    const [editingItem, setEditingItem] = useState({mustWeigh: true});
 
     useEffect(() => {
         setLoadingStart(true)
@@ -71,7 +82,7 @@ const Auction = ({showToast}) => {
                 history.goBack();
             })
         }
-    }, [tabViewActiveIndex, paginatorFirst, paginatorRows, paginatorPage])
+    }, [tabViewActiveIndex, paginatorFirst, paginatorRows, paginatorPage, refresh])
 
     const onPaginatorPageChange = (event) => {
         setPaginatorFirst(event.first);
@@ -79,100 +90,126 @@ const Auction = ({showToast}) => {
         setPaginatorPage(event.page);
     }
 
-    const tabViewActiveIndexChange = (index) => {
-        setTabViewActiveIndex(index)
-        //FIXME capaz no haga falta hacer nada aca, porque puse el tabViewActiveIndex en el useEffect
+    //Se dispara al tocar algun boton vender
+    const sellHandler = (animalOnGroundId) => {
+        if(!auctionIsFinished){
+            setDisplayDialog(true)
+            setEditingItem({...editingItem, 'id':animalOnGroundId})
+        }
     }
 
-    const sellHandler = (animalOnGroundId) => {
-
+    //Se dispara al tocar el boton aceptar del dialogo de vender
+    const sellAnimalsHandler = () => {
+        if(!auctionIsFinished){
+            if(editingItem.id && editingItem.client && editingItem.price && editingItem.amount && editingItem.mustWeigh!==null){
+                if(editingItem.amount<=0){
+                    showToast('warn', 'Error', 'La cantidad debe ser mayor a 0')
+                }else if(editingItem.price<=0){
+                    showToast('warn', 'Error', 'El precio debe ser mayor a 0')
+                }else{
+                    const actualAnimals = animalsOnGround.find(animal => animal.id === editingItem.id)
+                    //Si la cantidad que quiero vender es menor o igual a la cantidad del animalsOnGround
+                    //menos la cantidad ya vendida (los que quedan por vender), lo dejo seguir
+                    if(editingItem.amount<=actualAnimals.amount - actualAnimals.soldAmount){
+                        const data = {
+                            'client': editingItem.client,
+                            'price': editingItem.price,
+                            'amount': editingItem.amount,
+                            'mustWeigh': editingItem.mustWeigh
+                        }
+                        fetchContext.authAxios.post(`${url.SOLD_BATCH_API}/${editingItem.id}`, data)
+                        .then(response => {
+                            showToast('success','Exito','Se vendieron los animales correctamente')
+                            setDisplayDialog(false)
+                            setEditingItem({mustWeigh: true})
+                            setRefresh(!refresh)
+                        })
+                        .catch(error => {
+                            showToast('error','Error','No se pudieron vender los animales')
+                        })
+                    }else{
+                        showToast('warn','Error','La cantidad que quiere vender no puede ser mayor a la cantidad restante')
+                    }
+                }
+            }else{
+                showToast('warn','Error','Debe completar todos los campos')
+            }
+        }
     }
 
     const notSoldHandler = (animalOnGroundId) => {
-        
+        if(!auctionIsFinished){
+            confirmDialog({
+                message: '¿Esta seguro de que desea proceder?',
+                header: 'Marcar como no vendido',
+                icon: 'pi pi-exclamation-circle',
+                acceptLabel: 'Si',
+                accept: () => {
+                    fetchContext.authAxios.patch(`${url.ANIMALS_ON_GROUND_API}/${animalOnGroundId}`, {notSold: true})
+                    .then(response => {
+                        showToast('success', 'Exito', 'Animales marcados como no vendido')
+                        setRefresh(!refresh)
+                    })
+                    .catch(error => {
+                        showToast('error', 'Error', 'No se pudieron marcar como no vendidos')
+                    })
+                }
+            });
+        }
     }
 
     const editHandler = (animalOnGroundId) => {
-        history.push(url.BATCH_CRUD, 
-            {
-                auctionId: auctionId,
-                animalOnGroundId: animalOnGroundId
-            }
-        )
-    }
-
-    //Se dispara al presionar Terminar remate
-    const confirmFinishAuction = () => {
-        confirmDialog({
-            message: '¿Esta seguro de que desea proceder?',
-            header: 'Terminar remate',
-            icon: 'pi pi-exclamation-circle',
-            acceptLabel: 'Si',
-            accept: () => finishAuction()
-        });
-    }
-
-    const finishAuction = () => {
-        fetchContext.authAxios.patch(`${url.AUCTION_API}/${auctionId}`, {finished : true})
-        .then(response => {
-            showToast('success', 'Exito', 'Remate finalizado')
-            history.goBack();
-        })
-        .catch(error => {
-            showToast('error', 'Error', 'No se pudo finalizar el remate')
-        })
+        if(!auctionIsFinished){
+            history.push(url.BATCH_CRUD, 
+                {
+                    auctionId: auctionId,
+                    animalOnGroundId: animalOnGroundId
+                }
+            )
+        }
     }
 
     //TODO cambiar urls cuando las tengamos (url o command: () => hacerAlgo())
     const menuItems = []
-    if(authContext.isAdmin() || authContext.isConsignee()){
-        menuItems.push({
-            label: 'Agregar lote',
-            icon: 'pi pi-fw pi-plus-circle',
-            command: () => history.push(url.BATCH_CRUD, 
-                {
-                    auctionId: auctionId
-                }
-            )
-        },
-        {
-            label: 'Participantes',
-            icon: 'pi pi-fw pi-users',
-            command: () => history.push(url.ADD_PARTICIPANT,
-                {
-                    auctionId: auctionId
-                }
-            )
-        },
-        {
-            label: 'Informacion del remate',
-            icon: 'pi pi-fw pi-info-circle',
-            command: () => history.push(url.AUCTION_CRUD, 
-                {
-                    auctionId: auctionId
-                }
-            )
-        })
-    }else{
-        menuItems.push({
-            label: 'Agregar lote',
-            icon: 'pi pi-fw pi-plus-circle',
-            command: () => history.push(url.BATCH_CRUD, 
-                {
-                    auctionId: auctionId
-                }
-            )
-        },
-        {
-            label: 'Informacion del remate',
-            icon: 'pi pi-fw pi-info-circle',
-            command: () => history.push(url.AUCTION_CRUD, 
-                {
-                    auctionId: auctionId
-                }
-            )
-        })
+    if(!auctionIsFinished){
+        menuItems.push(
+            {
+                label: 'Agregar lote',
+                icon: 'pi pi-fw pi-plus-circle',
+                command: () => history.push(url.BATCH_CRUD, 
+                    {
+                        auctionId: auctionId
+                    }
+                )
+            }
+        )
     }
+    if(authContext.isAdmin() || authContext.isConsignee()){
+        menuItems.push(
+            {
+                label: 'Participantes',
+                icon: 'pi pi-fw pi-users',
+                command: () => history.push(url.ADD_PARTICIPANT,
+                    {
+                        auctionId: auctionId,
+                        auctionIsFinished: auctionIsFinished
+                    }
+                )
+            }
+        )
+    }
+    menuItems.push(
+        {
+            label: 'Informacion del remate',
+            icon: 'pi pi-fw pi-info-circle',
+            command: () => history.push(url.AUCTION_CRUD, 
+                {
+                    auctionId: auctionId,
+                    auctionIsFinished: auctionIsFinished
+                }
+            )
+        }
+    )
     menuItems.push(
         {separator: true},
         {
@@ -186,16 +223,13 @@ const Auction = ({showToast}) => {
             url: url.HOME
         },
         {
-            label: 'Lotes vendidos',
+            label: `${auctionIsFinished?'Lotes finales':'Lotes vendidos'}`,
             icon: 'pi pi-fw pi-shopping-cart',
-            url: url.HOME
-        },
-        {separator: true},
-        {separator: true},
-        {
-            label: 'Terminar remate',
-            icon: 'pi pi-fw pi-check-square',
-            command: () => confirmFinishAuction()
+            command: () => history.push(url.FINAL_BATCHES,
+                {
+                    auctionId: auctionId
+                }
+            )
         }
     )
 
@@ -209,6 +243,7 @@ const Auction = ({showToast}) => {
             category={animalOnGround.category.name}
             corralNumber={animalOnGround.corralNumber}
             tabViewActiveIndex = {tabViewActiveIndex}
+            auctionIsFinished={auctionIsFinished}
             sellHandler = {sellHandler}
             notSoldHandler = {notSoldHandler}
             editHandler = {editHandler}
@@ -219,7 +254,7 @@ const Auction = ({showToast}) => {
     const tabView = (
         <TabView className='w-full' 
             activeIndex={tabViewActiveIndex} 
-            onTabChange={(e) => tabViewActiveIndexChange(e.index)}
+            onTabChange={(e) => setTabViewActiveIndex(e.index)}
         >
             <TabPanel header="Para venta">
                 {itemCardList}
@@ -231,6 +266,20 @@ const Auction = ({showToast}) => {
                 {itemCardList}
             </TabPanel>
         </TabView>
+    )
+
+    const sellDialog = (
+        <SellDialog
+            isCreating={true}
+            acceptHandler = {sellAnimalsHandler}
+            setDisplayDialog = {setDisplayDialog}
+            displayDialog = {displayDialog}
+            url = {url}
+            fetchContext = {fetchContext}
+            showToast = {showToast}
+            editingItem = {editingItem}
+            setEditingItem = {setEditingItem}
+        />
     )
 
     const loadingScreen = (
@@ -248,6 +297,7 @@ const Auction = ({showToast}) => {
     return (
         <>
             <ScrollTop />
+            {sellDialog}
             <Menu 
                 className='w-auto' 
                 model={menuItems} 

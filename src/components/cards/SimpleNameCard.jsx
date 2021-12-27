@@ -13,12 +13,12 @@ const SimpleNameCard = props => (
         }
         buttons = {
             <div className={CARD_TWO_COLUMNS_BUTTON_DIV}>
-                {props.editHandler?
+                {props.editHandler && !props.auctionIsFinished?
                 <Button className={CARD_TWO_COLUMNS_BUTTON} icon="pi pi-pencil" onClick={()=> props.editHandler(props.id)} label={props.editLabel?props.editLabel:"Editar"}></Button>
                 :
                 null
                 }
-                {props.deleteHandler?
+                {props.deleteHandler && !props.auctionIsFinished?
                 <Button className="p-button-danger" icon="pi pi-trash" onClick={() => props.deleteHandler(props.id)} label="Borrar"></Button>
                 :
                 null
