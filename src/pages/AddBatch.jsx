@@ -140,7 +140,7 @@ const AddBatch = ({showToast}) => {
             corralNumber: corralNumber,
             dteNumber: dteNumber,
             animalsOnGround: animalsOnGroundList.map(item => (
-                {...item, 'sold': false, 'notSold': false, 'id': null}
+                {...item, 'sold': false, 'notSold': false, 'id': null, 'startingOrder': -1}
             ))
         }
         fetchContext.authAxios.post(`${url.AUCTION_BATCH_API}/${auctionId}`, body)
@@ -230,7 +230,7 @@ const AddBatch = ({showToast}) => {
                     showToast('error', 'Error', `No se pudieron guardar los animales`)
                 })
             }else if(!editingItem.id && batchId){
-                const data = {...editingItem, 'sold': false, 'notSold': false, 'id': null}
+                const data = {...editingItem, 'sold': false, 'notSold': false, 'id': null, 'startingOrder': -1}
                 fetchContext.authAxios.post(`${url.AUCTION_BATCH_API}/${batchId}/animals-on-ground`, data)
                 .then(response => {
                     showToast('success', 'Exito', `Animales guardados`)

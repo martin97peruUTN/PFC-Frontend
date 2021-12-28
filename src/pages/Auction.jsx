@@ -208,15 +208,29 @@ const Auction = ({showToast}) => {
                     auctionIsFinished: auctionIsFinished
                 }
             )
-        }
-    )
-    menuItems.push(
+        },
         {separator: true},
+    )
+    if(!auctionIsFinished){
+        menuItems.push(
+            {
+                label: 'Ordenar lotes',
+                icon: 'pi pi-fw pi-sort-alt',
+                command: () => history.push(url.SORT_ANIMALS_ON_GROUND, 
+                    {
+                        auctionId: auctionId
+                    }
+                )
+            }
+        )
+    }
+    menuItems.push(
         {
             label: 'Orden de salida',
             icon: 'pi pi-fw pi-sort-amount-down-alt',
             url: url.HOME
         },
+        {separator: true},
         {
             label: 'Resumen',
             icon: 'pi pi-fw pi-book',

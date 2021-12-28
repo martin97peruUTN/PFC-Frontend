@@ -32,6 +32,7 @@ import ClientCRUD from "./pages/ClientCRUD";
 import AddParticipant from "./pages/AddParticipant";
 import AddBatch from "./pages/AddBatch";
 import FinalBatches from "./pages/FinalBatches";
+import SortAnimalsOnGround from "./pages/SortAnimalsOnGround";
 
 const UnauthenticatedRoutes = ({showToast}) => (
   <div className="mx-3 my-7 md:mx-6">
@@ -126,6 +127,9 @@ function App() {
       <ConsigneeRoute exact path={url.ADD_PARTICIPANT}>
         <AddParticipant showToast={showToast}/>
       </ConsigneeRoute>
+      <AuthenticatedRoute exact path={url.SORT_ANIMALS_ON_GROUND}>
+        <SortAnimalsOnGround showToast={showToast}/>
+      </AuthenticatedRoute>
       <AuthenticatedRoute exact path={url.FINAL_BATCHES}>
         <FinalBatches showToast={showToast}/>
       </AuthenticatedRoute>

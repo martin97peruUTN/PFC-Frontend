@@ -71,3 +71,11 @@ body {
         width: 90%;
     }
 }
+
+/*orderList*/
+.order-list {
+    display: flex;
+    align-items: center;
+    padding: .2rem;
+    width: 100%;
+}
