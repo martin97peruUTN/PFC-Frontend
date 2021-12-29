@@ -76,7 +76,7 @@ const SortAnimalsOnGround = ({showToast}) => {
     }
 
     const itemTemplate = (item) => (
-        <div className="order-list">
+        <div className="order-list-item">
             {`Corral: ${item.corralNumber} - ${item.category.name}`}
             <br/>
             {`Vendedor: ${item.seller.name}`}
