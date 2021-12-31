@@ -13,6 +13,22 @@ body {
     background-color: var(--light) !important;
     border-color: var(--primary) !important;
 }
+.p-splitbutton-defaultbutton{
+    background-color: var(--primary) !important;
+    border-color: var(--dark)
+}
+.p-splitbutton-defaultbutton:hover{
+    background-color: var(--light) !important;
+    border-color: var(--primary) !important;
+}
+.p-splitbutton-menubutton{
+    background-color: var(--primary) !important;
+    border-color: var(--dark)
+}
+.p-splitbutton-menubutton:hover{
+    background-color: var(--light) !important;
+    border-color: var(--primary) !important;
+}
 
 /*Menubar*/
 .p-menubar {

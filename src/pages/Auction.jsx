@@ -16,6 +16,7 @@ import * as url from '../util/url';
 import Card from '../components/cards/Card'
 import AnimalsOnGroundShowCard from '../components/cards/AnimalsOnGroundShowCard'
 import SellDialog from '../components/SellDialog'
+import EditAnimalOnGroundDialog from '../components/EditAnimalOnGroundDialog';
 
 const Auction = ({showToast}) => {
 
@@ -37,7 +38,10 @@ const Auction = ({showToast}) => {
     const [refresh, setRefresh] = useState(false);
 
     //Mostrar el dialogo de vender o esconderlo
-    const [displayDialog, setDisplayDialog] = useState(false);
+    const [displayDialogSell, setDisplayDialogSell] = useState(false);
+
+    //Mostrar el dialogo de editar o esconderlo
+    const [displayDialogEdit, setDisplayDialogEdit] = useState(false);
 
     const [auctionId, setAuctionId] = useState()
     const [auctionIsFinished, setAuctionIsFinished] = useState()
@@ -93,7 +97,7 @@ const Auction = ({showToast}) => {
     //Se dispara al tocar algun boton vender
     const sellHandler = (animalOnGroundId) => {
         if(!auctionIsFinished){
-            setDisplayDialog(true)
+            setDisplayDialogSell(true)
             setEditingItem({...editingItem, 'id':animalOnGroundId})
         }
     }
@@ -120,7 +124,7 @@ const Auction = ({showToast}) => {
                         fetchContext.authAxios.post(`${url.SOLD_BATCH_API}/${editingItem.id}`, data)
                         .then(response => {
                             showToast('success','Exito','Se vendieron los animales correctamente')
-                            setDisplayDialog(false)
+                            setDisplayDialogSell(false)
                             setEditingItem({mustWeigh: true})
                             setRefresh(!refresh)
                         })
@@ -158,6 +162,7 @@ const Auction = ({showToast}) => {
         }
     }
 
+    //Se dispara al tocar en el SplitButton el editar lote
     const editHandler = (animalOnGroundId) => {
         if(!auctionIsFinished){
             history.push(url.BATCH_CRUD, 
@@ -166,6 +171,34 @@ const Auction = ({showToast}) => {
                     animalOnGroundId: animalOnGroundId
                 }
             )
+        }
+    }
+
+    //Se dispara al tocar un boton editar
+    const editAnimalOnGroundHandler = (animalOnGroundId) => {
+        if(!auctionIsFinished){
+            setEditingItem(animalsOnGround.find(animal => animal.id === animalOnGroundId))
+            setDisplayDialogEdit(true)
+        }
+    }
+
+    const saveItemHandler = () => {
+        if(!auctionIsFinished){
+            if(editingItem && editingItem.amount && editingItem.category){
+                const data = editingItem
+                fetchContext.authAxios.patch(`${url.ANIMALS_ON_GROUND_API}/${editingItem.id}`, data)
+                .then(response => {
+                    showToast('success', 'Exito', `Aminales guardados`)
+                    setRefresh(!refresh)
+                    setDisplayDialogEdit(false)
+                    setEditingItem(null)
+                })
+                .catch(error => {
+                    showToast('error', 'Error', `No se pudieron guardar los animales`)
+                })
+            }else{
+                showToast('warn', 'Cuidado', 'Algun campo esta vacio')
+            }
         }
     }
 
@@ -261,6 +294,7 @@ const Auction = ({showToast}) => {
             sellHandler = {sellHandler}
             notSoldHandler = {notSoldHandler}
             editHandler = {editHandler}
+            editAnimalOnGroundHandler = {editAnimalOnGroundHandler}
         />
     ))
 
@@ -286,13 +320,26 @@ const Auction = ({showToast}) => {
         <SellDialog
             isCreating={true}
             acceptHandler = {sellAnimalsHandler}
-            setDisplayDialog = {setDisplayDialog}
-            displayDialog = {displayDialog}
+            setDisplayDialog = {setDisplayDialogSell}
+            displayDialog = {displayDialogSell}
             url = {url}
             fetchContext = {fetchContext}
             showToast = {showToast}
             editingItem = {editingItem}
             setEditingItem = {setEditingItem}
+        />
+    )
+
+    const editDialog = (
+        <EditAnimalOnGroundDialog
+            acceptHandler={saveItemHandler}
+            setDisplayDialog={setDisplayDialogEdit}
+            displayDialog={displayDialogEdit}
+            url={url}
+            fetchContext={fetchContext}
+            showToast = {showToast}
+            editingItem={editingItem}
+            setEditingItem={setEditingItem}
         />
     )
 
@@ -312,6 +359,7 @@ const Auction = ({showToast}) => {
         <>
             <ScrollTop />
             {sellDialog}
+            {editDialog}
             <Menu 
                 className='w-auto' 
                 model={menuItems} 
