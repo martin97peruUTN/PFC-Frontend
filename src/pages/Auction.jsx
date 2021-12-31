@@ -12,6 +12,7 @@ import { confirmDialog } from 'primereact/confirmdialog';
 import { FetchContext } from '../context/FetchContext';
 import { AuthContext } from './../context/AuthContext';
 import * as url from '../util/url';
+import * as miscFunctions from '../util/miscFunctions';
 
 import Card from '../components/cards/Card'
 import AnimalsOnGroundShowCard from '../components/cards/AnimalsOnGroundShowCard'
@@ -204,7 +205,7 @@ const Auction = ({showToast}) => {
 
     //TODO cambiar urls cuando las tengamos (url o command: () => hacerAlgo())
     const menuItems = []
-    if(!auctionIsFinished){
+    if(!auctionIsFinished && miscFunctions.isSmallScreen()){
         menuItems.push(
             {
                 label: 'Agregar lote',
@@ -371,12 +372,28 @@ const Auction = ({showToast}) => {
                 title={
                     <div className="flex justify-content-between">
                         <>{"Remate"}</>
-                        <Button 
-                            icon="pi pi-bars"
-                            label="Menu"
-                            className="sm-menubar-button m-0"
-                            onClick={(event) => menu.current.toggle(event)}
-                        />
+                        <div className="flex justify-content-end">
+                            {!miscFunctions.isSmallScreen()?
+                                <Button 
+                                    icon="pi pi-plus-circle"
+                                    label="Agregar lote"
+                                    className="sm-menubar-button m-0 mr-2"
+                                    onClick={() => history.push(url.BATCH_CRUD, 
+                                        {
+                                            auctionId: auctionId
+                                        }
+                                    )}
+                                />
+                            :
+                                null
+                            }
+                            <Button 
+                                icon="pi pi-bars"
+                                label="Menu"
+                                className="sm-menubar-button m-0"
+                                onClick={(event) => menu.current.toggle(event)}
+                            />
+                        </div>
                     </div>
                 }
                 footer={
