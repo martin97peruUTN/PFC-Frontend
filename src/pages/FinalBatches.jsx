@@ -192,8 +192,8 @@ const FinalBatches = ({showToast}) => {
     //Se dispara al presionar Terminar remate
     const confirmFinishAuction = () => {
         confirmDialog({
-            message: `¿Está seguro de terminar el remate? Si lo termina se generarán lotes para los 
-                animales que no fueron vendidos y ya no podrá realizar mas cambios, solo cargar los DTe 
+            message: `¿Está seguro de terminar el remate? Si lo termina, se generarán lotes para los 
+                animales que no fueron vendidos y ya no podrá realizar mas cambios, salvo cargar los DTe 
                 y generar las boletas y resúmenes.`,
             header: 'Terminar remate',
             icon: 'pi pi-exclamation-circle',
@@ -215,8 +215,8 @@ const FinalBatches = ({showToast}) => {
     //Se dispara al presionar Reanudar remate
     const confirmResumeAuction = () => {
         confirmDialog({
-            message: `¿Está seguro de reanudar el remate? Si lo hace se perderan los numeros de DTe
-                que haya cargado en los lotes no vendidos.`,
+            message: `¿Está seguro de reanudar el remate? Si lo hace no podra acceder a los lotes 
+                de animales no vendidos hasta que vuelva a finalizarlo.`,
             header: 'Reanudar remate',
             icon: 'pi pi-exclamation-circle',
             className: 'w-11 md:w-7',
@@ -225,6 +225,7 @@ const FinalBatches = ({showToast}) => {
                 fetchContext.authAxios.post(`${url.AUCTION_API}/resume/${auctionId}`)
                 .then(response => {
                     showToast('success', 'Exito', 'Se reanudó el remate')
+                    setTabViewActiveIndex(0)
                     setRefresh(!refresh)
                 })
                 .catch(error => {
