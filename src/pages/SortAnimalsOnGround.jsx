@@ -8,6 +8,7 @@ import { Skeleton } from 'primereact/skeleton';
 import { confirmDialog } from 'primereact/confirmdialog';
 import { OrderList } from 'primereact/orderlist';
 import { ScrollPanel } from 'primereact/scrollpanel';
+import { Tooltip } from 'primereact/tooltip';
 
 import { FetchContext } from '../context/FetchContext';
 
@@ -15,6 +16,7 @@ import Card from '../components/cards/Card'
 import CardSecondary from '../components/cards/CardSecondary'
 
 import * as url from '../util/url';
+import * as miscFunctions from '../util/miscFunctions';
 
 const SortAnimalsOnGround = ({showToast}) => {
 
@@ -139,27 +141,40 @@ const SortAnimalsOnGround = ({showToast}) => {
     )
 
     const body = (
-        <Card
-            title="Ordenar lotes para venta"
-            footer={
-                <div className="flex justify-content-between">
-                    <Button label="Cancelar" icon="pi pi-arrow-left" onClick={() => history.goBack()} className="p-button-danger" />
-                    <Button label="Guardar" icon="pi pi-check" loading={loadingAccept} onClick={() => saveHandler()} className="btn btn-primary" />
-                </div>
-            }
-        >
-            {/*Codigo que quedo del uso de OrderList
-            <OrderList 
-                value={items} 
-                header="Listado de lotes" 
-                dragdrop
-                listStyle={{height:'auto'}} 
-                dataKey="id"
-                itemTemplate={itemTemplate} 
-                onChange={(e) => setItems(e.value)}
-            />*/}
-            {reactBeautifulDnd}
-        </Card>
+        <>
+            <Tooltip target=".help-icon"/>
+            <Card
+                title={
+                    <div>
+                        {`Ordenar lotes para venta `}
+                        <i 
+                            className="pi pi-question-circle help-icon" 
+                            style={{'fontSize': '.8em'}} 
+                            data-pr-tooltip="Arrastre las tarjetas hacia arriba o abajo para reordenar los lotes"
+                            data-pr-position={miscFunctions.isSmallScreen()?"bottom":"right"}
+                        />
+                    </div>
+                    }
+                footer={
+                    <div className="flex justify-content-between">
+                        <Button label="Cancelar" icon="pi pi-arrow-left" onClick={() => history.goBack()} className="p-button-danger" />
+                        <Button label="Guardar" icon="pi pi-check" loading={loadingAccept} onClick={() => saveHandler()} className="btn btn-primary" />
+                    </div>
+                }
+            >
+                {/*Codigo que quedo del uso de OrderList
+                <OrderList 
+                    value={items} 
+                    header="Listado de lotes" 
+                    dragdrop
+                    listStyle={{height:'auto'}} 
+                    dataKey="id"
+                    itemTemplate={itemTemplate} 
+                    onChange={(e) => setItems(e.value)}
+                />*/}
+                {reactBeautifulDnd}
+            </Card>
+        </>
     )
     
     const loadingScreen = (
