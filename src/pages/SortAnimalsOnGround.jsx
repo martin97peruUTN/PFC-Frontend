@@ -83,13 +83,13 @@ const SortAnimalsOnGround = ({showToast}) => {
     //https://github.com/atlassian/react-beautiful-dnd
 
     const itemTemplateCard = (item, isDragging) => (
-        <CardSecondary isDragging={isDragging}>
+        <div className={isDragging? "background-dragging sort-card shadow-2" : "background-not-dragging sort-card shadow-2"}>
             {`Corral: ${item.corralNumber} - ${item.category.name}`}
             <br/>
             {`Vendedor: ${item.seller.name}`}
             <br/>
             {`Animales totales: ${item.amount} - Vendidos: ${item.soldAmount}`}
-        </CardSecondary>
+        </div>
     )
 
     const handleOnDragEnd = (result) => {
