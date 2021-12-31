@@ -63,41 +63,44 @@ const LogIn = ({showToast}) => {
                 <BusinessLogo/>
             </div>
             <br/>
-            <Card 
-                title='Ingrese a su cuenta'
-                footer={
-                    <div className="flex justify-content-center">
-                        <Button 
-                            label='Ingresar' 
-                            className="btn btn-primary" 
-                            icon="pi pi-sign-in" 
-                            onClick={e => submit(e)} 
-                            loading={loading}
+            
+            <div className="md:mx-8">
+                <Card 
+                    title='Ingrese a su cuenta'
+                    footer={
+                        <div className="flex justify-content-center">
+                            <Button 
+                                label='Ingresar' 
+                                className="btn btn-primary" 
+                                icon="pi pi-sign-in" 
+                                onClick={e => submit(e)} 
+                                loading={loading}
+                            />
+                        </div>
+                    }
+                >   
+                    <span className="p-float-label">
+                        <InputText 
+                            id="user" 
+                            className='w-full' 
+                            onChange={e => setUsername(e.target.value)} 
                         />
-                    </div>
-                }
-            >   
-                <span className="p-float-label">
-                    <InputText 
-                        id="user" 
-                        className='w-full' 
-                        onChange={e => setUsername(e.target.value)} 
-                    />
-                    <label htmlFor="user">Usuario</label>
-                </span>
-                <br/>
-                <span className="p-float-label">
-                    <Password 
-                        id="password" 
-                        className='w-full' 
-                        inputClassName='w-full' 
-                        feedback={false} 
-                        toggleMask 
-                        onChange={e => setPassword(e.target.value)} 
-                    />
-                    <label htmlFor="password">Contraseña</label>
-                </span>
-            </Card>
+                        <label htmlFor="user">Usuario</label>
+                    </span>
+                    <br/>
+                    <span className="p-float-label">
+                        <Password 
+                            id="password" 
+                            className='w-full' 
+                            inputClassName='w-full' 
+                            feedback={false} 
+                            toggleMask 
+                            onChange={e => setPassword(e.target.value)} 
+                        />
+                        <label htmlFor="password">Contraseña</label>
+                    </span>
+                </Card>
+            </div>
         </>
     )
 }

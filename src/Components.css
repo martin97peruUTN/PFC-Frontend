@@ -79,3 +79,20 @@ body {
     padding: .2rem;
     width: 100%;
 }
+
+/*scroll-panel*/
+.custom-scroll-panel .p-scrollpanel-bar {
+    background-color: var(--primary) !important;
+    opacity: 0.8;
+    transition: background-color .3s;
+}
+
+.custom-scroll-panel .p-scrollpanel-bar:hover {
+    background-color: var(--light) !important;
+    opacity: 0.8;
+}
+
+.custom-scroll-panel .p-scrollpanel-bar:active {
+    background-color: var(--light) !important;
+    opacity: 0.8;
+}

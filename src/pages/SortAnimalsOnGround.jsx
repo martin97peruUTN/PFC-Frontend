@@ -1,14 +1,18 @@
 import React, {useState, useEffect, useContext} from 'react';
 import { useHistory } from "react-router-dom";
 
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+
 import { Button } from 'primereact/button';
 import { Skeleton } from 'primereact/skeleton';
 import { confirmDialog } from 'primereact/confirmdialog';
 import { OrderList } from 'primereact/orderlist';
+import { ScrollPanel } from 'primereact/scrollpanel';
 
 import { FetchContext } from '../context/FetchContext';
 
 import Card from '../components/cards/Card'
+import CardSecondary from '../components/cards/CardSecondary'
 
 import * as url from '../util/url';
 
@@ -75,6 +79,55 @@ const SortAnimalsOnGround = ({showToast}) => {
         });
     }
 
+    //>>>react-beautiful-dnd<<<
+    //https://github.com/atlassian/react-beautiful-dnd
+
+    const itemTemplateCard = (item, isDragging) => (
+        <CardSecondary isDragging={isDragging}>
+            {`Corral: ${item.corralNumber} - ${item.category.name}`}
+            <br/>
+            {`Vendedor: ${item.seller.name}`}
+            <br/>
+            {`Animales totales: ${item.amount} - Vendidos: ${item.soldAmount}`}
+        </CardSecondary>
+    )
+
+    const handleOnDragEnd = (result) => {
+        if (!result.destination) {
+            return;
+        }
+        const newItems = Array.from(items);
+        const [reorderedItem] = newItems.splice(result.source.index, 1);
+        newItems.splice(result.destination.index, 0, reorderedItem);
+        setItems(newItems);
+    }
+
+    const reactBeautifulDnd = (
+        <ScrollPanel style={{width: '100%', height: window.innerHeight*0.6}} className="custom-scroll-panel pr-3 md:pr-0">
+            <DragDropContext onDragEnd={handleOnDragEnd}>
+                <Droppable droppableId="animalsOnGround">
+                    {(provided, snapshot) => (
+                        <div {...provided.droppableProps} ref={provided.innerRef}>
+                            {items.map((item, index) => (
+                                <Draggable key={item.id} draggableId={`id-${item.id}`} index={index}>
+                                    {(provided, snapshot) => (
+                                        <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                                            {itemTemplateCard(item, snapshot.isDragging)}
+                                        </div>
+                                    )}
+                                </Draggable>
+                            ))}
+                            {provided.placeholder}
+                        </div>
+                    )}
+                </Droppable>
+            </DragDropContext>
+        </ScrollPanel>
+    )
+
+    //>>>termina react-beautiful-dnd<<<
+
+    //Codigo que quedo del uso de OrderList
     const itemTemplate = (item) => (
         <div className="order-list-item">
             {`Corral: ${item.corralNumber} - ${item.category.name}`}
@@ -95,6 +148,7 @@ const SortAnimalsOnGround = ({showToast}) => {
                 </div>
             }
         >
+            {/*Codigo que quedo del uso de OrderList
             <OrderList 
                 value={items} 
                 header="Listado de lotes" 
@@ -103,7 +157,8 @@ const SortAnimalsOnGround = ({showToast}) => {
                 dataKey="id"
                 itemTemplate={itemTemplate} 
                 onChange={(e) => setItems(e.value)}
-            />
+            />*/}
+            {reactBeautifulDnd}
         </Card>
     )
     
