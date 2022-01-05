@@ -269,8 +269,10 @@ const Auction = ({showToast}) => {
             label: 'Resumen',
             icon: 'pi pi-fw pi-book',
             url: url.HOME
-        },
-        {
+        }
+    )
+    if(miscFunctions.isSmallScreen()){
+        menuItems.push({
             label: `${auctionIsFinished?'Lotes finales':'Lotes vendidos'}`,
             icon: 'pi pi-fw pi-shopping-cart',
             command: () => history.push(url.FINAL_BATCHES,
@@ -278,8 +280,8 @@ const Auction = ({showToast}) => {
                     auctionId: auctionId
                 }
             )
-        }
-    )
+        })
+    }
 
     const itemCardList = animalsOnGround.map(animalOnGround => (
         <AnimalsOnGroundShowCard
@@ -374,16 +376,28 @@ const Auction = ({showToast}) => {
                         <>{"Remate"}</>
                         <div className="flex justify-content-end">
                             {!miscFunctions.isSmallScreen()?
-                                <Button 
-                                    icon="pi pi-plus-circle"
-                                    label="Agregar lote"
-                                    className="sm-menubar-button m-0 mr-2"
-                                    onClick={() => history.push(url.BATCH_CRUD, 
-                                        {
-                                            auctionId: auctionId
-                                        }
-                                    )}
-                                />
+                                <>
+                                    <Button 
+                                        icon="pi pi-plus-circle"
+                                        label="Agregar lote"
+                                        className="sm-menubar-button m-0 mr-2"
+                                        onClick={() => history.push(url.BATCH_CRUD, 
+                                            {
+                                                auctionId: auctionId
+                                            }
+                                        )}
+                                    />
+                                    <Button 
+                                        icon="pi pi-shopping-cart"
+                                        label={`${auctionIsFinished?'Lotes finales':'Lotes vendidos'}`}
+                                        className="sm-menubar-button m-0 mr-2"
+                                        onClick={() => history.push(url.FINAL_BATCHES,
+                                            {
+                                                auctionId: auctionId
+                                            }
+                                        )}
+                                    />
+                                </>
                             :
                                 null
                             }
