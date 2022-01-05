@@ -266,6 +266,15 @@ const Auction = ({showToast}) => {
         },
         {separator: true},
         {
+            label: 'Listado de lotes',
+            icon: 'pi pi-fw pi-list',
+            command: () => history.push(url.BATCH_LIST, 
+                {
+                    auctionId: auctionId
+                }
+            )
+        },
+        {
             label: 'Resumen',
             icon: 'pi pi-fw pi-book',
             url: url.HOME

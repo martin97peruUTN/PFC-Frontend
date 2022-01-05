@@ -33,6 +33,7 @@ import AddParticipant from "./pages/AddParticipant";
 import AddBatch from "./pages/AddBatch";
 import FinalBatches from "./pages/FinalBatches";
 import SortAnimalsOnGround from "./pages/SortAnimalsOnGround";
+import BatchList from "./pages/BatchList";
 
 const UnauthenticatedRoutes = ({showToast}) => (
   <div className="mx-3 my-7 md:mx-6">
@@ -129,6 +130,9 @@ function App() {
       </ConsigneeRoute>
       <AuthenticatedRoute exact path={url.SORT_ANIMALS_ON_GROUND}>
         <SortAnimalsOnGround showToast={showToast}/>
+      </AuthenticatedRoute>
+      <AuthenticatedRoute exact path={url.BATCH_LIST}>
+        <BatchList showToast={showToast}/>
       </AuthenticatedRoute>
       <AuthenticatedRoute exact path={url.FINAL_BATCHES}>
         <FinalBatches showToast={showToast}/>
