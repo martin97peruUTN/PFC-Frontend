@@ -266,7 +266,7 @@ const Auction = ({showToast}) => {
         },
         {separator: true},
         {
-            label: 'Listado de lotes',
+            label: 'Lotes por corral',
             icon: 'pi pi-fw pi-list',
             command: () => history.push(url.BATCH_LIST, 
                 {

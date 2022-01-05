@@ -22,8 +22,14 @@ const BatchListCard = props => {
                 <>
                     <>{`Corral ${props.corralNumber}`}</>
                     <br/>
-                    <>{`DTe: ${props.dteNumber}`}</>
-                    <br/>
+                    {props.dteNumber?
+                        <>
+                            <>{`DTe: ${props.dteNumber}`}</>
+                            <br/>
+                        </>
+                    :
+                        null
+                    }
                     {animalsOnGroundCard}
                 </>
             }
