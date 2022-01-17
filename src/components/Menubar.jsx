@@ -90,7 +90,7 @@ const Menubar = () => {
     }
 
     //992 es el breakpoint de primereact parece
-    if(window.screen.width < 992){
+    if(window.innerWidth < 992){
         MenubarItems.push(
             {separator: true},
             {separator: true},

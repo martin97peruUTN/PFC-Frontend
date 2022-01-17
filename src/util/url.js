@@ -16,6 +16,8 @@ export const USER_CRUD = '/crear-editar-usuario'
 export const ADD_PARTICIPANT = '/agregar-participante'
 export const BATCH_CRUD = '/crear-editar-lote'
 export const FINAL_BATCHES = '/lotes-finales'
+export const SORT_ANIMALS_ON_GROUND = '/orden-de-salida'
+export const BATCH_LIST = '/listado-de-lotes'
 
 //Backend
 export const LOGIN_API = '/login'

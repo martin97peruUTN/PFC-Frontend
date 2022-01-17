@@ -12,10 +12,12 @@ import { confirmDialog } from 'primereact/confirmdialog';
 import { FetchContext } from '../context/FetchContext';
 import { AuthContext } from './../context/AuthContext';
 import * as url from '../util/url';
+import * as miscFunctions from '../util/miscFunctions';
 
 import Card from '../components/cards/Card'
 import AnimalsOnGroundShowCard from '../components/cards/AnimalsOnGroundShowCard'
 import SellDialog from '../components/SellDialog'
+import EditAnimalOnGroundDialog from '../components/EditAnimalOnGroundDialog';
 
 const Auction = ({showToast}) => {
 
@@ -37,7 +39,10 @@ const Auction = ({showToast}) => {
     const [refresh, setRefresh] = useState(false);
 
     //Mostrar el dialogo de vender o esconderlo
-    const [displayDialog, setDisplayDialog] = useState(false);
+    const [displayDialogSell, setDisplayDialogSell] = useState(false);
+
+    //Mostrar el dialogo de editar o esconderlo
+    const [displayDialogEdit, setDisplayDialogEdit] = useState(false);
 
     const [auctionId, setAuctionId] = useState()
     const [auctionIsFinished, setAuctionIsFinished] = useState()
@@ -93,7 +98,7 @@ const Auction = ({showToast}) => {
     //Se dispara al tocar algun boton vender
     const sellHandler = (animalOnGroundId) => {
         if(!auctionIsFinished){
-            setDisplayDialog(true)
+            setDisplayDialogSell(true)
             setEditingItem({...editingItem, 'id':animalOnGroundId})
         }
     }
@@ -120,7 +125,7 @@ const Auction = ({showToast}) => {
                         fetchContext.authAxios.post(`${url.SOLD_BATCH_API}/${editingItem.id}`, data)
                         .then(response => {
                             showToast('success','Exito','Se vendieron los animales correctamente')
-                            setDisplayDialog(false)
+                            setDisplayDialogSell(false)
                             setEditingItem({mustWeigh: true})
                             setRefresh(!refresh)
                         })
@@ -158,6 +163,7 @@ const Auction = ({showToast}) => {
         }
     }
 
+    //Se dispara al tocar en el SplitButton el editar lote
     const editHandler = (animalOnGroundId) => {
         if(!auctionIsFinished){
             history.push(url.BATCH_CRUD, 
@@ -169,9 +175,37 @@ const Auction = ({showToast}) => {
         }
     }
 
+    //Se dispara al tocar un boton editar
+    const editAnimalOnGroundHandler = (animalOnGroundId) => {
+        if(!auctionIsFinished){
+            setEditingItem(animalsOnGround.find(animal => animal.id === animalOnGroundId))
+            setDisplayDialogEdit(true)
+        }
+    }
+
+    const saveItemHandler = () => {
+        if(!auctionIsFinished){
+            if(editingItem && editingItem.amount && editingItem.category){
+                const data = editingItem
+                fetchContext.authAxios.patch(`${url.ANIMALS_ON_GROUND_API}/${editingItem.id}`, data)
+                .then(response => {
+                    showToast('success', 'Exito', `Aminales guardados`)
+                    setRefresh(!refresh)
+                    setDisplayDialogEdit(false)
+                    setEditingItem(null)
+                })
+                .catch(error => {
+                    showToast('error', 'Error', `No se pudieron guardar los animales`)
+                })
+            }else{
+                showToast('warn', 'Cuidado', 'Algun campo esta vacio')
+            }
+        }
+    }
+
     //TODO cambiar urls cuando las tengamos (url o command: () => hacerAlgo())
     const menuItems = []
-    if(!auctionIsFinished){
+    if(!auctionIsFinished && miscFunctions.isSmallScreen()){
         menuItems.push(
             {
                 label: 'Agregar lote',
@@ -208,21 +242,46 @@ const Auction = ({showToast}) => {
                     auctionIsFinished: auctionIsFinished
                 }
             )
-        }
-    )
-    menuItems.push(
+        },
         {separator: true},
+    )
+    if(!auctionIsFinished){
+        menuItems.push(
+            {
+                label: 'Ordenar lotes',
+                icon: 'pi pi-fw pi-sort-alt',
+                command: () => history.push(url.SORT_ANIMALS_ON_GROUND, 
+                    {
+                        auctionId: auctionId
+                    }
+                )
+            }
+        )
+    }
+    menuItems.push(
         {
             label: 'Orden de salida',
             icon: 'pi pi-fw pi-sort-amount-down-alt',
             url: url.HOME
         },
+        {separator: true},
+        {
+            label: 'Lotes por corral',
+            icon: 'pi pi-fw pi-list',
+            command: () => history.push(url.BATCH_LIST, 
+                {
+                    auctionId: auctionId
+                }
+            )
+        },
         {
             label: 'Resumen',
             icon: 'pi pi-fw pi-book',
             url: url.HOME
-        },
-        {
+        }
+    )
+    if(miscFunctions.isSmallScreen()){
+        menuItems.push({
             label: `${auctionIsFinished?'Lotes finales':'Lotes vendidos'}`,
             icon: 'pi pi-fw pi-shopping-cart',
             command: () => history.push(url.FINAL_BATCHES,
@@ -230,8 +289,8 @@ const Auction = ({showToast}) => {
                     auctionId: auctionId
                 }
             )
-        }
-    )
+        })
+    }
 
     const itemCardList = animalsOnGround.map(animalOnGround => (
         <AnimalsOnGroundShowCard
@@ -247,6 +306,7 @@ const Auction = ({showToast}) => {
             sellHandler = {sellHandler}
             notSoldHandler = {notSoldHandler}
             editHandler = {editHandler}
+            editAnimalOnGroundHandler = {editAnimalOnGroundHandler}
         />
     ))
 
@@ -272,13 +332,26 @@ const Auction = ({showToast}) => {
         <SellDialog
             isCreating={true}
             acceptHandler = {sellAnimalsHandler}
-            setDisplayDialog = {setDisplayDialog}
-            displayDialog = {displayDialog}
+            setDisplayDialog = {setDisplayDialogSell}
+            displayDialog = {displayDialogSell}
             url = {url}
             fetchContext = {fetchContext}
             showToast = {showToast}
             editingItem = {editingItem}
             setEditingItem = {setEditingItem}
+        />
+    )
+
+    const editDialog = (
+        <EditAnimalOnGroundDialog
+            acceptHandler={saveItemHandler}
+            setDisplayDialog={setDisplayDialogEdit}
+            displayDialog={displayDialogEdit}
+            url={url}
+            fetchContext={fetchContext}
+            showToast = {showToast}
+            editingItem={editingItem}
+            setEditingItem={setEditingItem}
         />
     )
 
@@ -298,6 +371,7 @@ const Auction = ({showToast}) => {
         <>
             <ScrollTop />
             {sellDialog}
+            {editDialog}
             <Menu 
                 className='w-auto' 
                 model={menuItems} 
@@ -309,12 +383,40 @@ const Auction = ({showToast}) => {
                 title={
                     <div className="flex justify-content-between">
                         <>{"Remate"}</>
-                        <Button 
-                            icon="pi pi-bars"
-                            label="Menu"
-                            className="sm-menubar-button m-0"
-                            onClick={(event) => menu.current.toggle(event)}
-                        />
+                        <div className="flex justify-content-end">
+                            {!miscFunctions.isSmallScreen()?
+                                <>
+                                    <Button 
+                                        icon="pi pi-plus-circle"
+                                        label="Agregar lote"
+                                        className="sm-menubar-button m-0 mr-2"
+                                        onClick={() => history.push(url.BATCH_CRUD, 
+                                            {
+                                                auctionId: auctionId
+                                            }
+                                        )}
+                                    />
+                                    <Button 
+                                        icon="pi pi-shopping-cart"
+                                        label={`${auctionIsFinished?'Lotes finales':'Lotes vendidos'}`}
+                                        className="sm-menubar-button m-0 mr-2"
+                                        onClick={() => history.push(url.FINAL_BATCHES,
+                                            {
+                                                auctionId: auctionId
+                                            }
+                                        )}
+                                    />
+                                </>
+                            :
+                                null
+                            }
+                            <Button 
+                                icon="pi pi-bars"
+                                label="Menu"
+                                className="sm-menubar-button m-0"
+                                onClick={(event) => menu.current.toggle(event)}
+                            />
+                        </div>
                     </div>
                 }
                 footer={

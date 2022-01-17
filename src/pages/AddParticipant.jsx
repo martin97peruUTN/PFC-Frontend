@@ -193,16 +193,27 @@ const AddParticipant = ({showToast, ...props}) => {
                     <div className="flex justify-content-between">
                     <>Participantes</>
                     {!auctionIsFinished?
-                        <Button 
-                            className="btn btn-primary" 
-                            icon="pi pi-plus" 
-                            onClick={()=> createItemHandler()} 
-                            label={`Agregar`}
-                        />
+                            <Button 
+                                className="btn btn-primary" 
+                                icon="pi pi-plus" 
+                                onClick={()=> createItemHandler()} 
+                                label={`Agregar`}
+                            />
                         :
-                        null
+                            null
                     }
                     </div>
+                }
+                footer={
+                    !auctionIsFinished?
+                        <Button 
+                            className="btn btn-primary mr-2" 
+                            icon="pi pi-arrow-left" 
+                            onClick={()=> history.goBack()} 
+                            label={`Volver`}
+                        />
+                    :
+                        null
                 }
             >
                 {loadingStart?

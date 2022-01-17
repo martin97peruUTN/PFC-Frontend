@@ -16,6 +16,7 @@ import AnimalsOnGroundCRUDCard from '../components/cards/AnimalsOnGroundCRUDCard
 
 import * as url from '../util/url';
 import * as miscFunctions from '../util/miscFunctions';
+import EditAnimalOnGroundDialog from '../components/EditAnimalOnGroundDialog';
 
 const AddBatch = ({showToast}) => {
 
@@ -140,7 +141,7 @@ const AddBatch = ({showToast}) => {
             corralNumber: corralNumber,
             dteNumber: dteNumber,
             animalsOnGround: animalsOnGroundList.map(item => (
-                {...item, 'sold': false, 'notSold': false, 'id': null}
+                {...item, 'sold': false, 'notSold': false, 'id': null, 'startingOrder': -1}
             ))
         }
         fetchContext.authAxios.post(`${url.AUCTION_BATCH_API}/${auctionId}`, body)
@@ -230,7 +231,7 @@ const AddBatch = ({showToast}) => {
                     showToast('error', 'Error', `No se pudieron guardar los animales`)
                 })
             }else if(!editingItem.id && batchId){
-                const data = {...editingItem, 'sold': false, 'notSold': false, 'id': null}
+                const data = {...editingItem, 'sold': false, 'notSold': false, 'id': null, 'startingOrder': -1}
                 fetchContext.authAxios.post(`${url.AUCTION_BATCH_API}/${batchId}/animals-on-ground`, data)
                 .then(response => {
                     showToast('success', 'Exito', `Animales guardados`)
@@ -291,47 +292,18 @@ const AddBatch = ({showToast}) => {
             }
         });
     }
-
+    
     const editDialog = (
-        <Dialog
-            header={(editingItem && editingItem.id)?`Editar animales`:`Agregar animales`}
-            visible={displayDialog}
-            className="w-11 md:w-6"
-            onHide={() => setDisplayDialog(false)}
-            footer={
-                <div className="">
-                    <Button label="Cancelar" icon="pi pi-times" onClick={() => setDisplayDialog(false)} className="p-button-danger" />
-                    <Button label="Guardar" icon="pi pi-check" onClick={() => saveItemHandler()} autoFocus className="btn btn-primary" />
-                </div>
-            }
-            >
-                <br/>
-                <span className="p-float-label">
-                    <AutoComplete 
-                        id='categoryAutocompleteForm'
-                        className='w-full'
-                        value={editingItem?editingItem.category:null} 
-                        suggestions={filteredCategoryList} 
-                        completeMethod={searchCategory} 
-                        field="name" 
-                        dropdown 
-                        forceSelection 
-                        onChange={(e) => setEditingItem({...editingItem, category:e.target.value})}
-                    />
-                    <label htmlFor="categoryAutocompleteForm">Categoria</label>
-                </span>
-                <br/>
-                <span className="p-float-label">
-                    <InputText 
-                        id="amount" 
-                        className='w-full'
-                        keyfilter="int" 
-                        value={editingItem?editingItem.amount:''} 
-                        onChange={e => setEditingItem({...editingItem, amount:e.target.value})}
-                    />
-                    <label htmlFor="amount">Cantidad</label>
-                </span>
-        </Dialog>
+        <EditAnimalOnGroundDialog
+            acceptHandler={saveItemHandler}
+            setDisplayDialog={setDisplayDialog}
+            displayDialog={displayDialog}
+            url={url}
+            fetchContext={fetchContext}
+            showToast = {showToast}
+            editingItem={editingItem}
+            setEditingItem={setEditingItem}
+        />
     )
 
     const cardFormBatch = (
