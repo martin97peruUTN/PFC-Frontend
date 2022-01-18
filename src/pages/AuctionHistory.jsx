@@ -5,7 +5,7 @@ import * as url from '../util/url';
 import { Skeleton } from 'primereact/skeleton';
 import { Paginator } from 'primereact/paginator';
 import { ScrollTop } from 'primereact/scrolltop';
-import { TabView, TabPanel } from 'primereact/tabview';
+import { Calendar } from 'primereact/calendar';
 
 import { FetchContext } from '../context/FetchContext';
 import { AuthContext } from '../context/AuthContext';
@@ -13,7 +13,9 @@ import { AuthContext } from '../context/AuthContext';
 import Card from '../components/cards/Card'
 import AuctionCard from '../components/cards/AuctionCard';
 
-const HomePage = ({showToast}) => {
+import * as miscFunctions from '../util/miscFunctions';
+
+const AuctionHistory = ({showToast}) => {
 
     const authContext = useContext(AuthContext)
     const fetchContext = useContext(FetchContext)
@@ -27,25 +29,32 @@ const HomePage = ({showToast}) => {
     const [paginatorPage, setPaginatorPage] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
 
-    //uso este estado para controlar el tabView asi como para saber que listado mostrar
-    //0 para remates propios, 1 para ajenos. En caso de los admins no se usa
-    const [tabViewActiveIndex, setTabViewActiveIndex] = useState(0);
+    //Dates es un arreglo de 2 fechas, donde la sub 0 es la inicial y la sub 1 la final
+    const [dates, setDates] = useState(null);
 
     const [auctionList, setAuctionsList] = useState([])
 
     useEffect(() => {
         setLoadingStart(true)
-        fetchContext.authAxios.get(`${url.USER_AUCTIONS_API}${authContext.isAdmin() ? "" : (tabViewActiveIndex === 0? "/own/"+authContext.getUserInfo().id : "/others/"+authContext.getUserInfo().id)}?page=${paginatorPage}&limit=${paginatorRows}`)
+        //TODO cambiar own por history
+        let fetchUrl = `${url.USER_AUCTIONS_API}/history/${authContext.getUserInfo().id}?page=${paginatorPage}&limit=${paginatorRows}`
+        if(dates && dates[0]){
+            fetchUrl += `&first-date=${miscFunctions.parseDateFrontToBack(dates[0])}`
+        }
+        if(dates && dates[1]){
+            fetchUrl += `&last-date=${miscFunctions.parseDateFrontToBack(dates[1])}`
+        }
+        fetchContext.authAxios.get(fetchUrl)
         .then(res => {
             setAuctionsList(res.data.content)
             setTotalPages(res.data.totalPages)
             setLoadingStart(false)
         })
         .catch(err => {
-            showToast('error', 'Error', 'No se pudieron cargar los remates')
-            authContext.logout()
+            showToast('error', 'Error', 'No se pudo cargar el historial de remates')
+            history.push(url.HOME);
         })
-    },[tabViewActiveIndex, paginatorFirst, paginatorRows, paginatorPage])
+    },[dates, paginatorFirst, paginatorRows, paginatorPage])
 
     const onPaginatorPageChange = (event) => {
         setPaginatorFirst(event.first);
@@ -53,21 +62,8 @@ const HomePage = ({showToast}) => {
         setPaginatorPage(event.page);
     }
 
-    const addBatchHandler = (auctionId) => {
-        if(authContext.isAdmin() || tabViewActiveIndex === 0){
-            history.push(url.BATCH_CRUD, 
-                {
-                    auctionId: auctionId
-                }
-            )
-        }
-    }
-
     const auctionScreenHandler = (auctionId) => {
-        //Este if es por las dudas nomas, para asegurar, porque igual no se muestan los botones
-        if(authContext.isAdmin() || tabViewActiveIndex === 0){
-            history.push(url.AUCTION, {auctionId: auctionId})
-        }
+        history.push(url.AUCTION, {auctionId: auctionId})
     }
 
     const noAuctionYetMessage = (
@@ -82,26 +78,12 @@ const HomePage = ({showToast}) => {
             date={auction.date}
             locality={auction.locality.name}
             //paso el index para mostrar o no los botones, segun que pestaña esta mirando
-            tabViewActiveIndex={tabViewActiveIndex}
-            addBatchHandler={addBatchHandler}
+            //Eso en la pantalla de Home, aca paso 0 para que muestre los botones
+            tabViewActiveIndex={0}
+            isOnHistory={true}
             auctionScreenHandler={auctionScreenHandler}
-            isOnHistory={false}
         />
     ))
-
-    const tabView = (
-        <TabView className='w-full' 
-            activeIndex={tabViewActiveIndex} 
-            onTabChange={(e) => setTabViewActiveIndex(e.index)}
-        >
-            <TabPanel header="Mis remates">
-                {auctionCardList}
-            </TabPanel>
-            <TabPanel header="Remates ajenos">
-                {auctionCardList}
-            </TabPanel>
-        </TabView>
-    )
 
     const loadingScreen = (
         <div>
@@ -117,7 +99,7 @@ const HomePage = ({showToast}) => {
         <>
             <ScrollTop />
             <Card
-                title={'Inicio'}
+                title={'Historial de remates'}
                 footer={
                     <Paginator
                         first={paginatorFirst}
@@ -128,18 +110,27 @@ const HomePage = ({showToast}) => {
                     ></Paginator>
                 }
             >
+                <span className="p-float-label">
+                    <Calendar
+                        id='calendar' 
+                        className='w-full'
+                        value={dates} 
+                        onChange={(e) => setDates(e.value)} 
+                        selectionMode="range"
+                        tooltip="D/M/AAAA - D/M/AAAA (espacio, guion y otro espacio entre las fechas)"
+                        tooltipOptions={{position: 'top'}}
+                    />    
+                    <label htmlFor="calendar">Buscar por rango de fechas</label>
+                </span>
+                <br/>
                 {loadingStart?
                     loadingScreen
                     :
-                    authContext.isAdmin()?
-                        //Si es admin le muestro directamente las cards porque tiene acceso a todas
-                        auctionCardList 
-                        :
-                        tabView
+                    auctionCardList
                 }
             </Card>
         </>
     )
 }
 
-export default HomePage
+export default AuctionHistory

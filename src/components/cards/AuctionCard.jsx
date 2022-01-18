@@ -28,7 +28,13 @@ const AuctionCard = props => {
                 //Si no es admin o no esta mirando sus remates (index = 0), no muestro los botones
                 authContext.isAdmin() || props.tabViewActiveIndex === 0 ?
                 <div className={CARD_TWO_COLUMNS_BUTTON_DIV}>
-                    <Button className={CARD_TWO_COLUMNS_BUTTON} icon="pi pi-plus-circle" onClick={()=> props.addBatchHandler(props.id)} label="Agregar lote"></Button>
+                    {!props.isOnHistory? 
+                    //true si esta siendo usada en el historial de remates
+                    //false si esta siendo usada en el home
+                        <Button className={CARD_TWO_COLUMNS_BUTTON} icon="pi pi-plus-circle" onClick={()=> props.addBatchHandler(props.id)} label="Agregar lote"></Button>
+                    :
+                        null
+                    }
                     <Button className="btn btn-primary" icon="pi pi-eye" onClick={() => props.auctionScreenHandler(props.id)} label="Ver"></Button>
                 </div>
                 :

@@ -40,7 +40,6 @@ const SortAnimalsOnGround = ({showToast}) => {
             let fetchURL = `${url.ANIMALS_ON_GROUND_API}/by-auction/${auctionId}/allForSort`
             fetchContext.authAxios.get(fetchURL)
             .then(res => {
-                console.log(res.data)
                 setItems(res.data)
                 setLoadingStart(false)
             })
