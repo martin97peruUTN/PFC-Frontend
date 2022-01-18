@@ -45,6 +45,9 @@ const FinalBatches = ({showToast}) => {
     //Mostrar el dialogo de pesar o esconderlo
     const [displayWeighDialog, setDisplayWeighDialog] = useState(false);
 
+    //Mostrar el dialogo de cargar DTe o esconderlo
+    const [displayDteNumberDialog, setDisplayDteNumberDialog] = useState(false);
+
     const [auctionId, setAuctionId] = useState()
     const [auctionIsFinished, setAuctionIsFinished] = useState()
 
@@ -120,7 +123,29 @@ const FinalBatches = ({showToast}) => {
 
     //Se dispara al tocar algun boton cargar DTe
     const dteNumberSetHandler = (batchId) => {
-        //TODO proximamente un nuevo dialogo
+        setDisplayDteNumberDialog(true)
+        setEditingItem(batchList.find(batch => batch.id === batchId))
+    }
+
+    const saveDteNumberHandler = () => {
+        if(!editingItem.dteNumber){
+            showToast('error', 'Error', 'Debe ingresar un numero de DTe')
+        }else{
+            fetchContext.authAxios.patch(`${url.SOLD_BATCH_API}/${editingItem.id}`, 
+            {
+                dteNumber: editingItem.dteNumber
+            })
+            .then(response => {
+                showToast('success','Exito','Se guardo el DTe correctamente')
+                setDisplayDteNumberDialog(false)
+                setEditingItem(null)
+                setRefresh(!refresh)
+            })
+            .catch(error => {
+                //TODO poner el mensaje del back
+                showToast('error','Error','No se pudo guardar el DTe')
+            })
+        }
     }
 
     //Se dispara al tocar algun boton boleta
@@ -378,6 +403,33 @@ const FinalBatches = ({showToast}) => {
         </Dialog>
     )
 
+    const dteNumberDialog = (
+        <Dialog
+            header="Cargar DTe"
+            visible={displayDteNumberDialog}
+            className="w-11 md:w-6"
+            onHide={() => setDisplayDteNumberDialog(false)}
+            footer={
+                <div className="">
+                    <Button label="Cancelar" icon="pi pi-times" onClick={() => setDisplayDteNumberDialog(false)} className="p-button-danger" />
+                    <Button label="Aceptar" icon="pi pi-check" onClick={() => saveDteNumberHandler()} autoFocus className="btn btn-primary" />
+                </div>
+            }
+        >
+            <br/>
+            <span className="p-float-label">
+                <InputText 
+                    id="dte" 
+                    className='w-full' 
+                    value={editingItem?editingItem.dteNumber:null}
+                    keyfilter="num"
+                    onChange={e => setEditingItem({...editingItem, dteNumber:e.target.value})}
+                />
+                <label htmlFor="dte">Numero de DTe</label>
+            </span>
+        </Dialog>
+    )
+
     const loadingScreen = (
         <div>
             <Skeleton width="100%" height="8rem"/>
@@ -395,6 +447,7 @@ const FinalBatches = ({showToast}) => {
             <ScrollTop />
             {sellDialog}
             {weighDialog}
+            {dteNumberDialog}
             <Menu 
                 className='w-auto' 
                 model={menuItems} 
