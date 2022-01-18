@@ -38,12 +38,11 @@ const SortAnimalsOnGround = ({showToast}) => {
         }else{
             const {auctionId} = history.location.state
             setAuctionId(auctionId)
-            //url de los "para venta", le puse 10000 como para que sea un numero grande
-            //TODO /api/auction-batch/animals-on-ground/by-auction/${auctionId}/allForSort
-            let fetchURL = `${url.ANIMALS_ON_GROUND_API}/by-auction/${auctionId}?limit=${10000}&page=${0}&sold=false&notSold=false`
+            let fetchURL = `${url.ANIMALS_ON_GROUND_API}/by-auction/${auctionId}/allForSort`
             fetchContext.authAxios.get(fetchURL)
             .then(res => {
-                setItems(res.data.content)
+                console.log(res.data)
+                setItems(res.data)
                 setLoadingStart(false)
             })
             .catch(error => {
