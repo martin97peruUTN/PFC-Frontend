@@ -37,7 +37,7 @@ const AuctionHistory = ({showToast}) => {
     useEffect(() => {
         setLoadingStart(true)
         //TODO cambiar own por history
-        let fetchUrl = `${url.USER_AUCTIONS_API}/own/${authContext.getUserInfo().id}?page=${paginatorPage}&limit=${paginatorRows}`
+        let fetchUrl = `${url.USER_AUCTIONS_API}/history/${authContext.getUserInfo().id}?page=${paginatorPage}&limit=${paginatorRows}`
         if(dates && dates[0]){
             fetchUrl += `&first-date=${miscFunctions.parseDateFrontToBack(dates[0])}`
         }
@@ -51,8 +51,8 @@ const AuctionHistory = ({showToast}) => {
             setLoadingStart(false)
         })
         .catch(err => {
-            showToast('error', 'Error', 'No se pudieron cargar lo remates')
-            history.goBack();
+            showToast('error', 'Error', 'No se pudo cargar el historial de remates')
+            history.push(url.HOME);
         })
     },[dates, paginatorFirst, paginatorRows, paginatorPage])
 
