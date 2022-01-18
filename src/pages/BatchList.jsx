@@ -7,9 +7,7 @@ import { Skeleton } from 'primereact/skeleton';
 import { ScrollTop } from 'primereact/scrolltop';
 
 import { FetchContext } from '../context/FetchContext';
-import { AuthContext } from './../context/AuthContext';
 import * as url from '../util/url';
-import { isSmallScreen } from '../util/miscFunctions'
 
 import Card from '../components/cards/Card'
 import BatchListCard from '../components/cards/BatchListCard';
@@ -17,7 +15,6 @@ import BatchListCard from '../components/cards/BatchListCard';
 const BatchList = ({showToast}) => {
 
     const fetchContext = useContext(FetchContext)
-    const authContext = useContext(AuthContext);
     const history = useHistory();
 
     const [loadingStart, setLoadingStart] = useState(false)
@@ -121,7 +118,10 @@ const BatchList = ({showToast}) => {
                 {loadingStart?
                     loadingScreen
                 :
-                    itemCardList
+                    batchList.length === 0 ?
+                        <div className="text-2xl flex justify-content-center">No hay lotes aún</div>
+                    :
+                        itemCardList
                 }
             </Card>
         </>

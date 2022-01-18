@@ -292,22 +292,25 @@ const Auction = ({showToast}) => {
         })
     }
 
-    const itemCardList = animalsOnGround.map(animalOnGround => (
-        <AnimalsOnGroundShowCard
-            id={animalOnGround.id}
-            key={animalOnGround.id}
-            amount={animalOnGround.amount}
-            soldAmount={animalOnGround.soldAmount}
-            seller={animalOnGround.seller.name}
-            category={animalOnGround.category.name}
-            corralNumber={animalOnGround.corralNumber}
-            tabViewActiveIndex = {tabViewActiveIndex}
-            auctionIsFinished={auctionIsFinished}
-            sellHandler = {sellHandler}
-            notSoldHandler = {notSoldHandler}
-            editHandler = {editHandler}
-            editAnimalOnGroundHandler = {editAnimalOnGroundHandler}
-        />
+    const itemCardList = animalsOnGround.length === 0 ?
+        <div className="text-2xl flex justify-content-center">No hay lotes aún</div>
+        :
+        animalsOnGround.map(animalOnGround => (
+            <AnimalsOnGroundShowCard
+                id={animalOnGround.id}
+                key={animalOnGround.id}
+                amount={animalOnGround.amount}
+                soldAmount={animalOnGround.soldAmount}
+                seller={animalOnGround.seller.name}
+                category={animalOnGround.category.name}
+                corralNumber={animalOnGround.corralNumber}
+                tabViewActiveIndex = {tabViewActiveIndex}
+                auctionIsFinished={auctionIsFinished}
+                sellHandler = {sellHandler}
+                notSoldHandler = {notSoldHandler}
+                editHandler = {editHandler}
+                editAnimalOnGroundHandler = {editAnimalOnGroundHandler}
+            />
     ))
 
     //0:Para venta 1:No vendido 2:Vendido
