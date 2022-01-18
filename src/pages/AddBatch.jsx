@@ -6,7 +6,6 @@ import { Button } from 'primereact/button';
 import { Skeleton } from 'primereact/skeleton';
 import { confirmDialog } from 'primereact/confirmdialog';
 import { AutoComplete } from 'primereact/autocomplete';
-import { Dialog } from 'primereact/dialog';
 import { Dropdown } from 'primereact/dropdown';
 
 import { FetchContext } from '../context/FetchContext';

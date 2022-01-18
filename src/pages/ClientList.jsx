@@ -140,7 +140,10 @@ const ClientList = ({showToast}) => {
                 {loadingStart?
                     loadingScreen
                     :
-                    itemCardList
+                    itemCardList.length === 0 ?
+                        <div className="text-2xl flex justify-content-center">No hay clientes creados aún</div>
+                    :
+                        itemCardList
                 }
             </Card>     
         </>

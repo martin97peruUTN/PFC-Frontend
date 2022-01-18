@@ -13,7 +13,6 @@ import { Tooltip } from 'primereact/tooltip';
 import { FetchContext } from '../context/FetchContext';
 
 import Card from '../components/cards/Card'
-import CardSecondary from '../components/cards/CardSecondary'
 
 import * as url from '../util/url';
 import * as miscFunctions from '../util/miscFunctions';
@@ -172,7 +171,11 @@ const SortAnimalsOnGround = ({showToast}) => {
                     itemTemplate={itemTemplate} 
                     onChange={(e) => setItems(e.value)}
                 />*/}
-                {reactBeautifulDnd}
+                {items.length === 0?
+                    <div className="text-2xl flex justify-content-center">No hay lotes para ordenar</div>
+                :
+                    reactBeautifulDnd
+                }
             </Card>
         </>
     )

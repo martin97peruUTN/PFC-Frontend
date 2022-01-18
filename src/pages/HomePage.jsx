@@ -70,7 +70,11 @@ const HomePage = ({showToast}) => {
         }
     }
 
-    const auctionCardList = auctionList.map((auction) => (
+    const noAuctionYetMessage = (
+        <div className="text-2xl flex justify-content-center">No hay remates aún</div>
+    )
+
+    const auctionCardList = auctionList.length===0? noAuctionYetMessage : auctionList.map((auction) => (
         <AuctionCard
             key={auction.id}
             id={auction.id}

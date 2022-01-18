@@ -260,26 +260,29 @@ const FinalBatches = ({showToast}) => {
         });
     }
 
-    const itemCardList = batchList.map(batch => (
-        <FinalBatchCard
-            id={batch.id}
-            key={batch.id}
-            buyer={batch.buyer?batch.buyer.name:null}
-            seller={batch.seller.name}
-            amount={batch.amount}
-            category={batch.category.name}
-            mustWeigh={batch.mustWeigh}
-            weight={batch.weight}
-            price={batch.price}
-            dteNumber={batch.dteNumber}
-            tabViewActiveIndex={tabViewActiveIndex}
-            auctionIsFinished={auctionIsFinished}
-            weighHandler={weighHandler}
-            dteNumberSetHandler={dteNumberSetHandler}
-            getBillHandler={getBillHandler}
-            editHandler={editHandler}
-            deleteHandler={deleteHandler}
-        />
+    const itemCardList = batchList.length === 0? 
+        <div className="text-2xl flex justify-content-center">No hay lotes para mostrar</div> 
+        :
+        batchList.map(batch => (
+            <FinalBatchCard
+                id={batch.id}
+                key={batch.id}
+                buyer={batch.buyer?batch.buyer.name:null}
+                seller={batch.seller.name}
+                amount={batch.amount}
+                category={batch.category.name}
+                mustWeigh={batch.mustWeigh}
+                weight={batch.weight}
+                price={batch.price}
+                dteNumber={batch.dteNumber}
+                tabViewActiveIndex={tabViewActiveIndex}
+                auctionIsFinished={auctionIsFinished}
+                weighHandler={weighHandler}
+                dteNumberSetHandler={dteNumberSetHandler}
+                getBillHandler={getBillHandler}
+                editHandler={editHandler}
+                deleteHandler={deleteHandler}
+            />
     ))
 
     const topButtons = (
