@@ -34,6 +34,7 @@ import AddBatch from "./pages/AddBatch";
 import FinalBatches from "./pages/FinalBatches";
 import SortAnimalsOnGround from "./pages/SortAnimalsOnGround";
 import BatchList from "./pages/BatchList";
+import AuctionHistory from "./pages/AuctionHistory";
 
 const UnauthenticatedRoutes = ({showToast}) => (
   <div className="mx-3 my-7 md:mx-6">
@@ -117,7 +118,7 @@ function App() {
         <AuctionCRUD showToast={showToast}/>
       </AuthenticatedRoute>
       <AuthenticatedRoute exact path={url.AUCTION_HISTORY}>
-        <HomePage showToast={showToast}/>
+        <AuctionHistory showToast={showToast}/>
       </AuthenticatedRoute>
       <AuthenticatedRoute exact path={url.AUCTION}>
         <Auction showToast={showToast}/>
