@@ -36,7 +36,6 @@ const AuctionHistory = ({showToast}) => {
 
     useEffect(() => {
         setLoadingStart(true)
-        //TODO cambiar own por history
         let fetchUrl = `${url.USER_AUCTIONS_API}/history/${authContext.getUserInfo().id}?page=${paginatorPage}&limit=${paginatorRows}`
         if(dates && dates[0]){
             fetchUrl += `&first-date=${miscFunctions.parseDateFrontToBack(dates[0])}`
