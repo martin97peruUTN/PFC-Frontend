@@ -99,7 +99,7 @@ const AddParticipant = ({showToast, ...props}) => {
                 setSelectedUserItem(null)
             })
             .catch(error => {
-                showToast('error', 'Error', `No se pudo agregar el participante`)
+                showToast('error', 'Error', error.response.data.errorMsg)
             })
         }else{
             showToast('warn', 'Error', `Ingrese un participante`)
@@ -123,7 +123,7 @@ const AddParticipant = ({showToast, ...props}) => {
                         setRefresh(!refresh)
                     })
                     .catch(error => {
-                        showToast('error', 'Error', `No se pudo quitar al participante`)
+                        showToast('error', 'Error', error.response.data.errorMsg)
                     })
                 }
             }

@@ -53,7 +53,7 @@ const AuctionCRUD = ({showToast}) => {
                 setLoadingStart(false)
             })
             .catch(error => {
-                showToast('error', 'Error', 'No se encontro el remate')
+                showToast('error', 'Error', error.response.data.errorMsg)
                 history.goBack();
             })
         }
@@ -108,7 +108,7 @@ const AuctionCRUD = ({showToast}) => {
                 history.push('/');
             })
             .catch(error => {
-                showToast('error', 'Error', 'No se pudo crear el remate')
+                showToast('error', 'Error', error.response.data.errorMsg)
                 setLoadingAccept(false)
             })
         }else{
@@ -118,7 +118,7 @@ const AuctionCRUD = ({showToast}) => {
                 history.goBack();
             })
             .catch(error => {
-                showToast('error', 'Error', 'No se pudo actualizar el remate')
+                showToast('error', 'Error', error.response.data.errorMsg)
                 setLoadingAccept(false)
             })
         }
@@ -142,7 +142,7 @@ const AuctionCRUD = ({showToast}) => {
             history.push('/');
         })
         .catch(error => {
-            showToast('error', 'Error', 'No se pudo eliminar el remate')
+            showToast('error', 'Error', error.response.data.errorMsg)
         })
     }
 

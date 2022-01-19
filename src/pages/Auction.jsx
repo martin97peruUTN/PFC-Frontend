@@ -130,7 +130,7 @@ const Auction = ({showToast}) => {
                             setRefresh(!refresh)
                         })
                         .catch(error => {
-                            showToast('error','Error','No se pudieron vender los animales')
+                            showToast('error','Error',error.response.data.errorMsg)
                         })
                     }else{
                         showToast('warn','Error','La cantidad que quiere vender no puede ser mayor a la cantidad restante')
@@ -156,7 +156,7 @@ const Auction = ({showToast}) => {
                         setRefresh(!refresh)
                     })
                     .catch(error => {
-                        showToast('error', 'Error', 'No se pudieron marcar como no vendidos')
+                        showToast('error', 'Error', error.response.data.errorMsg)
                     })
                 }
             });
@@ -195,7 +195,7 @@ const Auction = ({showToast}) => {
                     setEditingItem(null)
                 })
                 .catch(error => {
-                    showToast('error', 'Error', `No se pudieron guardar los animales`)
+                    showToast('error', 'Error', error.response.data.errorMsg)
                 })
             }else{
                 showToast('warn', 'Cuidado', 'Algun campo esta vacio')

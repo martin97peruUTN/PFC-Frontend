@@ -50,7 +50,6 @@ const AddBatch = ({showToast}) => {
     const [animalsOnGroundList, setAnimalsOnGroundList] = useState([]);
     
     //Estados de autocompletes
-    const [filteredCategoryList, setFilteredCategoryList] = useState([])
     const [filteredClientList, setFilteredClientList] = useState([])
     const [provenanceList, setProvenanceList] = useState([])
 
@@ -73,7 +72,7 @@ const AddBatch = ({showToast}) => {
                 setLoadingStart(false)
             })
             .catch(error => {
-                showToast('error', 'Error', 'No se pudo conectar al servidor')
+                showToast('error', 'Error', error.response.data.errorMsg)
                 history.goBack()
             })
         }else{
@@ -82,16 +81,6 @@ const AddBatch = ({showToast}) => {
     },[refresh])
 
     //>>>SEARCHS DE LOS AUTOCOMPLETES<<<
-    
-    const searchCategory = (event) => {
-        fetchContext.authAxios.get(`${url.CATEGORY_API}?name=${event.query}`)
-        .then(response => {
-            setFilteredCategoryList(response.data.content)
-        })
-        .catch(error => {
-            showToast('error','Error','No se pudo obtener la lista de categorias')
-        })
-    }
 
     const searchClient = (event) => {
         fetchContext.authAxios.get(`${url.CLIENT_API}?name=${event.query}`)
@@ -168,7 +157,7 @@ const AddBatch = ({showToast}) => {
             setLoadingAccept(false)
         })
         .catch(error => {
-            showToast('error','Error','No se pudo editar el lote')
+            showToast('error','Error',error.response.data.errorMsg)
             setLoadingAccept(false)
         })
     }
@@ -188,11 +177,7 @@ const AddBatch = ({showToast}) => {
                     history.goBack()
                 })
                 .catch(error => {
-                    if (error.response.status === 403) {
-                        showToast('error','Error','No se pueden eliminar lotes que tengan animales vendidos')
-                    }else{
-                        showToast('error','Error','No se pudo eliminar el lote')
-                    }
+                    showToast('error','Error',error.response.data.errorMsg)
                 })
             }
         })
@@ -221,13 +206,13 @@ const AddBatch = ({showToast}) => {
                 const data = editingItem
                 fetchContext.authAxios.patch(`${url.ANIMALS_ON_GROUND_API}/${editingItem.id}`, data)
                 .then(response => {
-                    showToast('success', 'Exito', `Aminales guardados`)
+                    showToast('success', 'Exito', `Animales guardados`)
                     setRefresh(!refresh)
                     setDisplayDialog(false)
                     setEditingItem(null)
                 })
                 .catch(error => {
-                    showToast('error', 'Error', `No se pudieron guardar los animales`)
+                    showToast('error', 'Error', error.response.data.errorMsg)
                 })
             }else if(!editingItem.id && batchId){
                 const data = {...editingItem, 'sold': false, 'notSold': false, 'id': null, 'startingOrder': -1}
@@ -239,7 +224,7 @@ const AddBatch = ({showToast}) => {
                     setEditingItem(null)
                 })
                 .catch(error => {
-                    showToast('error', 'Error', `No se pudieron guardar los animales`)
+                    showToast('error', 'Error', error.response.data.errorMsg)
                 })
             }else if(editingItem.id && !batchId){
                 const modifiedItemIndex = animalsOnGroundList.findIndex(item => item.id === editingItem.id)
@@ -278,7 +263,7 @@ const AddBatch = ({showToast}) => {
                         setRefresh(!refresh)
                     })
                     .catch(error => {
-                        showToast('error', 'Error', `No se pudieron eliminar los animales`)
+                        showToast('error', 'Error', error.response.data.errorMsg)
                     })
                 }else{
                     //(batchId && animalsOnGroundId<0) no se puede dar, porque ni bien creo un animalsOnGround se guarda en el back si hay batchId

@@ -61,8 +61,8 @@ const UserCRUD = ({showToast}) => {
                 }
                 setLoadingStart(false)
             })
-            .catch(() => {
-                showToast('error', 'Error', 'No se encontro el usuario')
+            .catch(error => {
+                showToast('error', 'Error', error.response.data.errorMsg)
                 history.goBack();
             })
         }
@@ -139,12 +139,8 @@ const UserCRUD = ({showToast}) => {
                 showToast('success', 'Exito', 'Usuario creado')
                 history.goBack();
             })
-            .catch(err => {
-                if(err.response.status === 403) {
-                    showToast('error','Error','Usuario no disponible')
-                }else{
-                    showToast('error', 'Error', 'No se pudo crear el usuario')
-                }
+            .catch(error => {
+                showToast('error','Error',error.response.data.errorMsg)
                 setLoadingAccept(false)
             })
         }else{
@@ -153,14 +149,8 @@ const UserCRUD = ({showToast}) => {
                 showToast('success', 'Exito', 'Usuario ha sido actualizado')
                 history.goBack();
             })
-            .catch(err => {
-                if(err.response.status === 403) {
-                    showToast('error','Error','Usuario no disponible')
-                }else if(err.response.status === 400){
-                    showToast('error','Error','La nueva contraseña es igual a la anterior')
-                }else{
-                    showToast('error', 'Error', 'No se pudo actualizar el usuario')
-                }
+            .catch(error => {
+                showToast('error','Error',error.response.data.errorMsg)
                 setLoadingAccept(false)
             })
         }

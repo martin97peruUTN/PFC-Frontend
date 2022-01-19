@@ -115,8 +115,7 @@ const FinalBatches = ({showToast}) => {
                 setRefresh(!refresh)
             })
             .catch(error => {
-                //TODO poner el mensaje del back
-                showToast('error','Error','No se pudo guardar el peso')
+                showToast('error','Error',error.response.data.errorMsg)
             })
         }
     }
@@ -142,8 +141,7 @@ const FinalBatches = ({showToast}) => {
                 setRefresh(!refresh)
             })
             .catch(error => {
-                //TODO poner el mensaje del back
-                showToast('error','Error','No se pudo guardar el DTe')
+                showToast('error','Error',error.response.data.errorMsg)
             })
         }
     }
@@ -183,8 +181,7 @@ const FinalBatches = ({showToast}) => {
                     setRefresh(!refresh)
                 })
                 .catch(error => {
-                    //TODO poner el mensaje del back, aca me va a decir tambien si la cantidad es mayor a la cantidad disponible
-                    showToast('error','Error','No se pudieron guardar los cambios')
+                    showToast('error','Error',error.response.data.errorMsg)
                 })
             }
         }else{
@@ -208,7 +205,7 @@ const FinalBatches = ({showToast}) => {
                     setRefresh(!refresh)
                 })
                 .catch(error => {
-                    showToast('error', 'Error', `No se pudo eliminar el lote`)
+                    showToast('error', 'Error', error.response.data.errorMsg)
                 })
             }
         });
@@ -231,6 +228,7 @@ const FinalBatches = ({showToast}) => {
                     setRefresh(!refresh)
                 })
                 .catch(error => {
+                    //TODO ver si lo cambio o no
                     showToast('error', 'Error', 'No se pudo finalizar el remate')
                 })
             }
