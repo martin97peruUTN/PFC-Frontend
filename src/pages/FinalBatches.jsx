@@ -62,9 +62,12 @@ const FinalBatches = ({showToast}) => {
 
     useEffect(() => {
         setLoadingStart(true)
-        //Si estoy en la pestaña de soldbatches comienzo a escuchar el websocket
-        if(tabViewActiveIndex === 0){
-            // if(!stompClient.status === 'CONNECTED'){
+        if(!history.location.state){
+            showToast('error', 'Error', 'No se encontro el remate')
+            history.goBack();
+        }else{
+            //Si estoy en la pestaña de soldbatches comienzo a escuchar el websocket
+            if(tabViewActiveIndex === 0){
                 stompClient.register([
                     {route: '/topic/newSoldBatch', callback: () => {
                         refreshData()
@@ -72,12 +75,7 @@ const FinalBatches = ({showToast}) => {
                     // {route: '/topic/deleteSoldBatch', callback: refreshData()},
                     // {route: '/topic/updateSoldBatch', callback: refreshData()}
                 ]);
-            // }
-        }
-        if(!history.location.state){
-            showToast('error', 'Error', 'No se encontro el remate')
-            history.goBack();
-        }else{
+            }
             const {auctionId} = history.location.state
             setAuctionId(auctionId)
             let fetchURL = `${url.SOLD_BATCH_API}/by-auction/${auctionId}/${tabViewActiveIndex===0?'sold':'not-sold'}?limit=${paginatorRows}&page=${paginatorPage}`
