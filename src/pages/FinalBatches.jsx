@@ -22,6 +22,9 @@ import SellDialog from '../components/SellDialog'
 
 const FinalBatches = ({showToast}) => {
 
+    //import websocket configuration
+    var stompClient = require('../util/websocket-listener')
+
     const fetchContext = useContext(FetchContext)
     const authContext = useContext(AuthContext);
     const history = useHistory();
@@ -59,6 +62,18 @@ const FinalBatches = ({showToast}) => {
 
     useEffect(() => {
         setLoadingStart(true)
+        //Si estoy en la pestaña de soldbatches comienzo a escuchar el websocket
+        if(tabViewActiveIndex === 0){
+            // if(!stompClient.status === 'CONNECTED'){
+                stompClient.register([
+                    {route: '/topic/newSoldBatch', callback: () => {
+                        refreshData()
+                    }},
+                    // {route: '/topic/deleteSoldBatch', callback: refreshData()},
+                    // {route: '/topic/updateSoldBatch', callback: refreshData()}
+                ]);
+            // }
+        }
         if(!history.location.state){
             showToast('error', 'Error', 'No se encontro el remate')
             history.goBack();
@@ -82,6 +97,11 @@ const FinalBatches = ({showToast}) => {
             })
         }
     },[tabViewActiveIndex, paginatorFirst, paginatorRows, paginatorPage, refresh])
+ 
+    const refreshData = () => {
+        console.log('Nuevo mensaje desde websocket')
+        setRefresh(!refresh)
+    }
 
     const onPaginatorPageChange = (event) => {
         setPaginatorFirst(event.first);
