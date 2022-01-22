@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef, useContext} from 'react';
+import React, {useState, useEffect, useRef, useContext, useCallback} from 'react';
 import { useHistory } from "react-router-dom";
 
 import { Button } from 'primereact/button';
@@ -22,8 +22,8 @@ import SellDialog from '../components/SellDialog'
 
 const FinalBatches = ({showToast}) => {
 
-    //import websocket configuration
-    var stompClient = require('../util/websocket-listener')
+    const SockJS = require('sockjs-client'); // <1>
+    const Stomp  = require('stompjs'); // <2>
 
     const fetchContext = useContext(FetchContext)
     const authContext = useContext(AuthContext);
@@ -60,22 +60,14 @@ const FinalBatches = ({showToast}) => {
     //Item de la lista que estoy queriendo editar/pesar/cargar DTe
     const [editingItem, setEditingItem] = useState();
 
+    const [stompClient, setStompClient] = useState(null)
+
     useEffect(() => {
         setLoadingStart(true)
         if(!history.location.state){
             showToast('error', 'Error', 'No se encontro el remate')
             history.goBack();
         }else{
-            //Si estoy en la pestaña de soldbatches comienzo a escuchar el websocket
-            if(tabViewActiveIndex === 0){
-                stompClient.register([
-                    {route: '/topic/newSoldBatch', callback: () => {
-                        refreshData()
-                    }},
-                    // {route: '/topic/deleteSoldBatch', callback: refreshData()},
-                    // {route: '/topic/updateSoldBatch', callback: refreshData()}
-                ]);
-            }
             const {auctionId} = history.location.state
             setAuctionId(auctionId)
             let fetchURL = `${url.SOLD_BATCH_API}/by-auction/${auctionId}/${tabViewActiveIndex===0?'sold':'not-sold'}?limit=${paginatorRows}&page=${paginatorPage}`
@@ -95,10 +87,30 @@ const FinalBatches = ({showToast}) => {
             })
         }
     },[tabViewActiveIndex, paginatorFirst, paginatorRows, paginatorPage, refresh])
- 
-    const refreshData = () => {
+
+    useEffect(() => {
+        const socket = SockJS(`http://localhost:8080/payroll`); // <3>
+        const stompClient = Stomp.over(socket);
+        var headers = {
+            "Authorization": `Bearer ${localStorage.getItem('token')}`
+        }
+        stompClient.connect(headers, function(frame) {
+            console.log(frame)
+            stompClient.subscribe('/topic/newSoldBatch', message => refreshData(message))
+        }, function(frame) {
+            console.log(frame)
+        });
+        return () => {
+            stompClient.disconnect();
+        }
+    },[])
+
+    const refreshData = (message) => {
         console.log('Nuevo mensaje desde websocket')
-        setRefresh(!refresh)
+        //Pusimos el timeout sino no anda
+        setTimeout(() => {
+            setRefresh(message)
+        },1000)
     }
 
     const onPaginatorPageChange = (event) => {
