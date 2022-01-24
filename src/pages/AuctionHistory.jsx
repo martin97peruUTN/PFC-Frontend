@@ -62,7 +62,7 @@ const AuctionHistory = ({showToast}) => {
     }
 
     const auctionScreenHandler = (auctionId) => {
-        history.push(url.AUCTION, {auctionId: auctionId})
+        history.push(url.FINAL_BATCHES, {auctionId: auctionId})
     }
 
     const noAuctionYetMessage = (
