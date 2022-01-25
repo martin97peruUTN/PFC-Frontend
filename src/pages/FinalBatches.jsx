@@ -43,14 +43,11 @@ const FinalBatches = ({showToast}) => {
     //uso este estado "comodin" para refrescar la pagina cuando hay un cambio
     const [refresh, setRefresh] = useState(false);
 
-    //Mostrar el dialogo de editar o esconderlo
+    //Mostrar el dialogo un dialogo o esconderlo
     const [displayEditDialog, setDisplayEditDialog] = useState(false);
-
-    //Mostrar el dialogo de pesar o esconderlo
     const [displayWeighDialog, setDisplayWeighDialog] = useState(false);
-
-    //Mostrar el dialogo de cargar DTe o esconderlo
     const [displayDteNumberDialog, setDisplayDteNumberDialog] = useState(false);
+    const [displayPaymentTermDialog, setDisplayPaymentTermDialog] = useState(false);
 
     const [auctionId, setAuctionId] = useState()
     const [auctionIsFinished, setAuctionIsFinished] = useState()
@@ -170,6 +167,32 @@ const FinalBatches = ({showToast}) => {
             .then(response => {
                 showToast('success','Exito','Se guardo el DTe correctamente')
                 setDisplayDteNumberDialog(false)
+                setEditingItem(null)
+                setRefresh(!refresh)
+            })
+            .catch(error => {
+                showToast('error','Error',error.response.data.errorMsg)
+            })
+        }
+    }
+
+    //Se dispara al tocar algun boton cargar plazo
+    const paymentTermSetHandler = (batchId) => {
+        setDisplayPaymentTermDialog(true)
+        setEditingItem(batchList.find(batch => batch.id === batchId))
+    }
+
+    const savePaymentTermHandler = () => {
+        if(!editingItem.paymentTerm){
+            showToast('error', 'Error', 'Debe ingresar el plazo')
+        }else{
+            fetchContext.authAxios.patch(`${url.SOLD_BATCH_API}/${editingItem.id}`, 
+            {
+                paymentTerm: editingItem.paymentTerm
+            })
+            .then(response => {
+                showToast('success','Exito','Se guardo el plazo correctamente')
+                setDisplayPaymentTermDialog(false)
                 setEditingItem(null)
                 setRefresh(!refresh)
             })
@@ -306,10 +329,12 @@ const FinalBatches = ({showToast}) => {
                 weight={batch.weight}
                 price={batch.price}
                 dteNumber={batch.dteNumber}
+                paymentTerm={batch.paymentTerm}
                 tabViewActiveIndex={tabViewActiveIndex}
                 auctionIsFinished={auctionIsFinished}
                 weighHandler={weighHandler}
                 dteNumberSetHandler={dteNumberSetHandler}
+                paymentTermSetHandler={paymentTermSetHandler}
                 getBillHandler={getBillHandler}
                 editHandler={editHandler}
                 deleteHandler={deleteHandler}
@@ -464,6 +489,33 @@ const FinalBatches = ({showToast}) => {
         </Dialog>
     )
 
+    const paymentTermDialog = (
+        <Dialog
+            header="Cargar plazo"
+            visible={displayPaymentTermDialog}
+            className="w-11 md:w-6"
+            onHide={() => setDisplayPaymentTermDialog(false)}
+            footer={
+                <div className="">
+                    <Button label="Cancelar" icon="pi pi-times" onClick={() => setDisplayPaymentTermDialog(false)} className="p-button-danger" />
+                    <Button label="Aceptar" icon="pi pi-check" onClick={() => savePaymentTermHandler()} autoFocus className="btn btn-primary" />
+                </div>
+            }
+        >
+            <br/>
+            <span className="p-float-label">
+                <InputText 
+                    id="dte" 
+                    className='w-full' 
+                    value={editingItem?editingItem.paymentTerm:null}
+                    keyfilter="num"
+                    onChange={e => setEditingItem({...editingItem, paymentTerm:e.target.value})}
+                />
+                <label htmlFor="dte">Plazo de pago</label>
+            </span>
+        </Dialog>
+    )
+
     const loadingScreen = (
         <div>
             <Skeleton width="100%" height="8rem"/>
@@ -482,6 +534,7 @@ const FinalBatches = ({showToast}) => {
             {sellDialog}
             {weighDialog}
             {dteNumberDialog}
+            {paymentTermDialog}
             <Menu 
                 className='w-auto' 
                 model={menuItems} 

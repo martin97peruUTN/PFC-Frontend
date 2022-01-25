@@ -100,6 +100,13 @@ const FinalBatchCard = (props) => {
                         :
                             null
                         }
+                        {props.paymentTerm?//Depende de si ya se le cargo el plazo o no
+                            <div className="mb-1">
+                                {`Plazo: ${props.paymentTerm} dias`}
+                            </div>
+                        :
+                            null
+                        }
                     </div>
                 }
                 buttons = {
@@ -112,6 +119,7 @@ const FinalBatchCard = (props) => {
                             null
                         }
                         <Button className={CARD_TWO_COLUMNS_BUTTON} icon="pi pi-tag" onClick={()=> props.dteNumberSetHandler(props.id)} label={props.dteNumber?"Editar DTe":"Cargar DTe"}/>
+                        <Button className={CARD_TWO_COLUMNS_BUTTON} icon="pi pi-tag" onClick={()=> props.paymentTermSetHandler(props.id)} label={props.paymentTerm?"Editar plazo":"Cargar plazo"}/>
                         {props.tabViewActiveIndex===0?//Solo los vendidos tienen boleta
                             <Button className={CARD_TWO_COLUMNS_BUTTON} icon="pi pi-print" onClick={()=> props.getBillHandler(props.id)} label="Boleta"/>
                             :
