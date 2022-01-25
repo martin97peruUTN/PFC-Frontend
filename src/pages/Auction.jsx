@@ -203,6 +203,27 @@ const Auction = ({showToast}) => {
         }
     }
 
+    const downloadPdf = (auctionId) => {
+        fetchContext.authAxios.get(`/pdf/starting-order/${auctionId}`, {
+            headers: {
+                'Content-Type':'application/pdf',
+                'Accept':'application/pdf'
+            }
+        })
+        .then(res => {
+            var a = window.document.createElement('a');
+            a.href = `data:application/octet-stream;charset=utf-8;base64,${res.data}`
+            a.download = "OrdenDeSalida.pdf";
+            a.target='_blank'
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        })
+        .catch(err => {
+            console.log(err)
+        })
+    }
+
     //TODO cambiar urls cuando las tengamos (url o command: () => hacerAlgo())
     const menuItems = []
     if(!auctionIsFinished && miscFunctions.isSmallScreen()){
@@ -262,7 +283,7 @@ const Auction = ({showToast}) => {
         {
             label: 'Orden de salida',
             icon: 'pi pi-fw pi-sort-amount-down-alt',
-            url: url.HOME
+            command: () => downloadPdf(auctionId)
         },
         {separator: true},
         {
