@@ -224,7 +224,6 @@ const Auction = ({showToast}) => {
         })
     }
 
-    //TODO cambiar urls cuando las tengamos (url o command: () => hacerAlgo())
     const menuItems = []
     if(!auctionIsFinished && miscFunctions.isSmallScreen()){
         menuItems.push(
@@ -295,7 +294,7 @@ const Auction = ({showToast}) => {
                 }
             )
         },
-        {
+        {//TODO cambiar urls cuando las tengamos (url o command: () => hacerAlgo())
             label: 'Resumen',
             icon: 'pi pi-fw pi-book',
             url: url.HOME

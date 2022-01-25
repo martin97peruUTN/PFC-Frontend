@@ -197,7 +197,7 @@ const FinalBatches = ({showToast}) => {
                 setRefresh(!refresh)
             })
             .catch(error => {
-                showToast('error','Error',error.response.data.errorMsg)
+                showToast('error','Error','No se pudo guardar el plazo')
             })
         }
     }
@@ -401,7 +401,17 @@ const FinalBatches = ({showToast}) => {
             }
         )
     }
-    
+    if((authContext.isAdmin() || authContext.isConsignee()) && auctionIsFinished){
+        menuItems.push(
+            {separator: true},
+            {separator: true},
+            {
+                label: 'Reanudar remate',
+                icon: 'pi pi-fw pi-replay',
+                command: () => confirmResumeAuction()
+            }
+        )
+    }
 
     //0:Vendidos 1:No vendidos
     const tabView = (
@@ -503,16 +513,19 @@ const FinalBatches = ({showToast}) => {
             }
         >
             <br/>
-            <span className="p-float-label">
-                <InputText 
-                    id="dte" 
-                    className='w-full' 
-                    value={editingItem?editingItem.paymentTerm:null}
-                    keyfilter="num"
-                    onChange={e => setEditingItem({...editingItem, paymentTerm:e.target.value})}
-                />
-                <label htmlFor="dte">Plazo de pago</label>
-            </span>
+            <div className="p-inputgroup">
+                <span className="p-float-label">
+                    <InputText  
+                        id="term" 
+                        className='w-full' 
+                        keyfilter="int"
+                        value={editingItem && editingItem.paymentTerm!==0?editingItem.paymentTerm:null}
+                        onChange={e => setEditingItem({...editingItem, paymentTerm:e.target.value})}
+                    />
+                    <label htmlFor="term">Plazo de pago</label>
+                </span>
+                <span className="p-inputgroup-addon">dias</span>
+            </div>
         </Dialog>
     )
 
