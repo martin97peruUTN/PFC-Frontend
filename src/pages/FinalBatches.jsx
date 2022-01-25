@@ -22,6 +22,10 @@ import SellDialog from '../components/SellDialog'
 
 const FinalBatches = ({showToast}) => {
 
+    //Para el websocket
+    const SockJS = require('sockjs-client'); // <1>
+    const Stomp  = require('stompjs'); // <2>
+
     const fetchContext = useContext(FetchContext)
     const authContext = useContext(AuthContext);
     const history = useHistory();
@@ -60,6 +64,9 @@ const FinalBatches = ({showToast}) => {
     //Item de la lista que estoy queriendo editar/pesar/cargar DTe
     const [editingItem, setEditingItem] = useState();
 
+    //Mensajes que llegan desde el websocket
+    const [message, setMessage] = useState();
+
     useEffect(() => {
         setLoadingStart(true)
         if(!history.location.state){
@@ -84,7 +91,33 @@ const FinalBatches = ({showToast}) => {
                 history.goBack();
             })
         }
-    },[tabViewActiveIndex, paginatorFirst, paginatorRows, paginatorPage, refresh])
+    },[tabViewActiveIndex, paginatorFirst, paginatorRows, paginatorPage, refresh, message])
+
+    useEffect(() => {
+        const baseURL = process.env.REACT_APP_API_URL.replace('/api', '')
+        const socket = SockJS(`${baseURL}/payroll`); // <3>
+        const stompClient = Stomp.over(socket);
+        var headers = {
+            "Authorization": `Bearer ${localStorage.getItem('token')}`
+        }
+        stompClient.connect(headers, function(frame) {
+            //consoole.log(frame)
+            stompClient.subscribe('/topic/newSoldBatch', message => refreshData(message))
+        }, function(frame) {
+            //consoole.log(frame)
+        });
+        return () => {
+            stompClient.disconnect();
+        }
+    },[])
+
+    //Metodo para hacer que la pagina traiga la nueva info cuando llega un mensaje desde el websocket
+    const refreshData = (message) => {
+        //Pusimos el timeout sino no anda
+        setTimeout(() => {
+            setMessage(message)
+        },1000)
+    }
 
     const onPaginatorPageChange = (event) => {
         setPaginatorFirst(event.first);
