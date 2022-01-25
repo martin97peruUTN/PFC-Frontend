@@ -220,7 +220,7 @@ const Auction = ({showToast}) => {
             document.body.removeChild(a);
         })
         .catch(err => {
-            console.log(err)
+            showToast('error', 'Error', 'No se pudo descargar el PDF')
         })
     }
 
