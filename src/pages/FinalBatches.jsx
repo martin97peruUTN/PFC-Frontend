@@ -48,6 +48,7 @@ const FinalBatches = ({showToast}) => {
     const [displayWeighDialog, setDisplayWeighDialog] = useState(false);
     const [displayDteNumberDialog, setDisplayDteNumberDialog] = useState(false);
     const [displayPaymentTermDialog, setDisplayPaymentTermDialog] = useState(false);
+    const [displayBillDialog, setDisplayBillDialog] = useState(false);
 
     const [auctionId, setAuctionId] = useState()
     const [auctionIsFinished, setAuctionIsFinished] = useState()
@@ -60,6 +61,9 @@ const FinalBatches = ({showToast}) => {
 
     //Item de la lista que estoy queriendo editar/pesar/cargar DTe
     const [editingItem, setEditingItem] = useState();
+
+    //Cantidad de copias de boletas, 4 por defecto
+    const [amountOfBillCopies, setAmountOfBillCopies] = useState(4);
 
     //Mensajes que llegan desde el websocket
     const [message, setMessage] = useState();
@@ -204,7 +208,29 @@ const FinalBatches = ({showToast}) => {
 
     //Se dispara al tocar algun boton boleta
     const getBillHandler = (batchId) => {
-        //TODO proximamente
+        setDisplayBillDialog(true)
+        setEditingItem(batchList.find(batch => batch.id === batchId))
+    }
+
+    //Se dispara al tocar aceptar en el dialogo de boleta
+    const downloadBillHandler = () => {
+        if(!amountOfBillCopies || amountOfBillCopies<=0){
+            showToast('error', 'Error', 'Debe ingresar una cantidad de copias mayor a 0')
+        }else{
+            fetchContext.authAxios.get(`${url.PDF_API}/boleta/${editingItem.id}?copyAmount=${amountOfBillCopies}`)
+            .then(res => {
+                window.open("").document.write(
+                    "<iframe width='100%' height='100%' src='data:application/pdf;base64, " +
+                    encodeURI(res.data) + "'></iframe>"
+                )
+                setDisplayBillDialog(false)
+                setEditingItem(null)
+                setAmountOfBillCopies(4)
+            })
+            .catch(error => {//TODO ver si cambio este error o no
+                showToast('error','Error',error.response.data.errorMsg)
+            })
+        }
     }
 
     //Se dispara al tocar algun boton editar
@@ -462,7 +488,7 @@ const FinalBatches = ({showToast}) => {
                         id="weight" 
                         className='w-full' 
                         value={editingItem?editingItem.weight:null}
-                        keyfilter="num"
+                        keyfilter="pnum"
                         onChange={e => setEditingItem({...editingItem, weight:e.target.value})}
                     />
                     <label htmlFor="weight">Peso</label>
@@ -518,7 +544,7 @@ const FinalBatches = ({showToast}) => {
                     <InputText  
                         id="term" 
                         className='w-full' 
-                        keyfilter="int"
+                        keyfilter="pint"
                         value={editingItem && editingItem.paymentTerm!==0?editingItem.paymentTerm:null}
                         onChange={e => setEditingItem({...editingItem, paymentTerm:e.target.value})}
                     />
@@ -526,6 +552,33 @@ const FinalBatches = ({showToast}) => {
                 </span>
                 <span className="p-inputgroup-addon">dias</span>
             </div>
+        </Dialog>
+    )
+
+    const billDialog = (
+        <Dialog
+            header="Imprimir boleta"
+            visible={displayBillDialog}
+            className="w-11 md:w-6"
+            onHide={() => setDisplayBillDialog(false)}
+            footer={
+                <div className="">
+                    <Button label="Cancelar" icon="pi pi-times" onClick={() => setDisplayBillDialog(false)} className="p-button-danger" />
+                    <Button label="Aceptar" icon="pi pi-check" onClick={() => downloadBillHandler()} autoFocus className="btn btn-primary" />
+                </div>
+            }
+        >
+            <br/>
+            <span className="p-float-label">
+                <InputText  
+                    id="bill" 
+                    className='w-full' 
+                    keyfilter="pint"
+                    value={amountOfBillCopies}
+                    onChange={e => setAmountOfBillCopies(e.target.value)}
+                />
+                <label htmlFor="bill">Cantidad de copia</label>
+            </span>
         </Dialog>
     )
 
@@ -548,6 +601,7 @@ const FinalBatches = ({showToast}) => {
             {weighDialog}
             {dteNumberDialog}
             {paymentTermDialog}
+            {billDialog}
             <Menu 
                 className='w-auto' 
                 model={menuItems} 

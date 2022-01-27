@@ -203,8 +203,8 @@ const Auction = ({showToast}) => {
         }
     }
 
-    const downloadPdf = (auctionId) => {
-        fetchContext.authAxios.get(`/pdf/starting-order/${auctionId}`, {
+    const downloadOrderPdf = (auctionId) => {
+        fetchContext.authAxios.get(`${url.PDF_API}/starting-order/${auctionId}`, {
             headers: {
                 'Content-Type':'application/pdf',
                 'Accept':'application/pdf'
@@ -282,7 +282,7 @@ const Auction = ({showToast}) => {
         {
             label: 'Orden de salida',
             icon: 'pi pi-fw pi-sort-amount-down-alt',
-            command: () => downloadPdf(auctionId)
+            command: () => downloadOrderPdf(auctionId)
         },
         {separator: true},
         {
