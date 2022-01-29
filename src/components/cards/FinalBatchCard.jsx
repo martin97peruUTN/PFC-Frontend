@@ -29,11 +29,6 @@ const FinalBatchCard = (props) => {
     if(props.tabViewActiveIndex===0){
         menuItems.push(
             {
-                icon: "pi pi-calendar",
-                label: props.paymentTerm?"Editar plazo":"Cargar plazo",
-                command: () => props.paymentTermSetHandler(props.id)
-            },
-            {
                 icon: "pi pi-print",
                 label: "Boleta",
                 command: () => props.getBillHandler(props.id)
@@ -124,11 +119,6 @@ const FinalBatchCard = (props) => {
                             null
                         }
                         <Button className={CARD_TWO_COLUMNS_BUTTON} icon="pi pi-tag" onClick={()=> props.dteNumberSetHandler(props.id)} label={props.dteNumber?"Editar DTe":"Cargar DTe"}/>
-                        {props.tabViewActiveIndex===0?//Solo los vendidos tienen plazo
-                            <Button className={CARD_TWO_COLUMNS_BUTTON} icon="pi pi-calendar" onClick={()=> props.paymentTermSetHandler(props.id)} label={props.paymentTerm?"Editar plazo":"Cargar plazo"}/>
-                            :
-                            null
-                        }
                         {props.tabViewActiveIndex===0?//Solo los vendidos tienen boleta
                             <Button className={CARD_TWO_COLUMNS_BUTTON} icon="pi pi-print" onClick={()=> props.getBillHandler(props.id)} label="Boleta"/>
                             :

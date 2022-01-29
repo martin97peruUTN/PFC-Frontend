@@ -78,6 +78,17 @@ const SellDialog = ({isCreating, acceptHandler, setDisplayDialog, displayDialog,
                     <label htmlFor="amount">Cantidad</label>
                 </span>
                 <br/>
+                <span className="p-float-label">
+                    <InputText 
+                        id="term" 
+                        className='w-full' 
+                        value={editingItem?editingItem.paymentTerm:null}
+                        keyfilter="pint"
+                        onChange={e => setEditingItem({...editingItem, paymentTerm:e.target.value})}
+                    />
+                    <label htmlFor="term">Plazo (opcional)</label>
+                </span>
+                <br/>
                 <Button 
                     className="btn btn-primary" 
                     icon={editingItem && editingItem.mustWeigh?"pi pi-check-circle":"pi pi-times-circle"}

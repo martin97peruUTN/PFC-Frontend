@@ -47,7 +47,6 @@ const FinalBatches = ({showToast}) => {
     const [displayEditDialog, setDisplayEditDialog] = useState(false);
     const [displayWeighDialog, setDisplayWeighDialog] = useState(false);
     const [displayDteNumberDialog, setDisplayDteNumberDialog] = useState(false);
-    const [displayPaymentTermDialog, setDisplayPaymentTermDialog] = useState(false);
     const [displayBillDialog, setDisplayBillDialog] = useState(false);
 
     const [auctionId, setAuctionId] = useState()
@@ -180,32 +179,6 @@ const FinalBatches = ({showToast}) => {
         }
     }
 
-    //Se dispara al tocar algun boton cargar plazo
-    const paymentTermSetHandler = (batchId) => {
-        setDisplayPaymentTermDialog(true)
-        setEditingItem(batchList.find(batch => batch.id === batchId))
-    }
-
-    const savePaymentTermHandler = () => {
-        if(!editingItem.paymentTerm){
-            showToast('error', 'Error', 'Debe ingresar el plazo')
-        }else{
-            fetchContext.authAxios.patch(`${url.SOLD_BATCH_API}/${editingItem.id}`, 
-            {
-                paymentTerm: editingItem.paymentTerm
-            })
-            .then(response => {
-                showToast('success','Exito','Se guardo el plazo correctamente')
-                setDisplayPaymentTermDialog(false)
-                setEditingItem(null)
-                setRefresh(!refresh)
-            })
-            .catch(error => {
-                showToast('error','Error','No se pudo guardar el plazo')
-            })
-        }
-    }
-
     //Se dispara al tocar algun boton boleta
     const getBillHandler = (batchId) => {
         setDisplayBillDialog(true)
@@ -213,7 +186,7 @@ const FinalBatches = ({showToast}) => {
     }
 
     //Se dispara al tocar aceptar en el dialogo de boleta
-    const downloadBillHandler = () => {
+    const printBillHandler = () => {
         if(!amountOfBillCopies || amountOfBillCopies<=0){
             showToast('error', 'Error', 'Debe ingresar una cantidad de copias mayor a 0')
         }else{
@@ -253,7 +226,8 @@ const FinalBatches = ({showToast}) => {
                     'client': editingItem.buyer,
                     'price': editingItem.price,
                     'amount': editingItem.amount,
-                    'mustWeigh': editingItem.mustWeigh
+                    'mustWeigh': editingItem.mustWeigh,
+                    'paymentTerm': editingItem.paymentTerm?editingItem.paymentTerm:null
                 }
                 fetchContext.authAxios.patch(`${url.SOLD_BATCH_API}/${editingItem.id}`, data)
                 .then(response => {
@@ -360,7 +334,6 @@ const FinalBatches = ({showToast}) => {
                 auctionIsFinished={auctionIsFinished}
                 weighHandler={weighHandler}
                 dteNumberSetHandler={dteNumberSetHandler}
-                paymentTermSetHandler={paymentTermSetHandler}
                 getBillHandler={getBillHandler}
                 editHandler={editHandler}
                 deleteHandler={deleteHandler}
@@ -525,36 +498,6 @@ const FinalBatches = ({showToast}) => {
         </Dialog>
     )
 
-    const paymentTermDialog = (
-        <Dialog
-            header="Cargar plazo"
-            visible={displayPaymentTermDialog}
-            className="w-11 md:w-6"
-            onHide={() => setDisplayPaymentTermDialog(false)}
-            footer={
-                <div className="">
-                    <Button label="Cancelar" icon="pi pi-times" onClick={() => setDisplayPaymentTermDialog(false)} className="p-button-danger" />
-                    <Button label="Aceptar" icon="pi pi-check" onClick={() => savePaymentTermHandler()} autoFocus className="btn btn-primary" />
-                </div>
-            }
-        >
-            <br/>
-            <div className="p-inputgroup">
-                <span className="p-float-label">
-                    <InputText  
-                        id="term" 
-                        className='w-full' 
-                        keyfilter="pint"
-                        value={editingItem && editingItem.paymentTerm!==0?editingItem.paymentTerm:null}
-                        onChange={e => setEditingItem({...editingItem, paymentTerm:e.target.value})}
-                    />
-                    <label htmlFor="term">Plazo de pago</label>
-                </span>
-                <span className="p-inputgroup-addon">dias</span>
-            </div>
-        </Dialog>
-    )
-
     const billDialog = (
         <Dialog
             header="Imprimir boleta"
@@ -564,7 +507,7 @@ const FinalBatches = ({showToast}) => {
             footer={
                 <div className="">
                     <Button label="Cancelar" icon="pi pi-times" onClick={() => setDisplayBillDialog(false)} className="p-button-danger" />
-                    <Button label="Aceptar" icon="pi pi-check" onClick={() => downloadBillHandler()} autoFocus className="btn btn-primary" />
+                    <Button label="Aceptar" icon="pi pi-check" onClick={() => printBillHandler()} autoFocus className="btn btn-primary" />
                 </div>
             }
         >
@@ -600,7 +543,6 @@ const FinalBatches = ({showToast}) => {
             {sellDialog}
             {weighDialog}
             {dteNumberDialog}
-            {paymentTermDialog}
             {billDialog}
             <Menu 
                 className='w-auto' 

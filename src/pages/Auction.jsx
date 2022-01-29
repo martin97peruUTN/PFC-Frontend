@@ -99,7 +99,7 @@ const Auction = ({showToast}) => {
     const sellHandler = (animalOnGroundId) => {
         if(!auctionIsFinished){
             setDisplayDialogSell(true)
-            setEditingItem({...editingItem, 'id':animalOnGroundId})
+            setEditingItem({...editingItem, 'id': animalOnGroundId, 'paymentTerm': 30})
         }
     }
 
@@ -120,7 +120,8 @@ const Auction = ({showToast}) => {
                             'client': editingItem.client,
                             'price': editingItem.price,
                             'amount': editingItem.amount,
-                            'mustWeigh': editingItem.mustWeigh
+                            'mustWeigh': editingItem.mustWeigh,
+                            'paymentTerm': editingItem.paymentTerm?editingItem.paymentTerm:null
                         }
                         fetchContext.authAxios.post(`${url.SOLD_BATCH_API}/${editingItem.id}`, data)
                         .then(response => {
