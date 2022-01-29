@@ -67,6 +67,9 @@ const FinalBatches = ({showToast}) => {
     //Mensajes que llegan desde el websocket
     const [message, setMessage] = useState();
 
+    //Opcion que indica si se imprime o se descarga el PDF de la boleta
+    const [billOption, setBillOption] = useState(null);
+
     useEffect(() => {
         setLoadingStart(true)
         if(!history.location.state){
@@ -180,8 +183,9 @@ const FinalBatches = ({showToast}) => {
     }
 
     //Se dispara al tocar algun boton boleta
-    const getBillHandler = (batchId) => {
+    const getBillHandler = (batchId, stringOption) => {
         setDisplayBillDialog(true)
+        setBillOption(stringOption)
         setEditingItem(batchList.find(batch => batch.id === batchId))
     }
 
@@ -192,12 +196,23 @@ const FinalBatches = ({showToast}) => {
         }else{
             fetchContext.authAxios.get(`${url.PDF_API}/boleta/${editingItem.id}?copyAmount=${amountOfBillCopies}`)
             .then(res => {
-                window.open("").document.write(
-                    "<iframe width='100%' height='100%' src='data:application/pdf;base64, " +
-                    encodeURI(res.data) + "'></iframe>"
-                )
+                if(billOption==="print"){
+                    window.open("").document.write(
+                        "<iframe width='100%' height='100%' src='data:application/pdf;base64, " +
+                        encodeURI(res.data) + "'></iframe>"
+                    )
+                }else{
+                    var a = window.document.createElement('a');
+                    a.href = `data:application/octet-stream;charset=utf-8;base64,${res.data}`
+                    a.download = `Boleta ${editingItem.seller.name} ${editingItem.buyer.name}.pdf`;
+                    a.target='_blank'
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                }
                 setDisplayBillDialog(false)
                 setEditingItem(null)
+                setBillOption(null)
                 setAmountOfBillCopies(4)
             })
             .catch(error => {//TODO ver si cambio este error o no
