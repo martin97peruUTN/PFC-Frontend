@@ -535,7 +535,7 @@ const FinalBatches = ({showToast}) => {
                     value={amountOfBillCopies}
                     onChange={e => setAmountOfBillCopies(e.target.value)}
                 />
-                <label htmlFor="bill">Cantidad de copia</label>
+                <label htmlFor="bill">Cantidad de copias</label>
             </span>
         </Dialog>
     )
