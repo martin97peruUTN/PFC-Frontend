@@ -5,7 +5,6 @@ import { ADMIN_ROLE } from '../util/constants';
 
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
-import { Toast } from 'primereact/toast';
 import { Skeleton } from 'primereact/skeleton';
 import { confirmDialog } from 'primereact/confirmdialog';
 import { Paginator } from 'primereact/paginator';

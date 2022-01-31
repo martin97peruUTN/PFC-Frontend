@@ -57,7 +57,7 @@ const SimpleItemList = ({showToast, ...props}) => {
             setLoadingStart(false)
         })
         .catch(error => {
-            showToast('error', 'Error', 'No se pudo conectar al servidor')
+            showToast('error','Error',error.response.data.errorMsg)
             history.push(url.HOME);
         })
     }, [refresh, paginatorFirst, paginatorRows, fetchContext.authAxios, history, urlAPI, paginatorPage, searchValue])
@@ -212,7 +212,10 @@ const SimpleItemList = ({showToast, ...props}) => {
                 {loadingStart?
                     loadingScreen
                     :
-                    itemCardList
+                    itemCardList.length === 0?
+                        <div className="text-2xl flex justify-content-center">{`No hay ${pluralizeSpanishWord(itemNameLowercase)} aún`}</div>
+                        :
+                        itemCardList
                 }
             </Card>     
         </>

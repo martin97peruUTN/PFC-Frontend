@@ -49,8 +49,8 @@ const ClientCRUD = ({showToast}) => {
                 setProvenances(provenances)
                 setLoadingStart(false)
             })
-            .catch(() => {
-                showToast('error', 'Error', 'No se encontro el usuario')
+            .catch((error) => {
+                showToast('error', 'Error', error.response.data.errorMsg)
                 history.goBack();
             })
         }else{

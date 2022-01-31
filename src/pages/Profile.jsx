@@ -75,13 +75,8 @@ const Profile = ({showToast}) => {
             showToast('success','Exito','El usuario se actualizó correctamente!')
             setLoadingAccept(false)
         }).catch((err) => {
-            if(err.response.status === 403) {
-                showToast('error','Error','Usuario no disponible')
-                setLoadingAccept(false)
-            }else{
-                showToast('error','Error','No se pudo actualizar el usuario')
-                setLoadingAccept(false)
-            }
+            showToast('error','Error',err.response.data.errorMsg)
+            setLoadingAccept(false)
         })
     }
 

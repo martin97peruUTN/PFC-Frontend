@@ -40,6 +40,7 @@ const LogIn = ({showToast}) => {
                 history.push('/')
             })
             .catch(err => {
+                //TODO preguntarle a Tomi en este caso
                 //Pregunto si hay response porque sino crashea
                 if(err.response && err.response.status === 400){
                     showToast('error', 'Error', 'Usuario o contraseña incorrecto, vuelva a intentarlo')

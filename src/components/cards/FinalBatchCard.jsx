@@ -1,6 +1,7 @@
 import React, {useRef} from 'react'
 
 import { Button } from 'primereact/button';
+import { SplitButton } from 'primereact/splitbutton';
 import { Menu } from 'primereact/menu';
 
 import { CARD_TWO_COLUMNS_BUTTON_DIV, CARD_TWO_COLUMNS_BUTTON } from '../../util/constants';
@@ -30,8 +31,13 @@ const FinalBatchCard = (props) => {
         menuItems.push(
             {
                 icon: "pi pi-print",
-                label: "Boleta",
-                command: () => props.getBillHandler(props.id)
+                label: "Imprimir boleta",
+                command: () => props.getBillHandler(props.id, "print")
+            },
+            {
+                icon: "pi pi-download",
+                label: "Descargar boleta",
+                command: ()=> props.getBillHandler(props.id, "download")
             }
         )
     }
@@ -49,6 +55,14 @@ const FinalBatchCard = (props) => {
             }
         )
     }
+
+    const billMenuItems = [
+        {
+            icon: "pi pi-download",
+            label: "Descargar boleta",
+            command: ()=> props.getBillHandler(props.id, "download")
+        }
+    ]
 
     return (
         <>
@@ -100,6 +114,13 @@ const FinalBatchCard = (props) => {
                         :
                             null
                         }
+                        {props.paymentTerm?//Depende de si ya se le cargo el plazo o no
+                            <div className="mb-1">
+                                {`Plazo: ${props.paymentTerm} dias`}
+                            </div>
+                        :
+                            null
+                        }
                     </div>
                 }
                 buttons = {
@@ -113,7 +134,7 @@ const FinalBatchCard = (props) => {
                         }
                         <Button className={CARD_TWO_COLUMNS_BUTTON} icon="pi pi-tag" onClick={()=> props.dteNumberSetHandler(props.id)} label={props.dteNumber?"Editar DTe":"Cargar DTe"}/>
                         {props.tabViewActiveIndex===0?//Solo los vendidos tienen boleta
-                            <Button className={CARD_TWO_COLUMNS_BUTTON} icon="pi pi-print" onClick={()=> props.getBillHandler(props.id)} label="Boleta"/>
+                            <SplitButton className={CARD_TWO_COLUMNS_BUTTON} model={billMenuItems} icon="pi pi-print" onClick={()=> props.getBillHandler(props.id, "print")} label="Boleta"/>
                             :
                             null
                         }

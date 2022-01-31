@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { Button } from 'primereact/button';
-import { CARD_TWO_COLUMNS_BUTTON, CARD_TWO_COLUMNS_BUTTON_DIV } from '../../util/constants';
+import { CARD_TWO_COLUMNS_BUTTON_DIV } from '../../util/constants';
 import { pluralizeSpanishWord } from '../../util/miscFunctions';
 
 import CardTwoColumns from './CardTwoColumns'

@@ -99,7 +99,7 @@ const Auction = ({showToast}) => {
     const sellHandler = (animalOnGroundId) => {
         if(!auctionIsFinished){
             setDisplayDialogSell(true)
-            setEditingItem({...editingItem, 'id':animalOnGroundId})
+            setEditingItem({...editingItem, 'id': animalOnGroundId, 'paymentTerm': 30})
         }
     }
 
@@ -120,7 +120,8 @@ const Auction = ({showToast}) => {
                             'client': editingItem.client,
                             'price': editingItem.price,
                             'amount': editingItem.amount,
-                            'mustWeigh': editingItem.mustWeigh
+                            'mustWeigh': editingItem.mustWeigh,
+                            'paymentTerm': editingItem.paymentTerm?editingItem.paymentTerm:null
                         }
                         fetchContext.authAxios.post(`${url.SOLD_BATCH_API}/${editingItem.id}`, data)
                         .then(response => {
@@ -130,7 +131,7 @@ const Auction = ({showToast}) => {
                             setRefresh(!refresh)
                         })
                         .catch(error => {
-                            showToast('error','Error','No se pudieron vender los animales')
+                            showToast('error','Error',error.response.data.errorMsg)
                         })
                     }else{
                         showToast('warn','Error','La cantidad que quiere vender no puede ser mayor a la cantidad restante')
@@ -156,7 +157,7 @@ const Auction = ({showToast}) => {
                         setRefresh(!refresh)
                     })
                     .catch(error => {
-                        showToast('error', 'Error', 'No se pudieron marcar como no vendidos')
+                        showToast('error', 'Error', error.response.data.errorMsg)
                     })
                 }
             });
@@ -195,7 +196,7 @@ const Auction = ({showToast}) => {
                     setEditingItem(null)
                 })
                 .catch(error => {
-                    showToast('error', 'Error', `No se pudieron guardar los animales`)
+                    showToast('error', 'Error', error.response.data.errorMsg)
                 })
             }else{
                 showToast('warn', 'Cuidado', 'Algun campo esta vacio')
@@ -203,7 +204,27 @@ const Auction = ({showToast}) => {
         }
     }
 
-    //TODO cambiar urls cuando las tengamos (url o command: () => hacerAlgo())
+    const downloadOrderPdf = (auctionId) => {
+        fetchContext.authAxios.get(`${url.PDF_API}/starting-order/${auctionId}`, {
+            headers: {
+                'Content-Type':'application/pdf',
+                'Accept':'application/pdf'
+            }
+        })
+        .then(res => {
+            var a = window.document.createElement('a');
+            a.href = `data:application/octet-stream;charset=utf-8;base64,${res.data}`
+            a.download = "OrdenDeSalida.pdf";
+            a.target='_blank'
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        })
+        .catch(err => {
+            showToast('error', 'Error', 'No se pudo descargar el PDF')
+        })
+    }
+
     const menuItems = []
     if(!auctionIsFinished && miscFunctions.isSmallScreen()){
         menuItems.push(
@@ -262,7 +283,7 @@ const Auction = ({showToast}) => {
         {
             label: 'Orden de salida',
             icon: 'pi pi-fw pi-sort-amount-down-alt',
-            url: url.HOME
+            command: () => downloadOrderPdf(auctionId)
         },
         {separator: true},
         {
@@ -274,7 +295,7 @@ const Auction = ({showToast}) => {
                 }
             )
         },
-        {
+        {//TODO cambiar urls cuando las tengamos (url o command: () => hacerAlgo())
             label: 'Resumen',
             icon: 'pi pi-fw pi-book',
             url: url.HOME
@@ -292,22 +313,25 @@ const Auction = ({showToast}) => {
         })
     }
 
-    const itemCardList = animalsOnGround.map(animalOnGround => (
-        <AnimalsOnGroundShowCard
-            id={animalOnGround.id}
-            key={animalOnGround.id}
-            amount={animalOnGround.amount}
-            soldAmount={animalOnGround.soldAmount}
-            seller={animalOnGround.seller.name}
-            category={animalOnGround.category.name}
-            corralNumber={animalOnGround.corralNumber}
-            tabViewActiveIndex = {tabViewActiveIndex}
-            auctionIsFinished={auctionIsFinished}
-            sellHandler = {sellHandler}
-            notSoldHandler = {notSoldHandler}
-            editHandler = {editHandler}
-            editAnimalOnGroundHandler = {editAnimalOnGroundHandler}
-        />
+    const itemCardList = animalsOnGround.length === 0 ?
+        <div className="text-2xl flex justify-content-center">No hay lotes aún</div>
+        :
+        animalsOnGround.map(animalOnGround => (
+            <AnimalsOnGroundShowCard
+                id={animalOnGround.id}
+                key={animalOnGround.id}
+                amount={animalOnGround.amount}
+                soldAmount={animalOnGround.soldAmount}
+                seller={animalOnGround.seller.name}
+                category={animalOnGround.category.name}
+                corralNumber={animalOnGround.corralNumber}
+                tabViewActiveIndex = {tabViewActiveIndex}
+                auctionIsFinished={auctionIsFinished}
+                sellHandler = {sellHandler}
+                notSoldHandler = {notSoldHandler}
+                editHandler = {editHandler}
+                editAnimalOnGroundHandler = {editAnimalOnGroundHandler}
+            />
     ))
 
     //0:Para venta 1:No vendido 2:Vendido

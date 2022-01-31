@@ -25,8 +25,10 @@ export const parseDateBackToFront = (dateJson) => {
 
 export const parseDateFrontToBack = (date, dateTime) => {
     const dateReturn = new Date(date);
-    dateReturn.setHours(dateTime.getHours());
-    dateReturn.setMinutes(dateTime.getMinutes());
+    if(dateTime){
+        dateReturn.setHours(dateTime.getHours());
+        dateReturn.setMinutes(dateTime.getMinutes());
+    }
     return dateReturn.toISOString()
 }
 
