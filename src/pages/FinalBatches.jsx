@@ -97,6 +97,7 @@ const FinalBatches = ({showToast}) => {
     },[tabViewActiveIndex, paginatorFirst, paginatorRows, paginatorPage, refresh, message])
 
     useEffect(() => {
+        const {auctionId} = history.location.state
         const baseURL = process.env.REACT_APP_API_URL.replace('/api', '')
         const socket = SockJS(`${baseURL}/payroll`); // <3>
         const stompClient = Stomp.over(socket);
@@ -104,10 +105,9 @@ const FinalBatches = ({showToast}) => {
             "Authorization": `Bearer ${localStorage.getItem('token')}`
         }
         stompClient.connect(headers, function(frame) {
-            //consoole.log(frame)
-            stompClient.subscribe('/topic/newSoldBatch', message => refreshData(message))
+            //TODO Agregar /${auctionId} para que solo se escuche el remate en cuestion
+            stompClient.subscribe(`/topic/newSoldBatch`, message => refreshData(message))
         }, function(frame) {
-            //consoole.log(frame)
         });
         return () => {
             stompClient.disconnect();
