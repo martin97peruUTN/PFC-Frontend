@@ -18,6 +18,7 @@ export const BATCH_CRUD = '/crear-editar-lote'
 export const FINAL_BATCHES = '/lotes-finales'
 export const SORT_ANIMALS_ON_GROUND = '/orden-de-salida'
 export const BATCH_LIST = '/listado-de-lotes'
+export const REPORT = '/resumen-del-remate'
 
 //Backend
 export const LOGIN_API = '/login'
@@ -31,3 +32,4 @@ export const AUCTION_BATCH_API = '/auction-batch'
 export const ANIMALS_ON_GROUND_API = `${AUCTION_BATCH_API}/animals-on-ground`
 export const SOLD_BATCH_API = '/sold-batch'
 export const PDF_API = '/pdf'
+export const REPORT_API = '/report'

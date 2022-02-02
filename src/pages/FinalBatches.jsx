@@ -364,10 +364,10 @@ const FinalBatches = ({showToast}) => {
                 onClick={() => history.push(url.AUCTION, {auctionId: auctionId})}
             />
             <Button 
-                icon="pi pi-file"
+                icon="pi pi-book"
                 label="Resumen"
                 className="btn btn-primary mr-3"
-                //TODO onClick={} proximamente
+                onClick={() => history.push(url.REPORT, {auctionId: auctionId})}
             />
             {(authContext.isAdmin() || authContext.isConsignee()) && !auctionIsFinished?
                 <Button 
@@ -399,9 +399,9 @@ const FinalBatches = ({showToast}) => {
             command: () => history.push(url.AUCTION, {auctionId: auctionId}),
         },
         {
-            icon: "pi pi-file",
+            icon: "pi pi-book",
             label: "Resumen",
-            //TODO command: () => {} proximamente
+            command: () => history.push(url.REPORT, {auctionId: auctionId})
         }
     ]
     if((authContext.isAdmin() || authContext.isConsignee()) && !auctionIsFinished){

@@ -295,10 +295,14 @@ const Auction = ({showToast}) => {
                 }
             )
         },
-        {//TODO cambiar urls cuando las tengamos (url o command: () => hacerAlgo())
+        {
             label: 'Resumen',
             icon: 'pi pi-fw pi-book',
-            url: url.HOME
+            command: () => history.push(url.REPORT, 
+                {
+                    auctionId: auctionId
+                }
+            )
         }
     )
     if(miscFunctions.isSmallScreen()){
