@@ -150,9 +150,9 @@ const ReportPage = ({showToast}) => {
                 responsiveLayout="scroll"
             >
                 <Column field="name" header="Nombre" sortable style={{width:'40%'}}/>
-                <Column field="totalAnimalsSold" header="Animales vendidos" sortable style={{width:'20%'}}/>
-                <Column field="totalAnimalsNotSold" header="Animales no vendidos" sortable style={{width:'20%'}}/>
-                <Column field="totalMoneyIncome" header="Dinero generado" sortable style={{width:'20%'}}/>
+                <Column field="totalAnimalsSold" header={!isSmallScreen()?"Animales vendidos":"🐮✔️"} sortable style={{width:'20%'}}/>
+                <Column field="totalAnimalsNotSold" header={!isSmallScreen()?"Animales no vendidos":"🐮❌"} sortable style={{width:'20%'}}/>
+                <Column field="totalMoneyIncome" header={!isSmallScreen()?"Dinero generado":"💵"} sortable style={{width:'20%'}}/>
             </DataTable>
             <br/>
             {/* Buyers table */}
@@ -164,8 +164,8 @@ const ReportPage = ({showToast}) => {
                     responsiveLayout="scroll"
                 >
                     <Column field="name" header="Nombre" sortable style={{width:'60%'}}/>
-                    <Column field="totalBought" header="Animales vendidos" sortable style={{width:'20%'}}/>
-                    <Column field="totalMoneyInvested" header="Dinero invertido" sortable style={{width:'20%'}}/>
+                    <Column field="totalBought" header={!isSmallScreen()?"Animales comprados":"🐮"} sortable style={{width:'20%'}}/>
+                    <Column field="totalMoneyInvested" header={!isSmallScreen()?"Dinero invertido":"💸"} sortable style={{width:'20%'}}/>
                 </DataTable>
             :
                 <DataTable 
