@@ -7,10 +7,14 @@ import { ScrollTop } from 'primereact/scrolltop';
 import { Menu } from 'primereact/menu';
 import { Dialog } from 'primereact/dialog';
 import { Checkbox } from 'primereact/checkbox';
+import { Accordion, AccordionTab } from 'primereact/accordion';
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
+import { Divider } from 'primereact/divider';
 
 import { FetchContext } from '../context/FetchContext';
 import * as url from '../util/url';
-import { isSmallScreen } from '../util/miscFunctions'
+import { isSmallScreen, parseDateToShow, parseDateTimeToShow, arrayToStringSeparatedByComma } from '../util/miscFunctions'
 
 import Card from '../components/cards/Card'
 
@@ -30,6 +34,8 @@ const ReportPage = ({showToast}) => {
     const [generalInfo, setGeneralInfo] = useState({})
     const [categoryInfo, setCategoryInfo] = useState([])
 
+    const [activeIndexArray, setActiveIndexArray] = useState([])
+
     useEffect(() => {
         setLoadingStart(true)
         if(!history.location.state){
@@ -40,13 +46,13 @@ const ReportPage = ({showToast}) => {
             fetchContext.authAxios.get(url.REPORT_API+"/"+auctionId)
             .then(res => {
                 setGeneralInfo(res.data.generalInfo)
-                setCategoryInfo(res.data.categoryInfo)
+                setCategoryInfo(res.data.categoryList)
                 setLoadingStart(false)
+                setActiveIndexArray(activeIndexArray.push(0))
             })
             .catch(error => {
                 showToast('error', 'Error', error.response.data.errorMsg)
-                //TODO history.goBack();
-                setLoadingStart(false)
+                history.goBack();
             })
         }
     },[])
@@ -66,10 +72,6 @@ const ReportPage = ({showToast}) => {
             setDisplayPrintDialog(false)
         })
     }
-
-    const infoScreen = (
-        <></>
-    )
 
     const topButtons = (
         <div>
@@ -131,6 +133,94 @@ const ReportPage = ({showToast}) => {
         </Dialog>
     )
 
+    const AccordionTabContent = ({category}) => (
+        <>
+            <>{`Cantidad de animales vendidos: ${category.totalAnimalsSold}`}</>
+            <br/>
+            <>{`Cantidad de animales no vendidos: ${category.totalAnimalsNotSold}`}</>
+            <br/>
+            <>{`Total de dinero generado: ${category.totalMoneyIncome}`}</>
+            <br/>
+            <br/>
+            {/* Selles table */}
+            <DataTable 
+                header="Vendedores" 
+                value={category.sellers} 
+                showGridlines 
+                responsiveLayout="scroll"
+            >
+                <Column field="name" header="Nombre" sortable style={{width:'40%'}}/>
+                <Column field="totalAnimalsSold" header="Animales vendidos" sortable style={{width:'20%'}}/>
+                <Column field="totalAnimalsNotSold" header="Animales no vendidos" sortable style={{width:'20%'}}/>
+                <Column field="totalMoneyIncome" header="Dinero generado" sortable style={{width:'20%'}}/>
+            </DataTable>
+            <br/>
+            {/* Buyers table */}
+            {category.buyers.length > 0 ?
+                <DataTable 
+                    header="Compradores" 
+                    value={category.buyers} 
+                    showGridlines 
+                    responsiveLayout="scroll"
+                >
+                    <Column field="name" header="Nombre" sortable style={{width:'60%'}}/>
+                    <Column field="totalBought" header="Animales vendidos" sortable style={{width:'20%'}}/>
+                    <Column field="totalMoneyInvested" header="Dinero invertido" sortable style={{width:'20%'}}/>
+                </DataTable>
+            :
+                <DataTable 
+                    header="No hay compradores"
+                />
+            }
+        </>
+    )
+
+    const generalInfoToShow = (
+        <div className="text-lg">
+            <div>{`Numero de Senasa: ${generalInfo.senasaNumber}`}</div>
+            <div>{`Localidad: ${generalInfo.locality}`}</div>
+            <div>{`Fecha: ${parseDateToShow(generalInfo.date)} - ${parseDateTimeToShow(generalInfo.date)}`}</div>
+            <div>{"Participantes:"}</div>
+            <>{`Consignatario${generalInfo.consignees && generalInfo.consignees.length>1?"s":""}: `}</>
+            <>{generalInfo.consignees?arrayToStringSeparatedByComma(generalInfo.consignees):null}</>
+            <br/>
+            {generalInfo.assistants && generalInfo.assistants.length===0?
+                <div>{"Sin asistentes"}</div>
+            :
+                <>{`Asistente${generalInfo.assistants && generalInfo.assistants.length>1?"s":""}: `}</>
+            }
+            {generalInfo.assistants?arrayToStringSeparatedByComma(generalInfo.assistants):null}
+            <div>{`Cantidad de vendedores: ${generalInfo.totalSeller}`}</div>
+            <div>{`Cantidad de compradores: ${generalInfo.totalBuyers}`}</div>
+            <div>{`Cantidad de lotes (por corral) que entraron: ${generalInfo.totalBatchesForSell}`}</div>
+            <div>{`Lotes (por corral) totalmente vendidos: ${generalInfo.totalCompletelySoldBatches}`}</div>
+        </div>
+    )
+
+    const mainScreen = (
+        <>
+            <Accordion
+                multiple
+                activeIndex={activeIndexArray}
+            >
+                <AccordionTab header={"Informacion general"}>
+                    {generalInfoToShow}
+                    <Divider/>
+                    <AccordionTabContent
+                        category={generalInfo.commonInfo}
+                    />
+                </AccordionTab>
+                {categoryInfo.map(category => (
+                    <AccordionTab header={category.name} key={category.name}>
+                        <AccordionTabContent
+                            category={category}
+                        />
+                    </AccordionTab>
+                ))}
+            </Accordion>
+        </>
+    )
+
     const loadingScreen = (
         <div>
             <Skeleton width="100%" height="8rem"/>
@@ -174,7 +264,7 @@ const ReportPage = ({showToast}) => {
                 {loadingStart?
                     loadingScreen
                 :
-                    infoScreen
+                    mainScreen
                 }
             </Card>
         </>
