@@ -14,7 +14,7 @@ import { Divider } from 'primereact/divider';
 
 import { FetchContext } from '../context/FetchContext';
 import * as url from '../util/url';
-import { isSmallScreen, parseDateToShow, parseDateTimeToShow, arrayToStringSeparatedByComma } from '../util/miscFunctions'
+import { isSmallScreen, parseDateToShow, parseDateTimeToShow, arrayToStringSeparatedByComma, formatCurrency } from '../util/miscFunctions'
 
 import Card from '../components/cards/Card'
 
@@ -133,13 +133,21 @@ const ReportPage = ({showToast}) => {
         </Dialog>
     )
 
+    const priceBodyTemplate = (rowData) => {
+        if(rowData.totalMoneyIncome){
+            return formatCurrency(rowData.totalMoneyIncome);
+        }else{
+            return formatCurrency(rowData.totalMoneyInvested);
+        }
+    }
+
     const AccordionTabContent = ({category}) => (
         <>
             <>{`Cantidad de animales vendidos: ${category.totalAnimalsSold}`}</>
             <br/>
             <>{`Cantidad de animales no vendidos: ${category.totalAnimalsNotSold}`}</>
             <br/>
-            <>{`Total de dinero generado: ${category.totalMoneyIncome}`}</>
+            <>{`Total de dinero generado: $${category.totalMoneyIncome}`}</>
             <br/>
             <br/>
             {/* Selles table */}
@@ -152,7 +160,7 @@ const ReportPage = ({showToast}) => {
                 <Column field="name" header="Nombre" sortable style={{width:'40%'}}/>
                 <Column field="totalAnimalsSold" header={!isSmallScreen()?"Animales vendidos":"🐮✔️"} sortable style={{width:'20%'}}/>
                 <Column field="totalAnimalsNotSold" header={!isSmallScreen()?"Animales no vendidos":"🐮❌"} sortable style={{width:'20%'}}/>
-                <Column field="totalMoneyIncome" header={!isSmallScreen()?"Dinero generado":"💵"} sortable style={{width:'20%'}}/>
+                <Column field="totalMoneyIncome" body={priceBodyTemplate} header={!isSmallScreen()?"Dinero generado":"💵"} sortable style={{width:'20%'}}/>
             </DataTable>
             <br/>
             {/* Buyers table */}
@@ -165,7 +173,7 @@ const ReportPage = ({showToast}) => {
                 >
                     <Column field="name" header="Nombre" sortable style={{width:'60%'}}/>
                     <Column field="totalBought" header={!isSmallScreen()?"Animales comprados":"🐮"} sortable style={{width:'20%'}}/>
-                    <Column field="totalMoneyInvested" header={!isSmallScreen()?"Dinero invertido":"💸"} sortable style={{width:'20%'}}/>
+                    <Column field="totalMoneyInvested" body={priceBodyTemplate} header={!isSmallScreen()?"Dinero invertido":"💸"} sortable style={{width:'20%'}}/>
                 </DataTable>
             :
                 <DataTable 
