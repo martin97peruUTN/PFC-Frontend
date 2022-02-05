@@ -189,15 +189,46 @@ const ReportPage = ({showToast}) => {
             <div>{`Localidad: ${generalInfo.locality}`}</div>
             <div>{`Fecha: ${parseDateToShow(generalInfo.date)} - ${parseDateTimeToShow(generalInfo.date)}`}</div>
             <div>{"Participantes:"}</div>
+            {/*Si la pantalla es chica los muestro uno por renglon, sino seguidos separados por comas*/}
             <>{`Consignatario${generalInfo.consignees && generalInfo.consignees.length>1?"s":""}: `}</>
-            <>{generalInfo.consignees?arrayToStringSeparatedByComma(generalInfo.consignees):null}</>
-            <br/>
+            {isSmallScreen() ?
+                <>
+                    {generalInfo.consignees?
+                        generalInfo.consignees.map((consignee, index) => (
+                            <div key={index}>{consignee.name}</div>
+                        ))
+                    :
+                        null
+                    }
+                </>
+            :
+                <>
+                    <>{generalInfo.consignees?arrayToStringSeparatedByComma(generalInfo.consignees):null}</>
+                    <br/>
+                </>
+            }
+            {/*Si la pantalla es chica los muestro uno por renglon, sino seguidos separados por comas*/}
             {generalInfo.assistants && generalInfo.assistants.length===0?
                 <div>{"Sin asistentes"}</div>
             :
-                <>{`Asistente${generalInfo.assistants && generalInfo.assistants.length>1?"s":""}: `}</>
+                <>
+                    <>{`Asistente${generalInfo.assistants && generalInfo.assistants.length>1?"s":""}: `}</>
+                    {isSmallScreen() ?
+                        <>
+                            {generalInfo.assistants?
+                                generalInfo.assistants.map((assistant, index) => (
+                                    <div key={index}>{assistant.name}</div>
+                                ))
+                            :
+                                null
+                            }
+                        </>
+                    :
+                        generalInfo.assistants?arrayToStringSeparatedByComma(generalInfo.assistants):null
+                    }
+                </>
             }
-            {generalInfo.assistants?arrayToStringSeparatedByComma(generalInfo.assistants):null}
+            
             <div>{`Cantidad de vendedores: ${generalInfo.totalSeller}`}</div>
             <div>{`Cantidad de compradores: ${generalInfo.totalBuyers}`}</div>
             <div>{`Cantidad de lotes (por corral) que entraron: ${generalInfo.totalBatchesForSell}`}</div>
