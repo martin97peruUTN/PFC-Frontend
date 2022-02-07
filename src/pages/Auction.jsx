@@ -204,7 +204,7 @@ const Auction = ({showToast}) => {
         }
     }
 
-    const downloadOrderPdf = (auctionId) => {
+    const printOrderPdf = (auctionId) => {
         fetchContext.authAxios.get(`${url.PDF_API}/starting-order/${auctionId}`, {
             headers: {
                 'Content-Type':'application/pdf',
@@ -212,6 +212,7 @@ const Auction = ({showToast}) => {
             }
         })
         .then(res => {
+            /* Codigo para descargar el pdf
             var a = window.document.createElement('a');
             a.href = `data:application/octet-stream;charset=utf-8;base64,${res.data}`
             a.download = "OrdenDeSalida.pdf";
@@ -219,6 +220,12 @@ const Auction = ({showToast}) => {
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
+
+            Codigo para imprimir el pdf */
+            window.open("").document.write(
+                "<iframe width='100%' height='100%' src='data:application/pdf;base64, " +
+                encodeURI(res.data) + "'></iframe>"
+            )
         })
         .catch(err => {
             showToast('error', 'Error', 'No se pudo descargar el PDF')
@@ -283,7 +290,7 @@ const Auction = ({showToast}) => {
         {
             label: 'Orden de salida',
             icon: 'pi pi-fw pi-sort-amount-down-alt',
-            command: () => downloadOrderPdf(auctionId)
+            command: () => printOrderPdf(auctionId)
         },
         {separator: true},
         {

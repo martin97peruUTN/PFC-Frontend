@@ -57,13 +57,23 @@ const ReportPage = ({showToast}) => {
         }
     },[])
 
-    const printBillHandler = () => {
+    const downloadReportPdf = () => {
         fetchContext.authAxios.get(`${url.PDF_API}/report/${history.location.state.auctionId}?withCategoryInfo=${wantsCategoryInfoInPdf}&withSoldBatchList=${wantsSoldBatchListInPdf}`)
         .then(res => {
+            /* Codigo para imprimir pdf
             window.open("").document.write(
                 "<iframe width='100%' height='100%' src='data:application/pdf;base64, " +
                 encodeURI(res.data) + "'></iframe>"
             )
+            
+            Codigo para descargar pdf */
+            var a = window.document.createElement('a');
+            a.href = `data:application/octet-stream;charset=utf-8;base64,${res.data}`
+            a.download = "ResumenDeRemate.pdf";
+            a.target='_blank'
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
         })
         .catch(error => {
             showToast('error', 'Error', error.response.data.errorMsg)
@@ -112,7 +122,7 @@ const ReportPage = ({showToast}) => {
             footer={
                 <div>
                     <Button label="Cancelar" icon="pi pi-times" onClick={() => setDisplayPrintDialog(false)} className="p-button-danger" />
-                    <Button label="Aceptar" icon="pi pi-check" onClick={() => printBillHandler()} autoFocus className="btn btn-primary" />
+                    <Button label="Aceptar" icon="pi pi-check" onClick={() => downloadReportPdf()} autoFocus className="btn btn-primary" />
                 </div>
             }
         >
