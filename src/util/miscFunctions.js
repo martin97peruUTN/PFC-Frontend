@@ -55,6 +55,7 @@ export const arrayToStringSeparatedByComma = (array) => {
     return returnArray.join(', ')
 }
 
-export const formatCurrency = (value) => {
+export const formatCurrency = (valueParam) => {
+    const value = valueParam ? valueParam : 0;
     return value.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
 }

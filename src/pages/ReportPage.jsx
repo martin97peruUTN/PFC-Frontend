@@ -166,11 +166,13 @@ const ReportPage = ({showToast}) => {
                 value={category.sellers} 
                 showGridlines 
                 responsiveLayout="scroll"
+                scrollable
+                scrollDirection="horizontal"
             >
-                <Column field="name" header="Nombre" sortable style={{width:'40%'}}/>
-                <Column field="totalAnimalsSold" header={!isSmallScreen()?"Animales vendidos":"🐮✔️"} sortable style={{width:'20%'}}/>
-                <Column field="totalAnimalsNotSold" header={!isSmallScreen()?"Animales no vendidos":"🐮❌"} sortable style={{width:'20%'}}/>
-                <Column field="totalMoneyIncome" body={priceBodyTemplate} header={!isSmallScreen()?"Dinero generado":"💵"} sortable style={{width:'20%'}}/>
+                <Column field="name" header="Nombre" sortable style={{ minWidth: '300px' }}/>
+                <Column field="totalAnimalsSold" header="Animales vendidos" sortable style={{ minWidth: '100px' }}/>
+                <Column field="totalAnimalsNotSold" header="Animales no vendidos" sortable style={{ minWidth: '100px' }}/>
+                <Column field="totalMoneyIncome" body={priceBodyTemplate} header="Dinero generado" sortable style={{ minWidth: '100px' }}/>
             </DataTable>
             <br/>
             {/* Buyers table */}
@@ -180,10 +182,12 @@ const ReportPage = ({showToast}) => {
                     value={category.buyers} 
                     showGridlines 
                     responsiveLayout="scroll"
+                    scrollable
+                    scrollDirection="horizontal"
                 >
-                    <Column field="name" header="Nombre" sortable style={{width:'60%'}}/>
-                    <Column field="totalBought" header={!isSmallScreen()?"Animales comprados":"🐮"} sortable style={{width:'20%'}}/>
-                    <Column field="totalMoneyInvested" body={priceBodyTemplate} header={!isSmallScreen()?"Dinero invertido":"💸"} sortable style={{width:'20%'}}/>
+                    <Column field="name" header="Nombre" sortable style={{ minWidth: '300px' }}/>
+                    <Column field="totalBought" header="Animales comprados" sortable style={{ minWidth: '100px' }}/>
+                    <Column field="totalMoneyInvested" body={priceBodyTemplate} header="Dinero invertido" sortable style={{ minWidth: '100px' }}/>
                 </DataTable>
             :
                 <DataTable 
@@ -313,9 +317,10 @@ const ReportPage = ({showToast}) => {
                 {loadingStart?
                     loadingScreen
                 :
-                    mainScreen
+                    null
                 }
             </Card>
+            {<div className="card">{mainScreen}</div>}
         </>
     )
 };
