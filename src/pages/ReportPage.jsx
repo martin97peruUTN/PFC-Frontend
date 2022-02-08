@@ -14,7 +14,7 @@ import { Divider } from 'primereact/divider';
 
 import { FetchContext } from '../context/FetchContext';
 import * as url from '../util/url';
-import { isSmallScreen, parseDateToShow, parseDateTimeToShow, arrayToStringSeparatedByComma, formatCurrency } from '../util/miscFunctions'
+import { isSmallScreen, parseDateToShow, parseDateTimeToShow, arrayToStringSeparatedByComma } from '../util/miscFunctions'
 
 import Card from '../components/cards/Card'
 
@@ -143,12 +143,12 @@ const ReportPage = ({showToast}) => {
         </Dialog>
     )
 
-    const priceBodyTemplate = (rowData) => {
-        if(rowData.totalMoneyIncome){
-            return formatCurrency(rowData.totalMoneyIncome);
-        }else{
-            return formatCurrency(rowData.totalMoneyInvested);
-        }
+    const priceBodyTemplateMoneyIncome = (rowData) => {
+        return `$${rowData.totalMoneyIncome}`
+    }
+
+    const priceBodyTemplateMoneyInvested = (rowData) => {
+        return `$${rowData.totalMoneyInvested}`
     }
 
     const AccordionTabContent = ({category}) => (
@@ -166,13 +166,13 @@ const ReportPage = ({showToast}) => {
                 value={category.sellers} 
                 showGridlines 
                 responsiveLayout="scroll"
-                scrollable
+                scrollable={isSmallScreen()?true:false}
                 scrollDirection="horizontal"
             >
                 <Column field="name" header="Nombre" sortable style={{ minWidth: '300px' }}/>
                 <Column field="totalAnimalsSold" header="Animales vendidos" sortable style={{ minWidth: '100px' }}/>
                 <Column field="totalAnimalsNotSold" header="Animales no vendidos" sortable style={{ minWidth: '100px' }}/>
-                <Column field="totalMoneyIncome" body={priceBodyTemplate} header="Dinero generado" sortable style={{ minWidth: '100px' }}/>
+                <Column field="totalMoneyIncome" body={priceBodyTemplateMoneyIncome} header="Dinero generado" sortable style={{ minWidth: '100px' }}/>
             </DataTable>
             <br/>
             {/* Buyers table */}
@@ -182,12 +182,12 @@ const ReportPage = ({showToast}) => {
                     value={category.buyers} 
                     showGridlines 
                     responsiveLayout="scroll"
-                    scrollable
+                    scrollable={isSmallScreen()?true:false}
                     scrollDirection="horizontal"
                 >
                     <Column field="name" header="Nombre" sortable style={{ minWidth: '300px' }}/>
                     <Column field="totalBought" header="Animales comprados" sortable style={{ minWidth: '100px' }}/>
-                    <Column field="totalMoneyInvested" body={priceBodyTemplate} header="Dinero invertido" sortable style={{ minWidth: '100px' }}/>
+                    <Column field="totalMoneyInvested" body={priceBodyTemplateMoneyInvested} header="Dinero invertido" sortable style={{ minWidth: '100px' }}/>
                 </DataTable>
             :
                 <DataTable 
@@ -317,10 +317,10 @@ const ReportPage = ({showToast}) => {
                 {loadingStart?
                     loadingScreen
                 :
-                    null
+                    !isSmallScreen()?mainScreen:null
                 }
             </Card>
-            {<div className="card">{mainScreen}</div>}
+            {isSmallScreen()?<div className="card">{mainScreen}</div>:null}
         </>
     )
 };
