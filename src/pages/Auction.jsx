@@ -54,7 +54,7 @@ const Auction = ({showToast}) => {
     const [animalsOnGround, setAnimalsOnGround] = useState([])
 
     //Item de la lista que estoy queriendo vender en este caso
-    const [editingItem, setEditingItem] = useState({mustWeigh: true});
+    const [editingItem, setEditingItem] = useState();
 
     useEffect(() => {
         setLoadingStart(true)
@@ -99,7 +99,7 @@ const Auction = ({showToast}) => {
     const sellHandler = (animalOnGroundId) => {
         if(!auctionIsFinished){
             setDisplayDialogSell(true)
-            setEditingItem({...editingItem, 'id': animalOnGroundId, 'paymentTerm': 30})
+            setEditingItem({...editingItem, 'id': animalOnGroundId, 'paymentTerm': 30, 'mustWeigh': true})
         }
     }
 
@@ -127,7 +127,7 @@ const Auction = ({showToast}) => {
                         .then(response => {
                             showToast('success','Exito','Se vendieron los animales correctamente')
                             setDisplayDialogSell(false)
-                            setEditingItem({mustWeigh: true})
+                            setEditingItem(null)
                             setRefresh(!refresh)
                         })
                         .catch(error => {
@@ -190,7 +190,7 @@ const Auction = ({showToast}) => {
                 const data = editingItem
                 fetchContext.authAxios.patch(`${url.ANIMALS_ON_GROUND_API}/${editingItem.id}`, data)
                 .then(response => {
-                    showToast('success', 'Exito', `Aminales guardados`)
+                    showToast('success', 'Exito', `Animales guardados`)
                     setRefresh(!refresh)
                     setDisplayDialogEdit(false)
                     setEditingItem(null)
