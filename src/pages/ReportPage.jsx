@@ -161,19 +161,25 @@ const ReportPage = ({showToast}) => {
             <br/>
             <br/>
             {/* Selles table */}
-            <DataTable 
-                header="Vendedores" 
-                value={category.sellers} 
-                showGridlines 
-                responsiveLayout="scroll"
-                scrollable={isSmallScreen()?true:false}
-                scrollDirection="horizontal"
-            >
-                <Column field="name" header="Nombre" sortable style={{ minWidth: '300px' }}/>
-                <Column field="totalAnimalsSold" header="Animales vendidos" sortable style={{ minWidth: '100px' }}/>
-                <Column field="totalAnimalsNotSold" header="Animales no vendidos" sortable style={{ minWidth: '100px' }}/>
-                <Column field="totalMoneyIncome" body={priceBodyTemplateMoneyIncome} header="Dinero generado" sortable style={{ minWidth: '100px' }}/>
-            </DataTable>
+            {category.sellers.length > 0 ?
+                <DataTable 
+                    header="Vendedores" 
+                    value={category.sellers} 
+                    showGridlines 
+                    responsiveLayout="scroll"
+                    scrollable={isSmallScreen()?true:false}
+                    scrollDirection="horizontal"
+                >
+                    <Column field="name" header="Nombre" sortable style={{ minWidth: '300px' }}/>
+                    <Column field="totalAnimalsSold" header="Animales vendidos" sortable style={{ minWidth: '100px' }}/>
+                    <Column field="totalAnimalsNotSold" header="Animales no vendidos" sortable style={{ minWidth: '100px' }}/>
+                    <Column field="totalMoneyIncome" body={priceBodyTemplateMoneyIncome} header="Dinero generado" sortable style={{ minWidth: '100px' }}/>
+                </DataTable>
+            :
+                <DataTable 
+                    header="No hay vendedores"
+                />
+            }
             <br/>
             {/* Buyers table */}
             {category.buyers.length > 0 ?
@@ -211,6 +217,11 @@ const ReportPage = ({showToast}) => {
                         generalInfo.consignees.map((consignee, index) => (
                             <div key={index}>{consignee.name}</div>
                         ))
+                    :
+                        null
+                    }
+                    {generalInfo.consignees && generalInfo.consignees.length === 0 ?
+                        <br/>
                     :
                         null
                     }
