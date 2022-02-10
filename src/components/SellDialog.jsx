@@ -54,7 +54,7 @@ const SellDialog = ({isCreating, acceptHandler, setDisplayDialog, displayDialog,
                 </span>
                 <br/>
                 <div className="p-inputgroup">
-                    <span className="p-inputgroup-addon">$</span>
+                    <span className="p-inputgroup-addon">{editingItem && editingItem.mustWeigh ? `$/Kg` : `$/Cabeza`}</span>
                     <span className="p-float-label">
                         <InputText 
                             id="price" 
