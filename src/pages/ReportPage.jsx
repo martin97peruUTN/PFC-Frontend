@@ -153,11 +153,11 @@ const ReportPage = ({showToast}) => {
 
     const AccordionTabContent = ({category}) => (
         <>
-            <>{`Cantidad de animales vendidos: ${category.totalAnimalsSold}`}</>
+            <><b>{`Cantidad de animales vendidos: `}</b>{`${category.totalAnimalsSold}`}</>
             <br/>
-            <>{`Cantidad de animales no vendidos: ${category.totalAnimalsNotSold}`}</>
+            <><b>{`Cantidad de animales no vendidos: `}</b>{`${category.totalAnimalsNotSold}`}</>
             <br/>
-            <>{`Total de dinero generado: $${category.totalMoneyIncome}`}</>
+            <><b>{`Total de dinero generado: `}</b>{`$${category.totalMoneyIncome}`}</>
             <br/>
             <br/>
             {/* Selles table */}
@@ -205,38 +205,40 @@ const ReportPage = ({showToast}) => {
 
     const generalInfoToShow = (
         <div className="text-lg">
-            <div>{`Numero de Senasa: ${generalInfo.senasaNumber}`}</div>
-            <div>{`Localidad: ${generalInfo.locality}`}</div>
-            <div>{`Fecha: ${parseDateToShow(generalInfo.date)} - ${parseDateTimeToShow(generalInfo.date)}`}</div>
-            <div>{"Participantes:"}</div>
+            <div><b>{`Numero de Senasa: `}</b>{`${generalInfo.senasaNumber}`}</div>
+            <div><b>{`Localidad: `}</b>{`${generalInfo.locality}`}</div>
+            <div><b>{`Fecha: `}</b>{`${parseDateToShow(generalInfo.date)} - ${parseDateTimeToShow(generalInfo.date)}`}</div>
+            <div><b>{"Participantes: "}</b></div>
             {/*Si la pantalla es chica los muestro uno por renglon, sino seguidos separados por comas*/}
-            <>{`Consignatario${generalInfo.consignees && generalInfo.consignees.length>1?"s":""}: `}</>
-            {isSmallScreen() ?
-                <>
-                    {generalInfo.consignees?
-                        generalInfo.consignees.map((consignee, index) => (
-                            <div key={index}>{consignee.name}</div>
-                        ))
-                    :
-                        null
-                    }
-                    {generalInfo.consignees && generalInfo.consignees.length === 0 ?
-                        <br/>
-                    :
-                        null
-                    }
-                </>
+            {generalInfo.consignees && generalInfo.consignees.length===0 ?
+                <div className="ml-4"><b>{`Sin consignatarios`}</b></div>
             :
-                <>
-                    <>{generalInfo.consignees?arrayToStringSeparatedByComma(generalInfo.consignees):null}</>
-                    <br/>
-                </>
+                <div className="ml-4">
+                    <b>{`Consignatario${generalInfo.consignees && generalInfo.consignees.length>1?"s":""}: `}</b>
+                    {isSmallScreen() ?
+                        <>
+                            {generalInfo.consignees?
+                                generalInfo.consignees.map((consignee, index) => (
+                                    <div key={index}>{consignee.name}</div>
+                                ))
+                            :
+                                null
+                            }
+                        </>
+                    :
+                        <>
+                            <>{generalInfo.consignees?arrayToStringSeparatedByComma(generalInfo.consignees):null}</>
+                            <br/>
+                        </>
+                    }
+                </div>
             }
+            
             {/*Si la pantalla es chica los muestro uno por renglon, sino seguidos separados por comas*/}
             {generalInfo.assistants && generalInfo.assistants.length===0?
-                <div>{"Sin asistentes"}</div>
+                <div className="ml-4"><b>{"Sin asistentes"}</b></div>
             :
-                <>
+                <div className="ml-4">
                     <>{`Asistente${generalInfo.assistants && generalInfo.assistants.length>1?"s":""}: `}</>
                     {isSmallScreen() ?
                         <>
@@ -251,13 +253,13 @@ const ReportPage = ({showToast}) => {
                     :
                         generalInfo.assistants?arrayToStringSeparatedByComma(generalInfo.assistants):null
                     }
-                </>
+                </div>
             }
             
-            <div>{`Cantidad de vendedores: ${generalInfo.totalSeller}`}</div>
-            <div>{`Cantidad de compradores: ${generalInfo.totalBuyers}`}</div>
-            <div>{`Cantidad de lotes (por corral) que entraron: ${generalInfo.totalBatchesForSell}`}</div>
-            <div>{`Lotes (por corral) totalmente vendidos: ${generalInfo.totalCompletelySoldBatches}`}</div>
+            <div><b>{`Cantidad de vendedores: `}</b>{`${generalInfo.totalSeller}`}</div>
+            <div><b>{`Cantidad de compradores: `}</b>{`${generalInfo.totalBuyers}`}</div>
+            <div><b>{`Cantidad de lotes (por corral) que entraron: `}</b>{`${generalInfo.totalBatchesForSell}`}</div>
+            <div><b>{`Lotes (por corral) totalmente vendidos: `}</b>{`${generalInfo.totalCompletelySoldBatches}`}</div>
         </div>
     )
 
