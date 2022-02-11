@@ -51,7 +51,7 @@ const ReportPage = ({showToast}) => {
                 setActiveIndexArray(activeIndexArray.push(0))
             })
             .catch(error => {
-                showToast('error', 'Error', error.response.data.errorMsg)
+                showToast('warn', 'Error', error.response.data.errorMsg)
                 history.goBack();
             })
         }
