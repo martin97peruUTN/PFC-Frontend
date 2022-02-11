@@ -136,9 +136,9 @@ const FinalBatches = ({showToast}) => {
 
     const saveWeighHandler = () => {
         if(!editingItem.weight){
-            showToast('error', 'Error', 'Debe ingresar un peso')
+            showToast('warn', 'Error', 'Debe ingresar un peso')
         }else if(editingItem.weight<=0){
-            showToast('error', 'Error', 'El peso debe ser mayor a 0')
+            showToast('warn', 'Error', 'El peso debe ser mayor a 0')
         }else{
             fetchContext.authAxios.patch(`${url.SOLD_BATCH_API}/${editingItem.id}`, 
             {
