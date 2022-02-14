@@ -27,7 +27,7 @@ const ReportPage = ({showToast}) => {
 
     const [loadingStart, setLoadingStart] = useState(false)
 
-    const [displayPrintDialog, setDisplayPrintDialog] = useState(false)
+    const [displayDownloadPdfDialog, setDisplayDownloadPdfDialog] = useState(false)
     const [wantsCategoryInfoInPdf, setWantsCategoryInfoInPdf] = useState(true)
     const [wantsSoldBatchListInPdf, setWantsSoldBatchListInPdf] = useState(true)
 
@@ -58,7 +58,7 @@ const ReportPage = ({showToast}) => {
     },[])
 
     const downloadReportPdf = () => {
-        fetchContext.authAxios.get(`${url.PDF_API}/report/${history.location.state.auctionId}?withCategoryInfo=${wantsCategoryInfoInPdf}&withSoldBatchList=${wantsSoldBatchListInPdf}`)
+        fetchContext.authAxios.get(`${url.PDF_API}/report/${history.location.state.auctionId}?withCategoriesInfo=${wantsCategoryInfoInPdf}&withSoldBatches=${wantsSoldBatchListInPdf}`)
         .then(res => {
             /* Codigo para imprimir pdf
             window.open("").document.write(
@@ -79,7 +79,7 @@ const ReportPage = ({showToast}) => {
             showToast('error', 'Error', error.response.data.errorMsg)
         })
         .finally(() => {
-            setDisplayPrintDialog(false)
+            setDisplayDownloadPdfDialog(false)
         })
     }
 
@@ -92,10 +92,10 @@ const ReportPage = ({showToast}) => {
                 onClick={() => history.goBack()}
             />
             <Button 
-                label="Imprimir" 
-                icon="pi pi-print" 
+                label="Descargar" 
+                icon="pi pi-download" 
                 className="btn btn-primary"
-                onClick={() => setDisplayPrintDialog(true)}
+                onClick={() => setDisplayDownloadPdfDialog(true)}
             />
         </div>
     )
@@ -107,38 +107,35 @@ const ReportPage = ({showToast}) => {
             command: () => history.goBack()
         },
         {
-            icon: "pi pi-print",
-            label: "Imprimir",
-            command: () => setDisplayPrintDialog(true)
+            icon: "pi pi-download",
+            label: "Descargar",
+            command: () => setDisplayDownloadPdfDialog(true)
         }
     ]
 
-    const printDialog = (
+    const downloadPdfDialog = (
         <Dialog
-            header="Imprimir"
-            visible={displayPrintDialog}
+            header="Descargar PDF"
+            visible={displayDownloadPdfDialog}
             className="w-11 md:w-6"
-            onHide={() => setDisplayPrintDialog(false)}
+            onHide={() => setDisplayDownloadPdfDialog(false)}
             footer={
                 <div>
-                    <Button label="Cancelar" icon="pi pi-times" onClick={() => setDisplayPrintDialog(false)} className="p-button-danger" />
+                    <Button label="Cancelar" icon="pi pi-times" onClick={() => setDisplayDownloadPdfDialog(false)} className="p-button-danger" />
                     <Button label="Aceptar" icon="pi pi-check" onClick={() => downloadReportPdf()} autoFocus className="btn btn-primary" />
                 </div>
             }
         >
-            <label>Se generará un archivo con la información general del remate</label>
-            <br/><br/>
-            <label>Agregar la informacion por categoria</label>
-            <br/><br/>
+            <label>Se generará un archivo con la <b>información general</b> del remate.</label>
+            <br/>
+            <br/>
             <div className="field-checkbox">
                 <Checkbox inputId="categoryInfoPdf" checked={wantsCategoryInfoInPdf} onChange={e => setWantsCategoryInfoInPdf(e.checked)} />
-                <label htmlFor="categoryInfoPdf">{wantsCategoryInfoInPdf ? 'Si' : 'No'}</label>
+                <label htmlFor="categoryInfoPdf">{wantsCategoryInfoInPdf ? 'Agregar la informacion por categoria' : 'No agregar la informacion por categoria'}</label>
             </div>
-            <label>Agregar un listado con los lotes vendidos</label>
-            <br/><br/>
             <div className="field-checkbox">
                 <Checkbox inputId="soldBatchListPdf" checked={wantsSoldBatchListInPdf} onChange={e => setWantsSoldBatchListInPdf(e.checked)} />
-                <label htmlFor="soldBatchListPdf">{wantsSoldBatchListInPdf ? 'Si' : 'No'}</label>
+                <label htmlFor="soldBatchListPdf">{wantsSoldBatchListInPdf ? 'Agregar un listado de los lotes vendidos' : 'No agregar un listado de los lotes vendidos'}</label>
             </div>
         </Dialog>
     )
@@ -302,7 +299,7 @@ const ReportPage = ({showToast}) => {
     return (
         <>
             <ScrollTop />
-            {printDialog}
+            {downloadPdfDialog}
             <Menu 
                 className='w-auto' 
                 model={menuItems} 
