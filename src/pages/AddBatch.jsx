@@ -70,6 +70,9 @@ const AddBatch = ({showToast}) => {
                 setDteNumber(response.data.dteNumber)
                 setAnimalsOnGroundList(response.data.animalsOnGround)
                 setLoadingStart(false)
+                if(!response.data.client.provenances.some(prov => prov.id === response.data.provenance.id)){
+                    showToast('info', 'Importante', 'La procedencia de este lote fue eliminada')
+                }
             })
             .catch(error => {
                 showToast('error', 'Error', error.response.data.errorMsg)

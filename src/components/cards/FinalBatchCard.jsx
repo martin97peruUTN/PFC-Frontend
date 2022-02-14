@@ -100,9 +100,9 @@ const FinalBatchCard = (props) => {
                         :
                             null
                         }
-                        {props.weight?//Depende si debe pesarse, y si debe, depende de si ya fue pesado o no
+                        {props.mustWeigh?//Depende si debe pesarse, y si debe, depende de si ya fue pesado o no
                             <div className="mb-1">
-                                {`Peso: ${props.weight}`}
+                                <>{`Peso: `}{props.weight?`${props.weight} Kg`:<b>{`Falta pesar`}</b>}</>
                             </div>
                         :
                             null

@@ -54,7 +54,7 @@ const Auction = ({showToast}) => {
     const [animalsOnGround, setAnimalsOnGround] = useState([])
 
     //Item de la lista que estoy queriendo vender en este caso
-    const [editingItem, setEditingItem] = useState({mustWeigh: true});
+    const [editingItem, setEditingItem] = useState();
 
     useEffect(() => {
         setLoadingStart(true)
@@ -99,7 +99,7 @@ const Auction = ({showToast}) => {
     const sellHandler = (animalOnGroundId) => {
         if(!auctionIsFinished){
             setDisplayDialogSell(true)
-            setEditingItem({...editingItem, 'id': animalOnGroundId, 'paymentTerm': 30})
+            setEditingItem({...editingItem, 'id': animalOnGroundId, 'paymentTerm': 30, 'mustWeigh': true})
         }
     }
 
@@ -127,7 +127,7 @@ const Auction = ({showToast}) => {
                         .then(response => {
                             showToast('success','Exito','Se vendieron los animales correctamente')
                             setDisplayDialogSell(false)
-                            setEditingItem({mustWeigh: true})
+                            setEditingItem(null)
                             setRefresh(!refresh)
                         })
                         .catch(error => {
@@ -190,7 +190,7 @@ const Auction = ({showToast}) => {
                 const data = editingItem
                 fetchContext.authAxios.patch(`${url.ANIMALS_ON_GROUND_API}/${editingItem.id}`, data)
                 .then(response => {
-                    showToast('success', 'Exito', `Aminales guardados`)
+                    showToast('success', 'Exito', `Animales guardados`)
                     setRefresh(!refresh)
                     setDisplayDialogEdit(false)
                     setEditingItem(null)
@@ -204,7 +204,7 @@ const Auction = ({showToast}) => {
         }
     }
 
-    const downloadOrderPdf = (auctionId) => {
+    const printOrderPdf = (auctionId) => {
         fetchContext.authAxios.get(`${url.PDF_API}/starting-order/${auctionId}`, {
             headers: {
                 'Content-Type':'application/pdf',
@@ -212,6 +212,7 @@ const Auction = ({showToast}) => {
             }
         })
         .then(res => {
+            /* Codigo para descargar el pdf
             var a = window.document.createElement('a');
             a.href = `data:application/octet-stream;charset=utf-8;base64,${res.data}`
             a.download = "OrdenDeSalida.pdf";
@@ -219,6 +220,12 @@ const Auction = ({showToast}) => {
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
+
+            Codigo para imprimir el pdf */
+            window.open("").document.write(
+                "<iframe width='100%' height='100%' src='data:application/pdf;base64, " +
+                encodeURI(res.data) + "'></iframe>"
+            )
         })
         .catch(err => {
             showToast('error', 'Error', 'No se pudo descargar el PDF')
@@ -283,7 +290,7 @@ const Auction = ({showToast}) => {
         {
             label: 'Orden de salida',
             icon: 'pi pi-fw pi-sort-amount-down-alt',
-            command: () => downloadOrderPdf(auctionId)
+            command: () => printOrderPdf(auctionId)
         },
         {separator: true},
         {
@@ -295,10 +302,14 @@ const Auction = ({showToast}) => {
                 }
             )
         },
-        {//TODO cambiar urls cuando las tengamos (url o command: () => hacerAlgo())
+        {
             label: 'Resumen',
             icon: 'pi pi-fw pi-book',
-            url: url.HOME
+            command: () => history.push(url.REPORT, 
+                {
+                    auctionId: auctionId
+                }
+            )
         }
     )
     if(miscFunctions.isSmallScreen()){
