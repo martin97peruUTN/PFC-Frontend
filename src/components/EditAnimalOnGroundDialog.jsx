@@ -34,7 +34,7 @@ const EditAnimalOnGroundDialog = ({acceptHandler, setDisplayDialog, displayDialo
             }
             >
                 <br/>
-                <span className="p-float-label">
+                <span className="p-float-label mb-4">
                     <AutoComplete 
                         id='categoryAutocompleteForm'
                         className='w-full'
@@ -48,7 +48,6 @@ const EditAnimalOnGroundDialog = ({acceptHandler, setDisplayDialog, displayDialo
                     />
                     <label htmlFor="categoryAutocompleteForm">Categoria</label>
                 </span>
-                <br/>
                 <span className="p-float-label">
                     <InputText 
                         id="amount" 

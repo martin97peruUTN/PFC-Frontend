@@ -154,8 +154,7 @@ const AddParticipant = ({showToast, ...props}) => {
                 </div>
             }
             >
-                <br/>
-                <span className="p-float-label">
+                <span className="p-float-label mt-4">
                     <AutoComplete 
                         id='userAutocompleteForm'
                         className='w-full'

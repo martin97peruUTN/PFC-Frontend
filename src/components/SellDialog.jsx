@@ -36,8 +36,7 @@ const SellDialog = ({isCreating, acceptHandler, setDisplayDialog, displayDialog,
                 </div>
             }
             >
-                <br/>
-                <span className="p-float-label">
+                <span className="p-float-label my-4">
                     <AutoComplete 
                         id='buyerAutocompleteForm'
                         className='w-full'
@@ -52,8 +51,7 @@ const SellDialog = ({isCreating, acceptHandler, setDisplayDialog, displayDialog,
                     />
                     <label htmlFor="buyerAutocompleteForm">Comprador</label>
                 </span>
-                <br/>
-                <div className="p-inputgroup">
+                <div className="p-inputgroup mb-4">
                     <span className="p-inputgroup-addon">{editingItem && editingItem.mustWeigh ? `$/Kg` : `$/Cabeza`}</span>
                     <span className="p-float-label">
                         <InputText 
@@ -66,8 +64,7 @@ const SellDialog = ({isCreating, acceptHandler, setDisplayDialog, displayDialog,
                         <label htmlFor="price">Precio</label>
                     </span>
                 </div>
-                <br/>
-                <span className="p-float-label">
+                <span className="p-float-label mb-4">
                     <InputText 
                         id="amount" 
                         className='w-full' 
@@ -77,8 +74,7 @@ const SellDialog = ({isCreating, acceptHandler, setDisplayDialog, displayDialog,
                     />
                     <label htmlFor="amount">Cantidad</label>
                 </span>
-                <br/>
-                <div className="p-inputgroup">
+                <div className="p-inputgroup mb-4">
                     <span className="p-float-label">
                         <InputText 
                             id="term" 
@@ -91,7 +87,6 @@ const SellDialog = ({isCreating, acceptHandler, setDisplayDialog, displayDialog,
                     </span>
                     <span className="p-inputgroup-addon">dias</span>
                 </div>
-                <br/>
                 <Button 
                     className="btn btn-primary" 
                     icon={editingItem && editingItem.mustWeigh?"pi pi-check-circle":"pi pi-times-circle"}

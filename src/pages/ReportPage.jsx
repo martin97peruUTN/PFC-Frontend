@@ -131,11 +131,11 @@ const ReportPage = ({showToast}) => {
             <br/>
             <div className="field-checkbox">
                 <Checkbox inputId="categoryInfoPdf" checked={wantsCategoryInfoInPdf} onChange={e => setWantsCategoryInfoInPdf(e.checked)} />
-                <label htmlFor="categoryInfoPdf">{wantsCategoryInfoInPdf ? 'Agregar la informacion por categoria' : 'No agregar la informacion por categoria'}</label>
+                <label htmlFor="categoryInfoPdf">{'Incluir informacion por categoria'}</label>
             </div>
             <div className="field-checkbox">
                 <Checkbox inputId="soldBatchListPdf" checked={wantsSoldBatchListInPdf} onChange={e => setWantsSoldBatchListInPdf(e.checked)} />
-                <label htmlFor="soldBatchListPdf">{wantsSoldBatchListInPdf ? 'Agregar un listado de los lotes vendidos' : 'No agregar un listado de los lotes vendidos'}</label>
+                <label htmlFor="soldBatchListPdf">{'Incluir un listado de los lotes vendidos'}</label>
             </div>
         </Dialog>
     )
