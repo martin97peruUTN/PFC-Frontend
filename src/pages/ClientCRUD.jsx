@@ -128,8 +128,8 @@ const ClientCRUD = ({showToast}) => {
                 showToast('success', 'Cliente guardado', 'El cliente fue guardado correctamente')
                 history.goBack();
             })
-            .catch(() => {
-                showToast('error', 'Error', 'No se pudo guardar el cliente')
+            .catch((error) => {
+                showToast('error', 'Error', error.response.data.errorMsg)
                 setLoadingAccept(false)
             })
         }else{
@@ -139,8 +139,8 @@ const ClientCRUD = ({showToast}) => {
                 showToast('success', 'Cliente guardado', 'El cliente fue guardado correctamente')
                 history.goBack();
             })
-            .catch(() => {
-                showToast('error', 'Error', 'No se pudo guardar el cliente')
+            .catch((error) => {
+                showToast('error', 'Error', error.response.data.errorMsg)
                 setLoadingAccept(false)
             })
         }
@@ -164,8 +164,8 @@ const ClientCRUD = ({showToast}) => {
             showToast('success', 'Exito', 'El cliente ha sido eliminado')
             history.goBack();
         })
-        .catch(() => {
-            showToast('error', 'Error', 'No se pudo eliminar el cliente')
+        .catch((error) => {
+            showToast('error', 'Error', error.response.data.errorMsg)
         })
     }
 
