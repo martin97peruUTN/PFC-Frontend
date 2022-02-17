@@ -236,7 +236,7 @@ const ReportPage = ({showToast}) => {
                 <div className="ml-4"><b>{"Sin asistentes"}</b></div>
             :
                 <div className="ml-4">
-                    <>{`Asistente${generalInfo.assistants && generalInfo.assistants.length>1?"s":""}: `}</>
+                    <b>{`Asistente${generalInfo.assistants && generalInfo.assistants.length>1?"s":""}: `}</b>
                     {isSmallScreen() ?
                         <>
                             {generalInfo.assistants?
