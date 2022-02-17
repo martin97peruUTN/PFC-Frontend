@@ -17,11 +17,11 @@ const AuctionCard = props => {
             key = {props.id}
             content = {
                 <div>
-                    {`${isSmallScreen()?'N° Senasa':'Numero de Senasa'}: ${props.senasaNumber}`}
+                    <b>{`${isSmallScreen()?'N° Senasa: ':'Numero de Senasa: '}`}</b>{props.senasaNumber}
                     <br/>
-                    {`Fecha: ${parseDateToShow(props.date)} ${parseDateTimeToShow(props.date)}`}
+                    <b>{`Fecha: `}</b>{`${parseDateToShow(props.date)} ${parseDateTimeToShow(props.date)}`}
                     <br/>
-                    {`Lugar: ${props.locality}`}
+                    <b>{`Lugar: `}</b>{`${props.locality}`}
                 </div>
             }
             buttons = {
