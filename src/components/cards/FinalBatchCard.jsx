@@ -77,7 +77,7 @@ const FinalBatchCard = (props) => {
                 key = {props.id}
                 content = {
                     <div className={isSmallScreen()?"text-xl":"text-2xl"}>
-                        <b>{`Lote numero: `}</b>{`${props.id}`}
+                        <b>{`Numero de lote: `}</b>{`${props.id}`}
                         {props.buyer?//Solo los vendidos tienen comprador
                             <div className="mb-1">
                                 <b>{`Comprador: `}</b>{`${props.buyer}`}
