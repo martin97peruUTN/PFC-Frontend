@@ -19,7 +19,7 @@ const AuctionCard = props => {
                 <div>
                     <b>{`${isSmallScreen()?'N° Senasa: ':'Numero de Senasa: '}`}</b>{props.senasaNumber}
                     <br/>
-                    <b>{`Fecha: `}</b>{`${parseDateToShow(props.date)} ${parseDateTimeToShow(props.date)}`}
+                    <b>{`Fecha: `}</b>{`${parseDateToShow(props.date)} - ${parseDateTimeToShow(props.date)}`}
                     <br/>
                     <b>{`Lugar: `}</b>{`${props.locality}`}
                 </div>
