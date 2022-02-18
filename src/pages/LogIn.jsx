@@ -46,7 +46,7 @@ const LogIn = ({showToast}) => {
                     showToast('error', 'Error', 'Usuario o contraseña incorrecto, vuelva a intentarlo')
                     setLoading(false);
                 }else{
-                    showToast('error', 'Error', 'No se puedo conectar con el servidor')
+                    showToast('error', 'Error', 'No se pudo conectar con el servidor')
                     setLoading(false);
                 }
             })
