@@ -99,13 +99,13 @@ const FinalBatches = ({showToast}) => {
     useEffect(() => {
         const {auctionId} = history.location.state
         const baseURL = process.env.REACT_APP_API_URL.replace('/api', '')
-        const socket = SockJS(`${baseURL}/payroll`); // <3>
+        const socket = SockJS(`${baseURL}/websocket`); // <3>
         const stompClient = Stomp.over(socket);
         var headers = {
             "Authorization": `Bearer ${localStorage.getItem('token')}`
         }
         stompClient.connect(headers, function(frame) {
-            stompClient.subscribe(`/topic/newSoldBatch/${auctionId}`, message => refreshData(message))
+            stompClient.subscribe(`/topic/sold-batch/${auctionId}`, message => refreshData(message))
         }, function(frame) {
         });
         return () => {
