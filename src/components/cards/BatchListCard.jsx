@@ -20,11 +20,11 @@ const BatchListCard = props => {
             key = {props.id}
             content = {
                 <>
-                    <>{`Corral ${props.corralNumber}`}</>
+                    <><b>{`Corral: `}</b>{`${props.corralNumber}`}</>
                     <br/>
                     {props.dteNumber?
                         <>
-                            <>{`DTe: ${props.dteNumber}`}</>
+                            <><b>{`DTe: `}</b>{`${props.dteNumber}`}</>
                             <br/>
                         </>
                     :
