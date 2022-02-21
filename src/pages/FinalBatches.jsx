@@ -214,7 +214,7 @@ const FinalBatches = ({showToast}) => {
                 setBillOption(null)
                 setAmountOfBillCopies(4)
             })
-            .catch(error => {//TODO ver si cambio este error o no
+            .catch(error => {
                 showToast('error','Error',error.response.data.errorMsg)
             })
         }
@@ -298,8 +298,7 @@ const FinalBatches = ({showToast}) => {
                     setRefresh(!refresh)
                 })
                 .catch(error => {
-                    //TODO ver si lo cambio o no
-                    showToast('error', 'Error', 'No se pudo finalizar el remate')
+                    showToast('error', 'Error', error.response.data.errorMsg)
                 })
             }
         });
