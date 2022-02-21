@@ -105,8 +105,7 @@ const FinalBatches = ({showToast}) => {
             "Authorization": `Bearer ${localStorage.getItem('token')}`
         }
         stompClient.connect(headers, function(frame) {
-            //TODO Agregar /${auctionId} para que solo se escuche el remate en cuestion
-            stompClient.subscribe(`/topic/newSoldBatch`, message => refreshData(message))
+            stompClient.subscribe(`/topic/newSoldBatch/${auctionId}`, message => refreshData(message))
         }, function(frame) {
         });
         return () => {
