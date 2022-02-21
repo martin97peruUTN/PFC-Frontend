@@ -84,11 +84,11 @@ const SortAnimalsOnGround = ({showToast}) => {
 
     const itemTemplateCard = (item, isDragging) => (
         <div className={isDragging? "background-dragging sort-card shadow-2" : "background-not-dragging sort-card shadow-2"}>
-            {`Corral: ${item.corralNumber} - ${item.category.name}`}
+            <b>{`Corral: `}</b>{`${item.corralNumber} - ${item.category.name}`}
             <br/>
-            {`Vendedor: ${item.seller.name}`}
+            <b>{`Vendedor: `}</b>{`${item.seller.name}`}
             <br/>
-            {`Animales totales: ${item.amount} - Vendidos: ${item.soldAmount}`}
+            <b>{`Animales totales: `}</b>{`${item.amount} - Vendidos: ${item.soldAmount}`}
         </div>
     )
 
