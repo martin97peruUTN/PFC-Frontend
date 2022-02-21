@@ -17,25 +17,27 @@ const AuctionCard = props => {
             key = {props.id}
             content = {
                 <div>
-                    {`${isSmallScreen()?'N° Senasa':'Numero de Senasa'}: ${props.senasaNumber}`}
+                    <b>{`${isSmallScreen()?'N° Senasa: ':'Numero de Senasa: '}`}</b>{props.senasaNumber}
                     <br/>
-                    {`Fecha: ${parseDateToShow(props.date)} ${parseDateTimeToShow(props.date)}`}
+                    <b>{`Fecha: `}</b>{`${parseDateToShow(props.date)} - ${parseDateTimeToShow(props.date)}`}
                     <br/>
-                    {`Lugar: ${props.locality}`}
+                    <b>{`Lugar: `}</b>{`${props.locality}`}
                 </div>
             }
             buttons = {
                 //Si no es admin o no esta mirando sus remates (index = 0), no muestro los botones
                 authContext.isAdmin() || props.tabViewActiveIndex === 0 ?
                 <div className={CARD_TWO_COLUMNS_BUTTON_DIV}>
-                    {!props.isOnHistory? 
+                    {!props.isOnHistory && !isSmallScreen()? 
                     //true si esta siendo usada en el historial de remates
                     //false si esta siendo usada en el home
+                    //Si es smallScreen no muestro este boton
                         <Button className={CARD_TWO_COLUMNS_BUTTON} icon="pi pi-plus-circle" onClick={()=> props.addBatchHandler(props.id)} label="Agregar lote"></Button>
                     :
                         null
                     }
-                    <Button className="btn btn-primary" icon="pi pi-eye" onClick={() => props.auctionScreenHandler(props.id)} label="Ver"></Button>
+                    <Button className={CARD_TWO_COLUMNS_BUTTON} icon="pi pi-tags" onClick={() => props.auctionScreenHandler(props.id)} label="Venta"></Button>
+                    <Button className="btn btn-primary" icon="pi pi-shopping-cart" onClick={() => props.soldBatchesHandler(props.id)} label="Lotes vendidos"></Button>
                 </div>
                 :
                 null

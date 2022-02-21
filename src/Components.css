@@ -124,3 +124,12 @@ body {
     background-color: var(--light) !important;
     opacity: 0.8;
 }
+.p-datatable-header {
+    background-color: var(--light) !important;
+    color: var(--text-primary) !important;
+}
+
+.p-accordion-header-link {
+    background-color: var(--primary) !important;
+    color: var(--text-primary) !important;
+}

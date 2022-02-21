@@ -35,6 +35,7 @@ import FinalBatches from "./pages/FinalBatches";
 import SortAnimalsOnGround from "./pages/SortAnimalsOnGround";
 import BatchList from "./pages/BatchList";
 import AuctionHistory from "./pages/AuctionHistory";
+import ReportPage from "./pages/ReportPage";
 
 const UnauthenticatedRoutes = ({showToast}) => (
   <div className="mx-3 my-7 md:mx-6">
@@ -137,6 +138,9 @@ function App() {
       </AuthenticatedRoute>
       <AuthenticatedRoute exact path={url.FINAL_BATCHES}>
         <FinalBatches showToast={showToast}/>
+      </AuthenticatedRoute>
+      <AuthenticatedRoute exact path={url.REPORT}>
+        <ReportPage showToast={showToast}/>
       </AuthenticatedRoute>
 
       <AuthenticatedRoute exact path={url.CLIENT_CRUD}>

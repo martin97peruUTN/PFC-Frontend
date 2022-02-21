@@ -97,6 +97,7 @@ const FinalBatches = ({showToast}) => {
     },[tabViewActiveIndex, paginatorFirst, paginatorRows, paginatorPage, refresh, message])
 
     useEffect(() => {
+        const {auctionId} = history.location.state
         const baseURL = process.env.REACT_APP_API_URL.replace('/api', '')
         const socket = SockJS(`${baseURL}/payroll`); // <3>
         const stompClient = Stomp.over(socket);
@@ -104,10 +105,8 @@ const FinalBatches = ({showToast}) => {
             "Authorization": `Bearer ${localStorage.getItem('token')}`
         }
         stompClient.connect(headers, function(frame) {
-            //consoole.log(frame)
-            stompClient.subscribe('/topic/newSoldBatch', message => refreshData(message))
+            stompClient.subscribe(`/topic/newSoldBatch/${auctionId}`, message => refreshData(message))
         }, function(frame) {
-            //consoole.log(frame)
         });
         return () => {
             stompClient.disconnect();
@@ -136,9 +135,9 @@ const FinalBatches = ({showToast}) => {
 
     const saveWeighHandler = () => {
         if(!editingItem.weight){
-            showToast('error', 'Error', 'Debe ingresar un peso')
+            showToast('warn', 'Error', 'Debe ingresar un peso')
         }else if(editingItem.weight<=0){
-            showToast('error', 'Error', 'El peso debe ser mayor a 0')
+            showToast('warn', 'Error', 'El peso debe ser mayor a 0')
         }else{
             fetchContext.authAxios.patch(`${url.SOLD_BATCH_API}/${editingItem.id}`, 
             {
@@ -215,7 +214,7 @@ const FinalBatches = ({showToast}) => {
                 setBillOption(null)
                 setAmountOfBillCopies(4)
             })
-            .catch(error => {//TODO ver si cambio este error o no
+            .catch(error => {
                 showToast('error','Error',error.response.data.errorMsg)
             })
         }
@@ -299,8 +298,7 @@ const FinalBatches = ({showToast}) => {
                     setRefresh(!refresh)
                 })
                 .catch(error => {
-                    //TODO ver si lo cambio o no
-                    showToast('error', 'Error', 'No se pudo finalizar el remate')
+                    showToast('error', 'Error', error.response.data.errorMsg)
                 })
             }
         });
@@ -364,10 +362,10 @@ const FinalBatches = ({showToast}) => {
                 onClick={() => history.push(url.AUCTION, {auctionId: auctionId})}
             />
             <Button 
-                icon="pi pi-file"
+                icon="pi pi-book"
                 label="Resumen"
                 className="btn btn-primary mr-3"
-                //TODO onClick={} proximamente
+                onClick={() => history.push(url.REPORT, {auctionId: auctionId})}
             />
             {(authContext.isAdmin() || authContext.isConsignee()) && !auctionIsFinished?
                 <Button 
@@ -399,9 +397,9 @@ const FinalBatches = ({showToast}) => {
             command: () => history.push(url.AUCTION, {auctionId: auctionId}),
         },
         {
-            icon: "pi pi-file",
+            icon: "pi pi-book",
             label: "Resumen",
-            //TODO command: () => {} proximamente
+            command: () => history.push(url.REPORT, {auctionId: auctionId})
         }
     ]
     if((authContext.isAdmin() || authContext.isConsignee()) && !auctionIsFinished){

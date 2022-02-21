@@ -62,6 +62,10 @@ const AuctionHistory = ({showToast}) => {
     }
 
     const auctionScreenHandler = (auctionId) => {
+        history.push(url.AUCTION, {auctionId: auctionId})
+    }
+
+    const soldBatchesHandler = (auctionId) => {
         history.push(url.FINAL_BATCHES, {auctionId: auctionId})
     }
 
@@ -81,6 +85,7 @@ const AuctionHistory = ({showToast}) => {
             tabViewActiveIndex={0}
             isOnHistory={true}
             auctionScreenHandler={auctionScreenHandler}
+            soldBatchesHandler={soldBatchesHandler}
         />
     ))
 

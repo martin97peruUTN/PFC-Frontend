@@ -16,9 +16,9 @@ const UserCard = props => {
             title = {`${props.lastname} ${props.name}`}
             content = {
                 <div>
-                    {`Usuario: ${props.username}`}
+                    <b>{`Usuario: `}</b>{`${props.username}`}
                     <br/>
-                    {`Rol: ${props.rol}`}
+                    <b>{`Rol: `}</b>{`${props.rol}`}
                 </div>
             }
             buttons = {

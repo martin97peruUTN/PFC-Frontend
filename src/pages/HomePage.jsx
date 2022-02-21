@@ -70,6 +70,13 @@ const HomePage = ({showToast}) => {
         }
     }
 
+    const soldBatchesHandler = (auctionId) => {
+        //Este if es por las dudas nomas, para asegurar, porque igual no se muestan los botones
+        if(authContext.isAdmin() || tabViewActiveIndex === 0){
+            history.push(url.FINAL_BATCHES, {auctionId: auctionId})
+        }
+    }
+
     const noAuctionYetMessage = (
         <div className="text-2xl flex justify-content-center">No hay remates aún</div>
     )
@@ -85,6 +92,7 @@ const HomePage = ({showToast}) => {
             tabViewActiveIndex={tabViewActiveIndex}
             addBatchHandler={addBatchHandler}
             auctionScreenHandler={auctionScreenHandler}
+            soldBatchesHandler={soldBatchesHandler}
             isOnHistory={false}
         />
     ))

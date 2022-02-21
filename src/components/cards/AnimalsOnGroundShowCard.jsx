@@ -47,21 +47,21 @@ const AnimalsOnGroundShowCard = (props) => {
                 content = {
                     isSmallScreen()?
                     <div>
-                        {`Corral: ${props.corralNumber} - ${props.category}`}
+                        <b>{`Corral: `}</b>{`${props.corralNumber} - ${props.category}`}
                         <br/>
-                        {`Vendedor: ${props.seller}`}
+                        <b>{`Vendedor: `}</b>{`${props.seller}`}
                         <br/>
-                        {`Animales totales: ${props.amount}`}
+                        <b>{`Animales totales: `}</b>{`${props.amount}`}
                         <br/>
-                        {`Vendidos: ${props.soldAmount}`}
+                        <b>{`Vendidos: `}</b>{`${props.soldAmount}`}
                     </div>
                     :
                     <div>
-                        {`Corral: ${props.corralNumber} - Categoria: ${props.category}`}
+                        <b>{`Corral: `}</b>{`${props.corralNumber}`}<b>{` - Categoria: `}</b>{`${props.category}`}
                         <br/>
-                        {`Vendedor: ${props.seller}`}
+                        <b>{`Vendedor: `}</b>{`${props.seller}`}
                         <br/>
-                        {`Animales totales: ${props.amount} - Vendidos: ${props.soldAmount}`}
+                        <b>{`Animales totales: `}</b>{`${props.amount}`}<b>{` - Vendidos: `}</b>{`${props.soldAmount}`}
                     </div>
                 }
                 buttons = {

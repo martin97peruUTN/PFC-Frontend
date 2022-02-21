@@ -46,3 +46,11 @@ export const parseDateTimeToShow = (dateJson) => {
 export const isSmallScreen = () =>{
     return window.innerWidth<=constant.SMALL_SCREEN_BREAKPOINT
 }
+
+export const arrayToStringSeparatedByComma = (array) => { 
+    let returnArray = []
+    array.forEach(element => {
+        returnArray.push(element.name)
+    })
+    return returnArray.join(', ')
+}
