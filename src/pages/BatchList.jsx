@@ -27,6 +27,8 @@ const BatchList = ({showToast}) => {
 
     const [auctionId, setAuctionId] = useState()
 
+    const [auctionIsFinished, setAuctionIsFinished] = useState(false)
+
     //Listado de batches
     const [batchList, setBatchList] = useState([])
 
@@ -39,10 +41,13 @@ const BatchList = ({showToast}) => {
             const {auctionId} = history.location.state
             setAuctionId(auctionId)
             let fetchURL = `${url.AUCTION_BATCH_API}/by-auction/${auctionId}?limit=${paginatorRows}&page=${paginatorPage}`
-            fetchContext.authAxios.get(fetchURL)
-            .then(res => {
+            const p1 = fetchContext.authAxios.get(fetchURL)
+            const p2 = fetchContext.authAxios.get(url.AUCTION_API+'/'+auctionId)
+            Promise.all([p1, p2]).then(values => {
+                const res = values[0]
                 setBatchList(res.data.content)
                 setTotalPages(res.data.totalPages)
+                setAuctionIsFinished(values[1].data.finished)
                 setLoadingStart(false)
             })
             .catch(err => {
@@ -74,6 +79,7 @@ const BatchList = ({showToast}) => {
             corralNumber={batch.corralNumber}
             dteNumber={batch.dteNumber}
             animalsOnGround={batch.animalsOnGround}
+            auctionIsFinished={auctionIsFinished}
             editHandler={() => editHandler(batch.animalsOnGround[0].id)}
         />
     ))

@@ -154,7 +154,7 @@ const AddParticipant = ({showToast, ...props}) => {
                 </div>
             }
             >
-                <span className="p-float-label mt-4">
+                <span className="p-float-label mt-4 p-fluid">
                     <AutoComplete 
                         id='userAutocompleteForm'
                         className='w-full'
@@ -162,7 +162,7 @@ const AddParticipant = ({showToast, ...props}) => {
                         suggestions={filteredUserList} 
                         completeMethod={searchUser} 
                         field="label"
-                        dropdown 
+                        //dropdown 
                         forceSelection
                         onChange={e => setSelectedUserItem(e.target.value)}
                     />
@@ -204,15 +204,12 @@ const AddParticipant = ({showToast, ...props}) => {
                     </div>
                 }
                 footer={
-                    !auctionIsFinished?
-                        <Button 
-                            className="btn btn-primary mr-2" 
-                            icon="pi pi-arrow-left" 
-                            onClick={()=> history.goBack()} 
-                            label={`Volver`}
-                        />
-                    :
-                        null
+                    <Button 
+                        className="btn btn-primary mr-2" 
+                        icon="pi pi-arrow-left" 
+                        onClick={()=> history.goBack()} 
+                        label={`Volver`}
+                    />
                 }
             >
                 {loadingStart?

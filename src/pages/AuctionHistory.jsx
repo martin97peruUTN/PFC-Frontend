@@ -121,6 +121,7 @@ const AuctionHistory = ({showToast}) => {
                         value={dates} 
                         onChange={(e) => setDates(e.value)} 
                         selectionMode="range"
+                        dateFormat="d/m/yy"
                         tooltip="D/M/AAAA - D/M/AAAA (espacio, guion y otro espacio entre las fechas)"
                         tooltipOptions={{position: 'top'}}
                     />    

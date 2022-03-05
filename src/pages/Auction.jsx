@@ -421,16 +421,21 @@ const Auction = ({showToast}) => {
                         <div className="flex justify-content-end">
                             {!miscFunctions.isSmallScreen()?
                                 <>
-                                    <Button 
-                                        icon="pi pi-plus-circle"
-                                        label="Agregar lote"
-                                        className="sm-menubar-button m-0 mr-2"
-                                        onClick={() => history.push(url.BATCH_CRUD, 
-                                            {
-                                                auctionId: auctionId
-                                            }
-                                        )}
-                                    />
+                                    {!auctionIsFinished?
+                                        <Button 
+                                            icon="pi pi-plus-circle"
+                                            label="Agregar lote"
+                                            className="sm-menubar-button m-0 mr-2"
+                                            onClick={() => history.push(url.BATCH_CRUD, 
+                                                {
+                                                    auctionId: auctionId
+                                                }
+                                            )}
+                                        />
+                                    :
+                                        null
+                                    }
+                                    
                                     <Button 
                                         icon="pi pi-shopping-cart"
                                         label={`${auctionIsFinished?'Lotes finales':'Lotes vendidos'}`}

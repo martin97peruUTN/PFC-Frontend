@@ -34,7 +34,7 @@ const EditAnimalOnGroundDialog = ({acceptHandler, setDisplayDialog, displayDialo
             }
             >
                 <br/>
-                <span className="p-float-label mb-4">
+                <span className="p-float-label mb-4 p-fluid">
                     <AutoComplete 
                         id='categoryAutocompleteForm'
                         className='w-full'
@@ -42,7 +42,7 @@ const EditAnimalOnGroundDialog = ({acceptHandler, setDisplayDialog, displayDialo
                         suggestions={filteredCategoryList} 
                         completeMethod={searchCategory} 
                         field="name" 
-                        dropdown 
+                        //dropdown 
                         forceSelection 
                         onChange={(e) => setEditingItem({...editingItem, category:e.target.value})}
                     />

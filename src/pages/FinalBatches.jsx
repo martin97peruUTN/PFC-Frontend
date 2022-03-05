@@ -70,6 +70,8 @@ const FinalBatches = ({showToast}) => {
     //Opcion que indica si se imprime o se descarga el PDF de la boleta
     const [billOption, setBillOption] = useState(null);
 
+    const [disableReportButton, setDisableReportButton] = useState(false);
+
     useEffect(() => {
         setLoadingStart(true)
         if(!history.location.state){
@@ -87,6 +89,7 @@ const FinalBatches = ({showToast}) => {
                 setAuctionIsFinished(auction.finished)
                 setBatchList(batches.content)
                 setTotalPages(batches.totalPages)
+                setDisableReportButton(!allBatchesWereWeighed(batches.content))
                 setLoadingStart(false)
             })
             .catch(error => {
@@ -112,6 +115,10 @@ const FinalBatches = ({showToast}) => {
             stompClient.disconnect();
         }
     },[])
+
+    const allBatchesWereWeighed = (batches) => {
+        return batches.every(batch => (batch.mustWeigh && batch.weight) || (!batch.mustWeigh))
+    }
 
     //Metodo para hacer que la pagina traiga la nueva info cuando llega un mensaje desde el websocket
     const refreshData = (message) => {
@@ -361,12 +368,15 @@ const FinalBatches = ({showToast}) => {
                 className="btn btn-primary mr-3"
                 onClick={() => history.push(url.AUCTION, {auctionId: auctionId})}
             />
-            <Button 
-                icon="pi pi-book"
-                label="Resumen"
-                className="btn btn-primary mr-3"
-                onClick={() => history.push(url.REPORT, {auctionId: auctionId})}
-            />
+            <span onMouseOver={() => disableReportButton?showToast('warn', 'Error', 'No puede calcularse el resumen hasta que se hayan pesado todos los animales que deben pesarse'):null}>
+                <Button 
+                    icon="pi pi-book"
+                    label="Resumen"
+                    className="btn btn-primary mr-3"
+                    disabled={disableReportButton}
+                    onClick={() => history.push(url.REPORT, {auctionId: auctionId})}
+                />
+            </span>
             {(authContext.isAdmin() || authContext.isConsignee()) && !auctionIsFinished?
                 <Button 
                     icon="pi pi-check-square"
@@ -399,7 +409,7 @@ const FinalBatches = ({showToast}) => {
         {
             icon: "pi pi-book",
             label: "Resumen",
-            command: () => history.push(url.REPORT, {auctionId: auctionId})
+            command: () => disableReportButton?showToast('warn', 'Error', 'No puede calcularse el resumen hasta que se hayan pesado todos los animales que deben pesarse'):history.push(url.REPORT, {auctionId: auctionId})
         }
     ]
     if((authContext.isAdmin() || authContext.isConsignee()) && !auctionIsFinished){

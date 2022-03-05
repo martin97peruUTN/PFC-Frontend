@@ -57,7 +57,7 @@ const ProvenanceCard = props => {
                 <label htmlFor="renspaNumber">Renspa (opcional)</label>
             </span>
             <br/>
-            <span className="p-float-label">
+            <span className="p-float-label p-fluid">
                 <AutoComplete 
                     id='localityAutocompleteForm'
                     className='w-full'
@@ -65,7 +65,7 @@ const ProvenanceCard = props => {
                     suggestions={filteredLocalityList} 
                     completeMethod={searchLocality} 
                     field="name" 
-                    dropdown 
+                    //dropdown 
                     forceSelection 
                     onChange={(e) => props.updateProvenance(e.target.value, 'locality')} 
                     disabled={!props.enableEditing}

@@ -34,9 +34,12 @@ const BatchListCard = props => {
                 </>
             }
             buttons = {
-                <div className={CARD_TWO_COLUMNS_BUTTON_DIV}>
-                    <Button className="btn btn-primary" icon="pi pi-pencil" onClick={()=> props.editHandler()} label="Ver/Editar"></Button>
-                </div>
+                !props.auctionIsFinished?
+                    <div className={CARD_TWO_COLUMNS_BUTTON_DIV}>
+                        <Button className="btn btn-primary" icon="pi pi-pencil" onClick={()=> props.editHandler()} label="Ver/Editar"></Button>
+                    </div>
+                :
+                    null
             }
         />
     )

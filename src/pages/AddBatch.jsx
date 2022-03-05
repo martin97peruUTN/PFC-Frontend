@@ -335,7 +335,7 @@ const AddBatch = ({showToast}) => {
                 null
             }
         >
-            <span className="p-float-label">
+            <span className="p-float-label p-fluid">
                 <AutoComplete 
                     id='sellerAutocompleteForm'
                     className='w-full'
@@ -343,7 +343,7 @@ const AddBatch = ({showToast}) => {
                     suggestions={filteredClientList} 
                     completeMethod={searchClient} 
                     field="name" 
-                    dropdown 
+                    //dropdown 
                     forceSelection 
                     disabled={!enableEditing}
                     onChange={(e) => setClientSeller(e.target.value)}

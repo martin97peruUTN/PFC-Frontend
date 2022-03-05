@@ -194,7 +194,7 @@ const AuctionCRUD = ({showToast}) => {
                 </div>
             </div>
             <br/>
-            <span className="p-float-label">
+            <span className="p-float-label p-fluid">
                 <AutoComplete 
                     id='localityAutocompleteForm'
                     className='w-full'
@@ -202,7 +202,7 @@ const AuctionCRUD = ({showToast}) => {
                     suggestions={filteredLocalityList} 
                     completeMethod={searchLocality} 
                     field="name" 
-                    dropdown 
+                    //dropdown 
                     forceSelection 
                     onChange={(e) => setSelectedLocality(e.value)} 
                     disabled={!enableEditing}
@@ -243,7 +243,7 @@ const AuctionCRUD = ({showToast}) => {
                 <div className="flex justify-content-between">
                     <div className="flex justify-content-start">
                         <Button 
-                            className="p-button-danger mr-2" 
+                            className={auctionIsFinished || (!authContext.isAdmin() && !authContext.isConsignee())?'btn btn-primary mr-2':'p-button-danger mr-2'}
                             onClick={()=> history.goBack()} 
                             label={auctionIsFinished || (!authContext.isAdmin() && !authContext.isConsignee())?"Volver":"Cancelar"}
                         />

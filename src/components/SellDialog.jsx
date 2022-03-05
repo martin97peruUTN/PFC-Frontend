@@ -36,7 +36,7 @@ const SellDialog = ({isCreating, acceptHandler, setDisplayDialog, displayDialog,
                 </div>
             }
             >
-                <span className="p-float-label my-4">
+                <span className="p-float-label my-4 p-fluid">
                     <AutoComplete 
                         id='buyerAutocompleteForm'
                         className='w-full'
@@ -45,7 +45,7 @@ const SellDialog = ({isCreating, acceptHandler, setDisplayDialog, displayDialog,
                         suggestions={filteredClientList} 
                         completeMethod={searchClient} 
                         field="name" 
-                        dropdown 
+                        //dropdown 
                         forceSelection
                         onChange={(e) => setEditingItem(isCreating?{...editingItem, client:e.target.value}:{...editingItem, buyer:e.target.value})}
                     />
