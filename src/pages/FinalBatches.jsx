@@ -14,7 +14,6 @@ import { InputText } from 'primereact/inputtext';
 import { FetchContext } from '../context/FetchContext';
 import { AuthContext } from './../context/AuthContext';
 import * as url from '../util/url';
-import { isSmallScreen } from '../util/miscFunctions'
 
 import Card from '../components/cards/Card'
 import FinalBatchCard from '../components/cards/FinalBatchCard';
@@ -361,7 +360,7 @@ const FinalBatches = ({showToast}) => {
     ))
 
     const topButtons = (
-        <div>
+        <div className="big-screen">
             <Button 
                 icon="pi pi-arrow-left"
                 label="Lotes de venta"
@@ -578,16 +577,17 @@ const FinalBatches = ({showToast}) => {
                 title={
                     <div className="flex justify-content-between">
                         <>{auctionIsFinished?"Lotes finales":"Lotes vendidos"}</>
-                        {!isSmallScreen()?//Pantalla grande: botones a la derecha del titulo
-                            topButtons
-                        ://Pantalla chica: menu desplegable
+                        <>
+                            {/*Pantalla grande: botones a la derecha del titulo*/}
+                            {topButtons}
+                            {/*Pantalla chica: menu desplegable*/}
                             <Button 
                                 icon="pi pi-bars"
                                 label="Menu"
-                                className="sm-menubar-button m-0"
+                                className="sm-menubar-button m-0 small-screen"
                                 onClick={(event) => menu.current.toggle(event)}
                             />
-                        }
+                        </>
                     </div>
                 }
                 footer={

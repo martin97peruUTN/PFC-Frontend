@@ -82,7 +82,7 @@ body {
 }
 
 /*Hago que los toast ocupen 90% en pantallas chicas, sino se desbordan*/
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 767px) {
     .p-toast {
         width: 90%;
     }
@@ -134,13 +134,18 @@ body {
     color: var(--text-primary) !important;
 }
 
-@media only screen and (min-width: 600px) {
+/*Arreglo un margen que desfasa el header de las tablas de resumenes*/
+.p-datatable-scrollable-header-box {
+    margin: 0 !important;
+}
+
+@media only screen and (min-width: 768px) {
     .small-screen {
         display: none !important;
     }
 }
 
-@media only screen and (max-width: 599px) {
+@media only screen and (max-width: 767px) {
     .big-screen {
         display: none !important;
     }

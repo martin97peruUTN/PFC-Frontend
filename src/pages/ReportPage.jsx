@@ -14,7 +14,7 @@ import { Divider } from 'primereact/divider';
 
 import { FetchContext } from '../context/FetchContext';
 import * as url from '../util/url';
-import { isSmallScreen, parseDateToShow, parseDateTimeToShow, arrayToStringSeparatedByComma } from '../util/miscFunctions'
+import { parseDateToShow, parseDateTimeToShow, arrayToStringSeparatedByComma } from '../util/miscFunctions'
 
 import Card from '../components/cards/Card'
 
@@ -84,7 +84,7 @@ const ReportPage = ({showToast}) => {
     }
 
     const topButtons = (
-        <div>
+        <div className='big-screen'>
             <Button 
                 icon="pi pi-arrow-left"
                 label="Volver"
@@ -160,11 +160,12 @@ const ReportPage = ({showToast}) => {
             {/* Selles table */}
             {category.sellers.length > 0 ?
                 <DataTable 
+                    className=''
                     header="Vendedores" 
                     value={category.sellers} 
                     showGridlines 
                     responsiveLayout="scroll"
-                    scrollable={isSmallScreen()?true:false}
+                    scrollable
                     scrollDirection="horizontal"
                 >
                     <Column field="name" header="Nombre" sortable style={{ minWidth: '300px' }}/>
@@ -185,7 +186,7 @@ const ReportPage = ({showToast}) => {
                     value={category.buyers} 
                     showGridlines 
                     responsiveLayout="scroll"
-                    scrollable={isSmallScreen()?true:false}
+                    scrollable
                     scrollDirection="horizontal"
                 >
                     <Column field="name" header="Nombre" sortable style={{ minWidth: '300px' }}/>
@@ -212,22 +213,19 @@ const ReportPage = ({showToast}) => {
             :
                 <div className="ml-4">
                     <b>{`Consignatario${generalInfo.consignees && generalInfo.consignees.length>1?"s":""}: `}</b>
-                    {isSmallScreen() ?
-                        <>
-                            {generalInfo.consignees?
-                                generalInfo.consignees.map((consignee, index) => (
-                                    <div key={index}>{consignee.name}</div>
-                                ))
-                            :
-                                null
-                            }
-                        </>
-                    :
-                        <>
-                            <>{generalInfo.consignees?arrayToStringSeparatedByComma(generalInfo.consignees):null}</>
-                            <br/>
-                        </>
-                    }
+                    <span className="small-screen">
+                        {generalInfo.consignees?
+                            generalInfo.consignees.map((consignee, index) => (
+                                <div key={index}>{consignee.name}</div>
+                            ))
+                        :
+                            null
+                        }
+                    </span>
+                    <span className="big-screen">
+                        <>{generalInfo.consignees?arrayToStringSeparatedByComma(generalInfo.consignees):null}</>
+                        <br/>
+                    </span>
                 </div>
             }
             
@@ -237,19 +235,18 @@ const ReportPage = ({showToast}) => {
             :
                 <div className="ml-4">
                     <b>{`Asistente${generalInfo.assistants && generalInfo.assistants.length>1?"s":""}: `}</b>
-                    {isSmallScreen() ?
-                        <>
-                            {generalInfo.assistants?
-                                generalInfo.assistants.map((assistant, index) => (
-                                    <div key={index}>{assistant.name}</div>
-                                ))
-                            :
-                                null
-                            }
-                        </>
-                    :
-                        generalInfo.assistants?arrayToStringSeparatedByComma(generalInfo.assistants):null
-                    }
+                    <span className="small-screen">
+                        {generalInfo.assistants?
+                            generalInfo.assistants.map((assistant, index) => (
+                                <div key={index}>{assistant.name}</div>
+                            ))
+                        :
+                            null
+                        }
+                    </span>
+                    <span className="big-screen">
+                        {generalInfo.assistants?arrayToStringSeparatedByComma(generalInfo.assistants):null}
+                    </span>
                 </div>
             }
             
@@ -310,27 +307,28 @@ const ReportPage = ({showToast}) => {
             <Card
                 title={
                     <div className="flex justify-content-between">
-                        <>{isSmallScreen()?"Resumen":"Resumen del remate"}</>
-                        {!isSmallScreen()?//Pantalla grande: botones a la derecha del titulo
-                            topButtons
-                        ://Pantalla chica: menu desplegable
-                            <Button 
-                                icon="pi pi-bars"
-                                label="Menu"
-                                className="sm-menubar-button m-0"
-                                onClick={(event) => menu.current.toggle(event)}
-                            />
-                        }
+                        <span className='small-screen'>{"Resumen"}</span>
+                        <span className='big-screen'>{"Resumen del remate"}</span>
+                        {/*Pantalla grande: botones a la derecha del titulo*/}
+                        {topButtons}
+                        {/*Pantalla chica: menu desplegable*/}
+                        <Button 
+                            icon="pi pi-bars"
+                            label="Menu"
+                            className="sm-menubar-button m-0 small-screen"
+                            onClick={(event) => menu.current.toggle(event)}
+                        />
                     </div>
                 }
             >
                 {loadingStart?
                     loadingScreen
                 :
-                    !isSmallScreen()?mainScreen:null
+                    <div className="big-screen">{mainScreen}</div>
                 }
             </Card>
-            {isSmallScreen()?<div className="card">{mainScreen}</div>:null}
+            {/*En pantalla chica lo pongo fuera de la card para ganar espacio a los bordes*/}
+            <div className="card small-screen">{mainScreen}</div>
         </>
     )
 };

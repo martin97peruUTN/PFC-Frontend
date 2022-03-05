@@ -15,7 +15,6 @@ import { FetchContext } from '../context/FetchContext';
 import Card from '../components/cards/Card'
 
 import * as url from '../util/url';
-import * as miscFunctions from '../util/miscFunctions';
 
 const SortAnimalsOnGround = ({showToast}) => {
 
@@ -145,11 +144,18 @@ const SortAnimalsOnGround = ({showToast}) => {
                 title={
                     <div>
                         {`Ordenar lotes para venta `}
+                        {/*Muestro el tooltip a la derecha en pantalla grande y a abajo en pantalla chica*/}
                         <i 
-                            className="pi pi-question-circle help-icon" 
+                            className="pi pi-question-circle help-icon small-screen" 
                             style={{'fontSize': '.8em'}} 
                             data-pr-tooltip="Arrastre las tarjetas hacia arriba o abajo para reordenar los lotes"
-                            data-pr-position={miscFunctions.isSmallScreen()?"bottom":"right"}
+                            data-pr-position={"bottom"}
+                        />
+                        <i 
+                            className="pi pi-question-circle help-icon big-screen" 
+                            style={{'fontSize': '.8em'}} 
+                            data-pr-tooltip="Arrastre las tarjetas hacia arriba o abajo para reordenar los lotes"
+                            data-pr-position={"right"}
                         />
                     </div>
                     }

@@ -43,10 +43,6 @@ export const parseDateTimeToShow = (dateJson) => {
     return `${date.getHours()}:${date.getMinutes()>=10 ? date.getMinutes() : '0'+date.getMinutes()}`
 }
 
-export const isSmallScreen = () =>{
-    return window.innerWidth<=constant.SMALL_SCREEN_BREAKPOINT
-}
-
 export const arrayToStringSeparatedByComma = (array) => { 
     let returnArray = []
     array.forEach(element => {

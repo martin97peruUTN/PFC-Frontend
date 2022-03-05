@@ -8,7 +8,6 @@ import { confirmDialog } from 'primereact/confirmdialog';
 
 import { FetchContext } from '../context/FetchContext';
 import * as url from '../util/url';
-import * as miscFunctions from '../util/miscFunctions';
 
 import Card from '../components/cards/Card'
 import ProvenanceCard from '../components/cards/ProvenanceCard';
@@ -226,9 +225,9 @@ const ClientCRUD = ({showToast}) => {
                 <div>
                 <div className="flex justify-content-between">
                     <>{clientId?'Informacion del cliente':'Nuevo cliente'}</>
-                    {clientId && !miscFunctions.isSmallScreen()?
+                    {clientId?
                         <Button 
-                            className="btn btn-primary" 
+                            className="btn btn-primary big-screen" 
                             icon="pi pi-pencil" 
                             onClick={()=> setEnableEditing(!enableEditing)} 
                             label={enableEditing?"Dejar de editar":"Editar"}
@@ -237,9 +236,9 @@ const ClientCRUD = ({showToast}) => {
                         null
                     }
                 </div>
-                    {clientId && miscFunctions.isSmallScreen()?
+                    {clientId?
                         <Button 
-                            className="btn btn-primary mt-2" 
+                            className="btn btn-primary mt-2 small-screen" 
                             icon="pi pi-pencil" 
                             onClick={()=> setEnableEditing(!enableEditing)} 
                             label={enableEditing?"Dejar de editar":"Editar"}

@@ -1,7 +1,5 @@
 import React from 'react'
 
-import { isSmallScreen } from '../../util/miscFunctions'
-
 import Card from './Card'
 
 const CardTwoColumns = (props) => {
@@ -11,10 +9,9 @@ const CardTwoColumns = (props) => {
             title={props.title} 
             footer={
                 //Si la pantalla es chica pongo los botones en el footer
-                isSmallScreen()?
-                props.buttons
-                :
-                null
+                <div className="small-screen">
+                    {props.buttons}
+                </div>
             } 
         >
             <div className="grid">
@@ -23,15 +20,10 @@ const CardTwoColumns = (props) => {
                 <div className="col-12 md:col-10 md:text-3xl text-xl">
                     {props.content}
                 </div>
-                {!isSmallScreen() ?
-                    //Si la pantalla es grande pongo los botones en la columna derecha
-                    <div className="col-2">
-                        {props.buttons}
-                    </div>
-                    :
-                    null
-                }
-                
+                {/*Si la pantalla es grande pongo los botones en la columna derecha*/}
+                <div className="col-2 big-screen">
+                    {props.buttons}
+                </div>
             </div>
         </Card>
     )

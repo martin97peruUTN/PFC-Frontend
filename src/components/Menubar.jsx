@@ -8,7 +8,7 @@ import { Menu } from 'primereact/menu';
 import { Sidebar } from 'primereact/sidebar';
 
 import * as url from '../util/url'
-
+//TODO hay un gap entre tamaños donde no se ve ninguno de los menus
 const Menubar = () => {
 
     const authContext = useContext(AuthContext);
@@ -89,18 +89,16 @@ const Menubar = () => {
         })
     }
 
-    //992 es el breakpoint de primereact parece
-    if(window.innerWidth < 992){
-        MenubarItems.push(
-            {separator: true},
-            {separator: true},
-            {
-                label: 'Cerrar menu',
-                icon: 'pi pi-fw pi-arrow-circle-left',
-                command: () => setVisible(false)
-            }
-        )
-    }
+    MenubarItems.push(
+        {separator: true},
+        {separator: true},
+        {
+            label: 'Cerrar menu',
+            icon: 'pi pi-fw pi-arrow-circle-left',
+            className: 'small-screen',
+            command: () => setVisible(false)
+        }
+    )
 
     const avatarMenuItems = [
         {
@@ -139,11 +137,11 @@ const Menubar = () => {
     return (
         <>
             <Menu model={avatarMenuItems} popup ref={avatarMenu} className="mt-2"/>
-            <div className='hidden lg:block lg:sticky lg:top-0 lg:z-5'>
+            <div className='lg:sticky lg:top-0 lg:z-5 big-screen'>
                 <MenubarPrime model={MenubarItems} end={end} />
             </div>
 
-            <div className='block lg:hidden'>
+            <div className='small-screen'>
                 <MenubarPrime start={openSidebarButton} end={end} />
                 {sidebar}
             </div>

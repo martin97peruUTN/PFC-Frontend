@@ -14,7 +14,6 @@ import Card from '../components/cards/Card'
 import AnimalsOnGroundCRUDCard from '../components/cards/AnimalsOnGroundCRUDCard'
 
 import * as url from '../util/url';
-import * as miscFunctions from '../util/miscFunctions';
 import EditAnimalOnGroundDialog from '../components/EditAnimalOnGroundDialog';
 
 const AddBatch = ({showToast}) => {
@@ -301,9 +300,9 @@ const AddBatch = ({showToast}) => {
                 <div>
                 <div className="flex justify-content-between">
                     <>{batchId?'Informacion del lote':'Nuevo lote'}</>
-                    {batchId && !miscFunctions.isSmallScreen()?
+                    {batchId?
                         <Button 
-                            className="btn btn-primary" 
+                            className="btn btn-primary big-screen" 
                             icon="pi pi-pencil" 
                             onClick={()=> setEnableEditing(!enableEditing)} 
                             label={enableEditing?"Dejar de editar":"Editar"}
@@ -312,9 +311,9 @@ const AddBatch = ({showToast}) => {
                         null
                     }
                 </div>
-                    {batchId && miscFunctions.isSmallScreen()?
+                    {batchId?
                         <Button 
-                            className="btn btn-primary mt-2" 
+                            className="btn btn-primary mt-2 small-screen" 
                             icon="pi pi-pencil" 
                             onClick={()=> setEnableEditing(!enableEditing)} 
                             label={enableEditing?"Dejar de editar":"Editar"}
