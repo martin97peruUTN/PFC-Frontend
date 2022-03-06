@@ -139,6 +139,7 @@ body {
     margin: 0 !important;
 }
 
+/*Media queries breakpoint*/
 @media only screen and (min-width: 768px) {
     .small-screen {
         display: none !important;
@@ -147,6 +148,19 @@ body {
 
 @media only screen and (max-width: 767px) {
     .big-screen {
+        display: none !important;
+    }
+}
+
+/*Media queries breakpoint para la Menubar (tiene un media query en 960px el componente, por eso no podia usar los anteriores)*/
+@media only screen and (min-width: 961px) {
+    .menubar-small-screen {
+        display: none !important;
+    }
+}
+
+@media only screen and (max-width: 960px) {
+    .menubar-big-screen {
         display: none !important;
     }
 }

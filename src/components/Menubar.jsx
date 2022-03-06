@@ -8,7 +8,7 @@ import { Menu } from 'primereact/menu';
 import { Sidebar } from 'primereact/sidebar';
 
 import * as url from '../util/url'
-//TODO hay un gap entre tamaños donde no se ve ninguno de los menus
+
 const Menubar = () => {
 
     const authContext = useContext(AuthContext);
@@ -95,7 +95,7 @@ const Menubar = () => {
         {
             label: 'Cerrar menu',
             icon: 'pi pi-fw pi-arrow-circle-left',
-            className: 'small-screen',
+            className: 'menubar-small-screen',
             command: () => setVisible(false)
         }
     )
@@ -137,11 +137,11 @@ const Menubar = () => {
     return (
         <>
             <Menu model={avatarMenuItems} popup ref={avatarMenu} className="mt-2"/>
-            <div className='lg:sticky lg:top-0 lg:z-5 big-screen'>
+            <div className='md:sticky md:top-0 md:z-5 menubar-big-screen'>
                 <MenubarPrime model={MenubarItems} end={end} />
             </div>
 
-            <div className='small-screen'>
+            <div className='menubar-small-screen'>
                 <MenubarPrime start={openSidebarButton} end={end} />
                 {sidebar}
             </div>
