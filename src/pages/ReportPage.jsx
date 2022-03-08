@@ -162,59 +162,6 @@ const ReportPage = ({showToast}) => {
         return `$${rowData.totalMoneyInvested}`
     }
 
-    const AccordionTabTables = ({category}) => (
-        <>
-            <><b>{`Cantidad de animales vendidos: `}</b>{`${category.totalAnimalsSold}`}</>
-            <br/>
-            <><b>{`Cantidad de animales no vendidos: `}</b>{`${category.totalAnimalsNotSold}`}</>
-            <br/>
-            <><b>{`Total de dinero generado: `}</b>{`$${category.totalMoneyIncome}`}</>
-            <br/>
-            <br/>
-            {/* Selles table */}
-            {category.sellers.length > 0 ?
-                <DataTable 
-                    className=''
-                    header="Vendedores" 
-                    value={category.sellers} 
-                    showGridlines 
-                    responsiveLayout="scroll"
-                    scrollable
-                    scrollDirection="horizontal"
-                >
-                    <Column field="name" header="Nombre" sortable style={{ minWidth: '300px' }}/>
-                    <Column field="totalAnimalsSold" header="Animales vendidos" sortable style={{ minWidth: '100px' }}/>
-                    <Column field="totalAnimalsNotSold" header="Animales no vendidos" sortable style={{ minWidth: '100px' }}/>
-                    <Column field="totalMoneyIncome" body={priceBodyTemplateMoneyIncome} header="Dinero generado" sortable style={{ minWidth: '100px' }}/>
-                </DataTable>
-            :
-                <DataTable 
-                    header="No hay vendedores"
-                />
-            }
-            <br/>
-            {/* Buyers table */}
-            {category.buyers.length > 0 ?
-                <DataTable 
-                    header="Compradores" 
-                    value={category.buyers} 
-                    showGridlines 
-                    responsiveLayout="scroll"
-                    scrollable
-                    scrollDirection="horizontal"
-                >
-                    <Column field="name" header="Nombre" sortable style={{ minWidth: '300px' }}/>
-                    <Column field="totalBought" header="Animales comprados" sortable style={{ minWidth: '100px' }}/>
-                    <Column field="totalMoneyInvested" body={priceBodyTemplateMoneyInvested} header="Dinero invertido" sortable style={{ minWidth: '100px' }}/>
-                </DataTable>
-            :
-                <DataTable 
-                    header="No hay compradores"
-                />
-            }
-        </>
-    )
-
     const generalInfoToShow = (
         <div className="text-lg">
             <div><b>{`Numero de Senasa: `}</b>{`${generalInfo.senasaNumber}`}</div>
@@ -271,6 +218,171 @@ const ReportPage = ({showToast}) => {
         </div>
     )
 
+    const AccordionTabTables = ({category}) => (
+        <>
+            <><b>{`Cantidad de animales vendidos: `}</b>{`${category.totalAnimalsSold}`}</>
+            <br/>
+            <><b>{`Cantidad de animales no vendidos: `}</b>{`${category.totalAnimalsNotSold}`}</>
+            <br/>
+            <><b>{`Total de dinero generado: `}</b>{`$${category.totalMoneyIncome}`}</>
+            <br/>
+            <br/>
+            {/* Selles table */}
+            {category.sellers.length > 0 ?
+                <DataTable 
+                    className=''
+                    header="Vendedores" 
+                    value={category.sellers} 
+                    showGridlines 
+                    responsiveLayout="scroll"
+                    scrollable
+                    scrollDirection="horizontal"
+                >
+                    <Column field="name" header="Nombre" sortable style={{ minWidth: '300px' }}/>
+                    <Column field="totalAnimalsSold" header="Animales vendidos" sortable style={{ minWidth: '100px' }}/>
+                    <Column field="totalAnimalsNotSold" header="Animales no vendidos" sortable style={{ minWidth: '100px' }}/>
+                    <Column field="totalMoneyIncome" body={priceBodyTemplateMoneyIncome} header="Dinero generado" sortable style={{ minWidth: '100px' }}/>
+                </DataTable>
+            :
+                <DataTable 
+                    header="No hay vendedores"
+                />
+            }
+            <br/>
+            {/* Buyers table */}
+            {category.buyers.length > 0 ?
+                <DataTable 
+                    header="Compradores" 
+                    value={category.buyers} 
+                    showGridlines 
+                    responsiveLayout="scroll"
+                    scrollable
+                    scrollDirection="horizontal"
+                >
+                    <Column field="name" header="Nombre" sortable style={{ minWidth: '300px' }}/>
+                    <Column field="totalBought" header="Animales comprados" sortable style={{ minWidth: '100px' }}/>
+                    <Column field="totalMoneyInvested" body={priceBodyTemplateMoneyInvested} header="Dinero invertido" sortable style={{ minWidth: '100px' }}/>
+                </DataTable>
+            :
+                <DataTable 
+                    header="No hay compradores"
+                />
+            }
+        </>
+    )
+
+    const AccordionTabCharts = ({category}) => {
+
+        const pieOptions = {
+            aspectRatio: 1,
+            plugins: {
+                title: {
+                    text: "Animales vendidos y no vendidos",
+                    display: true,
+                    font: {
+                        size: 16
+                    }
+                },
+                legend: {
+                    labels: {
+                        color: '#495057'
+                    }
+                }
+            }
+        }
+
+        const horizontalOptions = titleText => ({
+            indexAxis: 'y',
+            maintainAspectRatio: false,
+            aspectRatio: 1.6,
+            plugins: {
+                title: {
+                    text: titleText,
+                    display: true,
+                    font: {
+                        size: 16
+                    }
+                },
+                legend: {
+                    labels: {
+                        color: '#495057'
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    ticks: {
+                        color: '#495057'
+                    },
+                    grid: {
+                        color: '#ebedef'
+                    }
+                },
+                y: {
+                    ticks: {
+                        color: '#495057'
+                    },
+                    grid: {
+                        color: '#ebedef'
+                    }
+                }
+            }
+        });
+
+        const pieData = {
+            labels: ['Animales vendidos', 'Animales no vendidos'],
+            datasets: [
+                {
+                    data: [category && category.totalAnimalsSold, category && category.totalAnimalsNotSold],
+                    backgroundColor: [
+                        "#2ad430",
+                        "#e85454"
+                    ]
+                }
+            ]
+        }
+
+        //Todos estos inline if son para el caso de generalInfo.commonInfo, sino falla
+        const sellersData = {
+            labels: category && category.sellers? category.sellers.map(seller => seller.name) : [],
+            datasets: [
+                {
+                    label: 'Cantidad vendida',
+                    backgroundColor: '#2ad430',
+                    data: category && category.sellers? category.sellers.map(seller => seller.totalAnimalsSold) : []
+                },
+                {
+                    label: 'Cantidad no vendida',
+                    backgroundColor: '#e85454',
+                    data: category && category.sellers? category.sellers.map(seller => seller.totalAnimalsNotSold) : []
+                }
+            ] 
+        }
+
+        const buyersData = {
+            labels: category && category.buyers? category.buyers.map(buyer => buyer.name) : [],
+            datasets: [
+                {
+                    label: 'Cantidad comprada',
+                    backgroundColor: '#42A5F5',
+                    data: category && category.buyers? category.buyers.map(buyer => buyer.totalBought) : []
+                }
+            ] 
+        }
+
+        return (
+            <>
+                <div className="flex justify-content-center">
+                    <Chart type="pie" data={pieData} options={pieOptions}/>
+                </div>
+                <Divider type="dashed"/>
+                <Chart type="bar" data={sellersData} options={horizontalOptions('Vendedores')} />
+                <Divider type="dashed"/>
+                <Chart type="bar" data={buyersData} options={horizontalOptions('Compradores')} />
+            </>
+        )
+    }
+
     const mainScreen = (
         <>
             <Accordion
@@ -279,7 +391,7 @@ const ReportPage = ({showToast}) => {
             >
                 <AccordionTab header={"Informacion general"}>
                     {generalInfoToShow}
-                    <Divider/>
+                    <Divider type="dashed"/>
                     <TabView className='w-full' 
                         activeIndex={tabViewActiveIndexes[0]}
                         onTabChange={(e) => setTabViewActiveIndexesFunction(0, e.index)}
@@ -290,7 +402,9 @@ const ReportPage = ({showToast}) => {
                             />
                         </TabPanel>
                         <TabPanel header="Graficos">
-                            <div>{/*TODO */}</div>
+                            <AccordionTabCharts 
+                                category={generalInfo.commonInfo}
+                            />
                         </TabPanel>
                     </TabView>
                 </AccordionTab>
@@ -306,7 +420,9 @@ const ReportPage = ({showToast}) => {
                                 />
                             </TabPanel>
                             <TabPanel header="Graficos">
-                                <div>{/*TODO */}</div>
+                                <AccordionTabCharts 
+                                    category={category}
+                                />
                             </TabPanel>
                         </TabView>
                     </AccordionTab>
