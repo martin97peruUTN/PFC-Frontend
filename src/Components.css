@@ -136,7 +136,7 @@ body {
 
 /*Arreglo un margen que desfasa el header de las tablas de resumenes*/
 .p-datatable-scrollable-header-box {
-    margin: 0 !important;
+    margin-right: 0 !important;
 }
 
 /*Media queries breakpoint*/

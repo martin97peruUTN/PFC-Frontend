@@ -11,6 +11,8 @@ import { Accordion, AccordionTab } from 'primereact/accordion';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Divider } from 'primereact/divider';
+import { TabView, TabPanel } from 'primereact/tabview';
+import { Chart } from 'primereact/chart';
 
 import { FetchContext } from '../context/FetchContext';
 import * as url from '../util/url';
@@ -36,6 +38,9 @@ const ReportPage = ({showToast}) => {
 
     const [activeIndexArray, setActiveIndexArray] = useState([])
 
+    //0:Tablas 1:Graficos
+    const [tabViewActiveIndexes, setTabViewActiveIndexes] = useState([]);
+
     useEffect(() => {
         setLoadingStart(true)
         if(!history.location.state){
@@ -47,6 +52,9 @@ const ReportPage = ({showToast}) => {
             .then(res => {
                 setGeneralInfo(res.data.generalInfo)
                 setCategoryInfo(res.data.categoryList)
+                let tabValues = [0];
+                res.data.categoryList.map(a => tabValues.push(0))
+                setTabViewActiveIndexes(tabValues)
                 setLoadingStart(false)
                 setActiveIndexArray(activeIndexArray.push(0))
             })
@@ -56,6 +64,12 @@ const ReportPage = ({showToast}) => {
             })
         }
     },[])
+
+    const setTabViewActiveIndexesFunction = (index, value) => {
+        let newTabViewActiveIndexes = [...tabViewActiveIndexes];
+        newTabViewActiveIndexes[index] = value;
+        setTabViewActiveIndexes(newTabViewActiveIndexes);
+    }
 
     const downloadReportPdf = () => {
         fetchContext.authAxios.get(`${url.PDF_API}/report/${history.location.state.auctionId}?withCategoriesInfo=${wantsCategoryInfoInPdf}&withSoldBatches=${wantsSoldBatchListInPdf}`)
@@ -148,7 +162,7 @@ const ReportPage = ({showToast}) => {
         return `$${rowData.totalMoneyInvested}`
     }
 
-    const AccordionTabContent = ({category}) => (
+    const AccordionTabTables = ({category}) => (
         <>
             <><b>{`Cantidad de animales vendidos: `}</b>{`${category.totalAnimalsSold}`}</>
             <br/>
@@ -266,15 +280,35 @@ const ReportPage = ({showToast}) => {
                 <AccordionTab header={"Informacion general"}>
                     {generalInfoToShow}
                     <Divider/>
-                    <AccordionTabContent
-                        category={generalInfo.commonInfo}
-                    />
+                    <TabView className='w-full' 
+                        activeIndex={tabViewActiveIndexes[0]}
+                        onTabChange={(e) => setTabViewActiveIndexesFunction(0, e.index)}
+                    >
+                        <TabPanel header="Tablas">
+                            <AccordionTabTables
+                                category={generalInfo.commonInfo}
+                            />
+                        </TabPanel>
+                        <TabPanel header="Graficos">
+                            <div>{/*TODO */}</div>
+                        </TabPanel>
+                    </TabView>
                 </AccordionTab>
                 {categoryInfo.map(category => (
                     <AccordionTab header={category.name} key={category.name}>
-                        <AccordionTabContent
-                            category={category}
-                        />
+                        <TabView className='w-full' 
+                            activeIndex={tabViewActiveIndexes[categoryInfo.findIndex(cat => cat.name===category.name)+1]} 
+                            onTabChange={(e) => setTabViewActiveIndexesFunction(categoryInfo.findIndex(cat => cat.name===category.name)+1, e.index)}
+                        >
+                            <TabPanel header="Tablas">
+                                <AccordionTabTables
+                                    category={category}
+                                />
+                            </TabPanel>
+                            <TabPanel header="Graficos">
+                                <div>{/*TODO */}</div>
+                            </TabPanel>
+                        </TabView>
                     </AccordionTab>
                 ))}
             </Accordion>
