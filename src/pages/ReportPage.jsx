@@ -271,10 +271,11 @@ const ReportPage = ({showToast}) => {
         </>
     )
 
-    const AccordionTabCharts = ({category}) => {
+    const AccordionTabCharts = ({category, itemAmountSellers, itemAmountBuyers}) => {
 
         const chartColorGreen = '#2ad430'
         const chartColorRed = '#e85454'
+        const heightConstant = aspectRatioConstant => 2/(aspectRatioConstant*0.1)
 
         const pieOptions = {
             aspectRatio: 1,
@@ -294,10 +295,9 @@ const ReportPage = ({showToast}) => {
             }
         }
 
-        const horizontalOptions = titleText => ({
+        const horizontalOptions = (titleText, aspectRatioConstant) => ({
             indexAxis: 'y',
-            maintainAspectRatio: false,
-            aspectRatio: 1.4,
+            aspectRatio: heightConstant(aspectRatioConstant),
             plugins: {
                 title: {
                     text: titleText,
@@ -382,14 +382,18 @@ const ReportPage = ({showToast}) => {
                     <Chart type="pie" data={pieData} options={pieOptions}/>
                 </div>
                 <Divider type="dashed"/>
-                <Chart type="bar" data={sellersData} options={horizontalOptions('Vendedores')} />
+                <div className="">
+                    <Chart type="bar" data={sellersData} options={horizontalOptions('Vendedores', itemAmountSellers)} />
+                </div>
                 <Divider type="dashed"/>
-                <Chart type="bar" data={buyersData} options={horizontalOptions('Compradores')} />
+                <div className="">
+                    <Chart type="bar" data={buyersData} options={horizontalOptions('Compradores', itemAmountBuyers)} />
+                </div>
             </>
         )
     }
 
-    const TabPanels = ({category, activeIndexSubIndex}) => (
+    const TabPanels = ({category, activeIndexSubIndex, itemAmountSellers, itemAmountBuyers}) => (
         <TabView className='w-full' 
             activeIndex={tabViewActiveIndexes[activeIndexSubIndex]} 
             onTabChange={(e) => setTabViewActiveIndexesFunction(activeIndexSubIndex, e.index)}
@@ -402,6 +406,8 @@ const ReportPage = ({showToast}) => {
             <TabPanel header="Graficos">
                 <AccordionTabCharts 
                     category={category}
+                    itemAmountSellers={itemAmountSellers}
+                    itemAmountBuyers={itemAmountBuyers}
                 />
             </TabPanel>
         </TabView>
@@ -419,6 +425,8 @@ const ReportPage = ({showToast}) => {
                     <TabPanels 
                         category={generalInfo.commonInfo} 
                         activeIndexSubIndex={0}
+                        itemAmountSellers={generalInfo.commonInfo && generalInfo.commonInfo.seller? generalInfo.commonInfo.seller.length : 0}
+                        itemAmountBuyers={generalInfo.commonInfo && generalInfo.commonInfo.buyers? generalInfo.commonInfo.buyers.length : 0}
                     />
                 </AccordionTab>
                 {categoryInfo.map(category => (
@@ -426,6 +434,8 @@ const ReportPage = ({showToast}) => {
                         <TabPanels 
                             category={category} 
                             activeIndexSubIndex={categoryInfo.findIndex(cat => cat.name===category.name)+1}
+                            itemAmountSellers={category.sellers.length}
+                            itemAmountBuyers={category.buyers.length}
                         />
                     </AccordionTab>
                 ))}
