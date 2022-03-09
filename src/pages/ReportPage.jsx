@@ -297,7 +297,7 @@ const ReportPage = ({showToast}) => {
         const horizontalOptions = titleText => ({
             indexAxis: 'y',
             maintainAspectRatio: false,
-            aspectRatio: 1.6,
+            aspectRatio: 1.4,
             plugins: {
                 title: {
                     text: titleText,
