@@ -273,6 +273,9 @@ const ReportPage = ({showToast}) => {
 
     const AccordionTabCharts = ({category}) => {
 
+        const chartColorGreen = '#2ad430'
+        const chartColorRed = '#e85454'
+
         const pieOptions = {
             aspectRatio: 1,
             plugins: {
@@ -333,10 +336,13 @@ const ReportPage = ({showToast}) => {
             labels: ['Animales vendidos', 'Animales no vendidos'],
             datasets: [
                 {
-                    data: [category && category.totalAnimalsSold, category && category.totalAnimalsNotSold],
+                    data: [
+                        category && category.totalAnimalsSold,
+                        category && category.totalAnimalsNotSold
+                    ],
                     backgroundColor: [
-                        "#2ad430",
-                        "#e85454"
+                        chartColorGreen,
+                        chartColorRed
                     ]
                 }
             ]
@@ -348,12 +354,12 @@ const ReportPage = ({showToast}) => {
             datasets: [
                 {
                     label: 'Cantidad vendida',
-                    backgroundColor: '#2ad430',
+                    backgroundColor: chartColorGreen,
                     data: category && category.sellers? category.sellers.map(seller => seller.totalAnimalsSold) : []
                 },
                 {
                     label: 'Cantidad no vendida',
-                    backgroundColor: '#e85454',
+                    backgroundColor: chartColorRed,
                     data: category && category.sellers? category.sellers.map(seller => seller.totalAnimalsNotSold) : []
                 }
             ] 
@@ -364,7 +370,7 @@ const ReportPage = ({showToast}) => {
             datasets: [
                 {
                     label: 'Cantidad comprada',
-                    backgroundColor: '#42A5F5',
+                    backgroundColor: chartColorGreen,
                     data: category && category.buyers? category.buyers.map(buyer => buyer.totalBought) : []
                 }
             ] 
@@ -383,6 +389,24 @@ const ReportPage = ({showToast}) => {
         )
     }
 
+    const TabPanels = ({category, activeIndexSubIndex}) => (
+        <TabView className='w-full' 
+            activeIndex={tabViewActiveIndexes[activeIndexSubIndex]} 
+            onTabChange={(e) => setTabViewActiveIndexesFunction(activeIndexSubIndex, e.index)}
+        >
+            <TabPanel header="Tablas">
+                <AccordionTabTables
+                    category={category}
+                />
+            </TabPanel>
+            <TabPanel header="Graficos">
+                <AccordionTabCharts 
+                    category={category}
+                />
+            </TabPanel>
+        </TabView>
+    )
+
     const mainScreen = (
         <>
             <Accordion
@@ -392,39 +416,17 @@ const ReportPage = ({showToast}) => {
                 <AccordionTab header={"Informacion general"}>
                     {generalInfoToShow}
                     <Divider type="dashed"/>
-                    <TabView className='w-full' 
-                        activeIndex={tabViewActiveIndexes[0]}
-                        onTabChange={(e) => setTabViewActiveIndexesFunction(0, e.index)}
-                    >
-                        <TabPanel header="Tablas">
-                            <AccordionTabTables
-                                category={generalInfo.commonInfo}
-                            />
-                        </TabPanel>
-                        <TabPanel header="Graficos">
-                            <AccordionTabCharts 
-                                category={generalInfo.commonInfo}
-                            />
-                        </TabPanel>
-                    </TabView>
+                    <TabPanels 
+                        category={generalInfo.commonInfo} 
+                        activeIndexSubIndex={0}
+                    />
                 </AccordionTab>
                 {categoryInfo.map(category => (
                     <AccordionTab header={category.name} key={category.name}>
-                        <TabView className='w-full' 
-                            activeIndex={tabViewActiveIndexes[categoryInfo.findIndex(cat => cat.name===category.name)+1]} 
-                            onTabChange={(e) => setTabViewActiveIndexesFunction(categoryInfo.findIndex(cat => cat.name===category.name)+1, e.index)}
-                        >
-                            <TabPanel header="Tablas">
-                                <AccordionTabTables
-                                    category={category}
-                                />
-                            </TabPanel>
-                            <TabPanel header="Graficos">
-                                <AccordionTabCharts 
-                                    category={category}
-                                />
-                            </TabPanel>
-                        </TabView>
+                        <TabPanels 
+                            category={category} 
+                            activeIndexSubIndex={categoryInfo.findIndex(cat => cat.name===category.name)+1}
+                        />
                     </AccordionTab>
                 ))}
             </Accordion>
