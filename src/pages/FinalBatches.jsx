@@ -88,7 +88,9 @@ const FinalBatches = ({showToast}) => {
                 setAuctionIsFinished(auction.finished)
                 setBatchList(batches.content)
                 setTotalPages(batches.totalPages)
-                setDisableReportButton(!allBatchesWereWeighed(batches.content))
+                if(tabViewActiveIndex===0){
+                    setDisableReportButton(!allBatchesWereWeighed(batches.content))
+                }
                 setLoadingStart(false)
             })
             .catch(error => {
@@ -367,7 +369,7 @@ const FinalBatches = ({showToast}) => {
                 className="btn btn-primary mr-3"
                 onClick={() => history.push(url.AUCTION, {auctionId: auctionId})}
             />
-            <span onMouseOver={() => disableReportButton?showToast('warn', 'Error', 'No puede calcularse el resumen hasta que se hayan pesado todos los animales que deben pesarse'):null}>
+            <span onClick={() => disableReportButton?showToast('warn', 'Error', 'No puede calcularse el resumen hasta que se hayan pesado todos los animales que deben pesarse'):null}>
                 <Button 
                     icon="pi pi-book"
                     label="Resumen"
@@ -377,12 +379,15 @@ const FinalBatches = ({showToast}) => {
                 />
             </span>
             {(authContext.isAdmin() || authContext.isConsignee()) && !auctionIsFinished?
-                <Button 
-                    icon="pi pi-check-square"
-                    label="Terminar remate"
-                    className="p-button-danger"
-                    onClick={() => confirmFinishAuction()}
-                />
+                <span onClick={() => disableReportButton?showToast('warn', 'Error', 'No puede terminar el remate hasta que se hayan pesado todos los animales que deben pesarse'):null}>
+                    <Button 
+                        icon="pi pi-check-square"
+                        label="Terminar remate"
+                        className="p-button-danger"
+                        disabled={disableReportButton}
+                        onClick={() => confirmFinishAuction()}
+                    />
+                </span>
             :
                 null
             }
@@ -408,6 +413,7 @@ const FinalBatches = ({showToast}) => {
         {
             icon: "pi pi-book",
             label: "Resumen",
+            style: {backgroundColor: disableReportButton?'#D0D0D0':null},
             command: () => disableReportButton?showToast('warn', 'Error', 'No puede calcularse el resumen hasta que se hayan pesado todos los animales que deben pesarse'):history.push(url.REPORT, {auctionId: auctionId})
         }
     ]
@@ -418,7 +424,8 @@ const FinalBatches = ({showToast}) => {
             {
                 label: 'Terminar remate',
                 icon: 'pi pi-fw pi-check-square',
-                command: () => confirmFinishAuction()
+                style: {backgroundColor: disableReportButton?'#D0D0D0':null},
+                command: () => disableReportButton?showToast('warn', 'Error', 'No puede terminar el remate hasta que se hayan pesado todos los animales que deben pesarse'):confirmFinishAuction()
             }
         )
     }
