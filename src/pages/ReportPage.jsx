@@ -377,7 +377,7 @@ const ReportPage = ({showToast}) => {
         }
 
         //TODO ver bien esta funcion
-        const heightFunction = number => (10*number+20)+'vh'
+        const heightFunction = number => (10+(2.5*number))
 
         return (
             <>
@@ -386,11 +386,11 @@ const ReportPage = ({showToast}) => {
                 </div>
                 <Divider type="dashed"/>
                 <div className="">
-                    <Chart type="bar" height={heightFunction(category.sellers.length)} data={sellersData} options={horizontalOptions('Vendedores')} />
+                    <Chart type="bar" height={(heightFunction(category.sellers.length)*1.5)+'rem'} data={sellersData} options={horizontalOptions('Vendedores')} />
                 </div>
                 <Divider type="dashed"/>
                 <div className="">
-                    <Chart type="bar" height={heightFunction(category.buyers.length)} data={buyersData} options={horizontalOptions('Compradores')} />
+                    <Chart type="bar" height={heightFunction(category.buyers.length)+'rem'} data={buyersData} options={horizontalOptions('Compradores')} />
                 </div>
             </>
         )
