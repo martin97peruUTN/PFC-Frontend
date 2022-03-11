@@ -139,6 +139,12 @@ body {
     margin-right: 0 !important;
 }
 
+.p-menu .menuItemDisabled .p-menuitem-link  .p-menuitem-icon {
+    color: #D0D0D0;
+}
+.p-menu .menuItemDisabled .p-menuitem-link  .p-menuitem-text {
+    color:#D0D0D0;
+}
 /*Media queries breakpoint*/
 @media only screen and (min-width: 768px) {
     .small-screen {

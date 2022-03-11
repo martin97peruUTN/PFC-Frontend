@@ -411,9 +411,9 @@ const FinalBatches = ({showToast}) => {
             command: () => history.push(url.AUCTION, {auctionId: auctionId}),
         },
         {
+            className: disableReportButton ? 'menuItemDisabled' : '',
             icon: "pi pi-book",
             label: "Resumen",
-            style: {backgroundColor: disableReportButton?'#D0D0D0':null},
             command: () => disableReportButton?showToast('warn', 'Error', 'No puede calcularse el resumen hasta que se hayan pesado todos los animales que deben pesarse'):history.push(url.REPORT, {auctionId: auctionId})
         }
     ]
@@ -424,7 +424,7 @@ const FinalBatches = ({showToast}) => {
             {
                 label: 'Terminar remate',
                 icon: 'pi pi-fw pi-check-square',
-                style: {backgroundColor: disableReportButton?'#D0D0D0':null},
+                className: disableReportButton ? 'menuItemDisabled' : '',
                 command: () => disableReportButton?showToast('warn', 'Error', 'No puede terminar el remate hasta que se hayan pesado todos los animales que deben pesarse'):confirmFinishAuction()
             }
         )
