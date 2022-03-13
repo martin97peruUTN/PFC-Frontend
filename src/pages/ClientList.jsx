@@ -67,14 +67,14 @@ const ClientList = ({showToast}) => {
         confirmDialog({
             header: 'Confirmación',
             message: `¿Está seguro que desea eliminar el cliente?`,
-            acceptLabel: 'Si',
+            acceptLabel: 'Sí',
             className: 'w-9 md:w-6',
             rejectLabel: 'No',
             acceptClassName: 'p-button-danger',
             accept: () => {
                 fetchContext.authAxios.delete(`${url.CLIENT_API}/${id}`)
                 .then(res => {
-                    showToast('success', 'Exito', 'El cliente ha sido eliminado')
+                    showToast('success', 'Éxito', 'El cliente ha sido eliminado')
                     setRefresh(!refresh)
                 })
                 .catch(err => {
@@ -141,7 +141,7 @@ const ClientList = ({showToast}) => {
                     loadingScreen
                     :
                     itemCardList.length === 0 ?
-                        <div className="text-2xl flex justify-content-center">No hay clientes creados aún</div>
+                        <div className="text-2xl flex justify-content-center">Sin resultados</div>
                     :
                         itemCardList
                 }

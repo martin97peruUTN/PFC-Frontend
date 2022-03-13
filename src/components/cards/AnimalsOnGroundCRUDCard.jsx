@@ -10,7 +10,7 @@ const AnimalsOnGroundCRUDCard = props => (
         key = {props.id}
         content = {
             <>
-                <>{`Categoria: ${props.category.name}`}</>
+                <>{`Categoría: ${props.category.name}`}</>
                 <br/>
                 <>{`Cantidad: ${props.amount}`}</>
             </>

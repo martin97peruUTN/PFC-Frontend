@@ -83,7 +83,7 @@ const UserCRUD = ({showToast}) => {
         /*Si hay userId estoy editando, por lo que puedo o no ingresar una nueva contraseña 
         pero si la ingreso, debe estar en ambos campos. Es un XOR, o ambas o ninguna */
         if(userId && ((password && !repeatPassword) || (!password && repeatPassword))){
-            return 'Si va ingresar una contraseña, debe ingresarla en ambos campos'
+            return 'Si va a ingresar una contraseña, debe ingresarla en ambos campos'
         }
         //Si hay userId y no ingresa ninguna password, puede continuar
         if(userId && !password && !repeatPassword){
@@ -102,7 +102,7 @@ const UserCRUD = ({showToast}) => {
     //Se dispara al presionar el boton Guardar
     const confirm = () => {
         if(!name || !lastName || !username || !role){
-            showToast('warn', 'Cuidado', 'Los primeros 4 campos no pueden estar vacios')
+            showToast('warn', 'Cuidado', 'Los primeros 4 campos no pueden estar vacíos')
         }else{
             if(username.length < 6 || username.length > 30){
                 showToast('warn','Error','El usuario debe tener entre 6 y 30 caracteres')
@@ -112,10 +112,10 @@ const UserCRUD = ({showToast}) => {
                     showToast('warn', 'Cuidado', message)
                 }else{
                     confirmDialog({
-                        message: '¿Esta seguro de que desea proceder?',
+                        message: '¿Está seguro que desea proceder?',
                         header: 'Guardar usuario',
                         icon: 'pi pi-exclamation-circle',
-                        acceptLabel: 'Si',
+                        acceptLabel: 'Sí',
                         accept: () => handleSubmit()
                     });
                 }
@@ -136,7 +136,7 @@ const UserCRUD = ({showToast}) => {
         if(!userId){
             fetchContext.authAxios.post(url.USER_API, data)
             .then(() => {
-                showToast('success', 'Exito', 'Usuario creado')
+                showToast('success', 'Éxito', 'Usuario creado')
                 history.goBack();
             })
             .catch(error => {
@@ -146,7 +146,7 @@ const UserCRUD = ({showToast}) => {
         }else{
             fetchContext.authAxios.patch(`${url.USER_API}/admin-patch/${userId}`, data)
             .then(() => {
-                showToast('success', 'Exito', 'Usuario ha sido actualizado')
+                showToast('success', 'Éxito', 'Usuario ha sido actualizado')
                 history.goBack();
             })
             .catch(error => {
@@ -161,10 +161,10 @@ const UserCRUD = ({showToast}) => {
         //No deberia llegar hasta aca desde la otra pantalla, este if es solo por las dudas
         if(role.name!==constants.ADMIN_ROLE){
             confirmDialog({
-                message: '¿Esta seguro de que desea eliminar el usuario?',
+                message: '¿Está seguro que desea eliminar el usuario?',
                 header: 'Eliminar usuario',
                 icon: 'pi pi-exclamation-circle',
-                acceptLabel: 'Si',
+                acceptLabel: 'Sí',
                 accept: () => deleteUser()
             })
         }
@@ -173,7 +173,7 @@ const UserCRUD = ({showToast}) => {
     const deleteUser = () => {
         fetchContext.authAxios.delete(`${url.USER_API}/${userId}`)
         .then(() => {
-            showToast('success', 'Exito', 'El usuario ha sido eliminado')
+            showToast('success', 'Éxito', 'El usuario ha sido eliminado')
             history.goBack();
         })
         .catch(() => {
@@ -288,7 +288,7 @@ const UserCRUD = ({showToast}) => {
     return (
         <>
         <Card
-            title={userId?'Informacion del usuario':'Nuevo usuario'}
+            title={userId?'Información del usuario':'Nuevo usuario'}
             footer={
                 <div className="flex justify-content-between">
                     <div className="flex justify-content-start">

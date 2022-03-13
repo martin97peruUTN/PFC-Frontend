@@ -6,8 +6,8 @@ const CategoryList = ({showToast}) => {
     return (
         <SimpleItemList
             urlAPI = {url.CATEGORY_API}
-            itemNameUppercase = 'Categoria'
-            itemNameLowercase = 'categoria'
+            itemNameUppercase = 'Categoría'
+            itemNameLowercase = 'categoría'
             showToast = {showToast}
         />
     )

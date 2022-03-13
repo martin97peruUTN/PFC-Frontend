@@ -35,7 +35,7 @@ const BatchList = ({showToast}) => {
     useEffect(() => {
         setLoadingStart(true)
         if(!history.location.state){
-            showToast('error', 'Error', 'No se encontro el remate')
+            showToast('error', 'Error', 'No se encontró el remate')
             history.goBack();
         }else{
             const {auctionId} = history.location.state

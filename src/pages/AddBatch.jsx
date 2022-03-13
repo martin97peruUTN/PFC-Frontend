@@ -145,10 +145,10 @@ const AddBatch = ({showToast}) => {
             showToast('warn','Cuidado','No hay animales en el lote')
         }else{
             confirmDialog({
-                message: '¿Esta seguro de que desea proceder?',
+                message: '¿Está seguro que desea proceder?',
                 header: 'Guardar lote',
                 icon: 'pi pi-exclamation-circle',
-                acceptLabel: 'Si',
+                acceptLabel: 'Sí',
                 accept: () => !batchId?createBatchHandler():editBatchHandler()
             });
         }
@@ -167,7 +167,7 @@ const AddBatch = ({showToast}) => {
         }
         fetchContext.authAxios.post(`${url.AUCTION_BATCH_API}/${auctionId}`, body)
         .then(response => {
-            showToast('success','Exito','Se creo el lote correctamente')
+            showToast('success','Éxito','Se creó el lote correctamente')
             history.goBack()
         })
         .catch(error => {
@@ -186,7 +186,7 @@ const AddBatch = ({showToast}) => {
         }
         fetchContext.authAxios.patch(`${url.AUCTION_BATCH_API}/${batchId}`, body)
         .then(response => {
-            showToast('success','Exito','Se edito el lote correctamente')
+            showToast('success','Éxito','El lote se editó correctamente')
             setLoadingAccept(false)
         })
         .catch(error => {
@@ -199,14 +199,14 @@ const AddBatch = ({showToast}) => {
         confirmDialog({
             header: 'Confirmación',
             message: `¿Está seguro que desea eliminar estos animales?`,
-            acceptLabel: 'Si',
+            acceptLabel: 'Sí',
             className: 'w-9 md:w-6',
             rejectLabel: 'No',
             acceptClassName: 'p-button-danger',
             accept: () => {
                 fetchContext.authAxios.delete(`${url.AUCTION_BATCH_API}/${batchId}`)
                 .then(response => {
-                    showToast('success','Exito','Se elimino el lote correctamente')
+                    showToast('success','Éxito','Se eliminó el lote correctamente')
                     history.goBack()
                 })
                 .catch(error => {
@@ -239,7 +239,7 @@ const AddBatch = ({showToast}) => {
                 const data = editingItem
                 fetchContext.authAxios.patch(`${url.ANIMALS_ON_GROUND_API}/${editingItem.id}`, data)
                 .then(response => {
-                    showToast('success', 'Exito', `Animales guardados`)
+                    showToast('success', 'Éxito', `Animales guardados`)
                     setRefresh(!refresh)
                     setDisplayDialog(false)
                     setEditingItem(null)
@@ -251,7 +251,7 @@ const AddBatch = ({showToast}) => {
                 const data = {...editingItem, 'sold': false, 'notSold': false, 'id': null, 'startingOrder': -1}
                 fetchContext.authAxios.post(`${url.AUCTION_BATCH_API}/${batchId}/animals-on-ground`, data)
                 .then(response => {
-                    showToast('success', 'Exito', `Animales guardados`)
+                    showToast('success', 'Éxito', `Animales guardados`)
                     setRefresh(!refresh)
                     setDisplayDialog(false)
                     setEditingItem(null)
@@ -275,7 +275,7 @@ const AddBatch = ({showToast}) => {
                 setEditingItem(null)
             }
         }else{
-            showToast('warn', 'Cuidado', 'Algun campo esta vacio')
+            showToast('warn', 'Cuidado', 'Existen campos esta vacíos')
         }
     }
 
@@ -284,7 +284,7 @@ const AddBatch = ({showToast}) => {
         confirmDialog({
             header: 'Confirmación',
             message: `¿Está seguro que desea eliminar estos animales?`,
-            acceptLabel: 'Si',
+            acceptLabel: 'Sí',
             className: 'w-9 md:w-6',
             rejectLabel: 'No',
             acceptClassName: 'p-button-danger',
@@ -330,7 +330,7 @@ const AddBatch = ({showToast}) => {
             title={
                 <div>
                 <div className="flex justify-content-between">
-                    <>{batchId?'Informacion del lote':'Nuevo lote'}</>
+                    <>{batchId?'Información del lote':'Nuevo lote'}</>
                     {batchId?
                         <Button 
                             className="btn btn-primary big-screen" 
@@ -404,7 +404,7 @@ const AddBatch = ({showToast}) => {
                     disabled={!enableEditing}
                     onChange={e => setCorralNumber(e.target.value)}
                 />
-                <label htmlFor="corralNumber">Numero de corral</label>
+                <label htmlFor="corralNumber">Número de corral</label>
             </span>
             <br/>
             <span className="p-float-label">
@@ -415,7 +415,7 @@ const AddBatch = ({showToast}) => {
                     disabled={!enableEditing}
                     onChange={e => setDteNumber(e.target.value)}
                 />
-                <label htmlFor="dte">Numero de DT-e (opcional)</label>
+                <label htmlFor="dte">Número de DT-e (opcional)</label>
             </span>
         </Card>
     )
@@ -465,7 +465,7 @@ const AddBatch = ({showToast}) => {
             {animalsOnGroundList.length>0?
             animalsOnGroundCardList
             :
-            <div className="text-2xl flex justify-content-center">Aun no hay animales agregados a este lote</div>}
+            <div className="text-2xl flex justify-content-center">Aún no hay animales agregados a este lote</div>}
         </Card>
     )
 

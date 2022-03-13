@@ -44,7 +44,7 @@ const ReportPage = ({showToast}) => {
     useEffect(() => {
         setLoadingStart(true)
         if(!history.location.state){
-            showToast('error', 'Error', 'No se encontro el remate')
+            showToast('error', 'Error', 'No se encontró el remate')
             history.goBack();
         }else{
             const {auctionId} = history.location.state
@@ -164,7 +164,7 @@ const ReportPage = ({showToast}) => {
 
     const generalInfoToShow = (
         <div className="text-lg">
-            <div><b>{`Numero de Senasa: `}</b>{`${generalInfo.senasaNumber}`}</div>
+            <div><b>{`Número de Senasa: `}</b>{`${generalInfo.senasaNumber}`}</div>
             <div><b>{`Localidad: `}</b>{`${generalInfo.locality}`}</div>
             <div><b>{`Fecha: `}</b>{`${parseDateToShow(generalInfo.date)} - ${parseDateTimeToShow(generalInfo.date)}`}</div>
             <div><b>{"Participantes: "}</b></div>
@@ -406,7 +406,7 @@ const ReportPage = ({showToast}) => {
                     category={category}
                 />
             </TabPanel>
-            <TabPanel header="Graficos">
+            <TabPanel header="Gráficos">
                 <AccordionTabCharts 
                     category={category}
                 />
@@ -420,7 +420,7 @@ const ReportPage = ({showToast}) => {
                 multiple
                 activeIndex={activeIndexArray}
             >
-                <AccordionTab header={"Informacion general"}>
+                <AccordionTab header={"Información general"}>
                     {generalInfoToShow}
                     <Divider type="dashed"/>
                     <TabPanels 
@@ -473,7 +473,7 @@ const ReportPage = ({showToast}) => {
                         {/*Pantalla chica: menu desplegable*/}
                         <Button 
                             icon="pi pi-bars"
-                            label="Menu"
+                            label="Menú"
                             className="sm-menubar-button m-0 small-screen"
                             onClick={(event) => menu.current.toggle(event)}
                         />

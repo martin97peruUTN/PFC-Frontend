@@ -93,7 +93,7 @@ const AddParticipant = ({showToast, ...props}) => {
         if(selectedUserItem && !auctionIsFinished){
             fetchContext.authAxios.post(`${url.USER_AUCTIONS_API}/assignment/${auctionId}/adduser/${selectedUserItem.id}`)
             .then(response => {
-                showToast('success', 'Exito', `Participante agregado`)
+                showToast('success', 'Éxito', `Participante agregado`)
                 setRefresh(!refresh)
                 setDisplayDialog(false)
                 setSelectedUserItem(null)
@@ -111,7 +111,7 @@ const AddParticipant = ({showToast, ...props}) => {
         confirmDialog({
             header: 'Confirmación',
             message: `¿Está seguro que desea quitar el participante?`,
-            acceptLabel: 'Si',
+            acceptLabel: 'Sí',
             className: 'w-9 md:w-6',
             rejectLabel: 'No',
             acceptClassName: 'p-button-danger',

@@ -31,7 +31,7 @@ const SortAnimalsOnGround = ({showToast}) => {
     useEffect(() => {
         setLoadingStart(true)
         if(!history.location.state){
-            showToast('error', 'Error', 'No se encontro el remate')
+            showToast('error', 'Error', 'No se encontró el remate')
             history.goBack();
         }else{
             const {auctionId} = history.location.state
@@ -51,10 +51,10 @@ const SortAnimalsOnGround = ({showToast}) => {
 
     const saveHandler = () => {
         confirmDialog({
-            message: '¿Esta seguro de que desea proceder?',
+            message: '¿Está seguro que desea proceder?',
             header: 'Reordenar lotes',
             icon: 'pi pi-exclamation-circle',
-            acceptLabel: 'Si',
+            acceptLabel: 'Sí',
             accept: () => {
                 setLoadingAccept(true)
                 let data = []

@@ -50,7 +50,7 @@ const LogIn = ({showToast}) => {
                 }
             })
         }else{
-            showToast('warn', 'Cuidado', 'Complete los campos vacios!')
+            showToast('warn', 'Cuidado', 'Complete los campos vacíos!')
         }
     }
 

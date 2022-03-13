@@ -45,10 +45,10 @@ const PasswordChange = ({showToast}) => {
                         showToast('warn', 'Cuidado', 'La nueva contraseña no puede ser igual a la anterior');
                     }else{
                         confirmDialog({
-                            message: '¿Esta seguro de que desea proceder?',
+                            message: '¿Está seguro que desea proceder?',
                             header: 'Cambio de contraseña',
                             icon: 'pi pi-exclamation-circle',
-                            acceptLabel: 'Si',
+                            acceptLabel: 'Sí',
                             accept: () => handleSubmit()
                         });
                     }
@@ -63,7 +63,7 @@ const PasswordChange = ({showToast}) => {
             oldPassword: hash(currentPassword),
             newPassword: hash(newPassword)
         }).then(response => {
-            showToast('success', 'Exito', 'Contraseña modificada con exito');
+            showToast('success', 'Éxito', 'Contraseña modificada con éxito');
             history.push(url.PROFILE);
         }).catch(error => {
             showToast('error', 'Error', error.response.data.errorMsg);

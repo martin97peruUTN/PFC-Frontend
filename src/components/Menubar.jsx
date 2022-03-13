@@ -67,7 +67,7 @@ const Menubar = () => {
         MenubarItems.push(
         {separator: true},
         {
-            label: 'Administracion',
+            label: 'Administración',
             icon: 'pi pi-fw pi-briefcase',
             items: [
                 {
@@ -76,7 +76,7 @@ const Menubar = () => {
                     url: url.LOCALITIES
                 },
                 {
-                    label: 'Categorias',
+                    label: 'Categorías',
                     icon: 'pi pi-fw pi-th-large',
                     url: url.CATEGORIES
                 },
@@ -93,7 +93,7 @@ const Menubar = () => {
         {separator: true},
         {separator: true},
         {
-            label: 'Cerrar menu',
+            label: 'Cerrar menú',
             icon: 'pi pi-fw pi-arrow-circle-left',
             className: 'menubar-small-screen',
             command: () => setVisible(false)

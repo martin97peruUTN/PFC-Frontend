@@ -58,7 +58,7 @@ const Auction = ({showToast}) => {
     useEffect(() => {
         setLoadingStart(true)
         if(!history.location.state){
-            showToast('error', 'Error', 'No se encontro el remate')
+            showToast('error', 'Error', 'No se encontró el remate')
             history.goBack();
         }else{
             const {auctionId} = history.location.state
@@ -82,7 +82,7 @@ const Auction = ({showToast}) => {
                 setLoadingStart(false)
             })
             .catch(error => {
-                showToast('error', 'Error', 'No se pudo obtener los lotes del remate')
+                showToast('error', 'Error', 'Error al obtener los lotes del remate')
                 history.goBack();
             })
         }
@@ -109,7 +109,7 @@ const Auction = ({showToast}) => {
                 if(editingItem.amount<=0){
                     showToast('warn', 'Error', 'La cantidad debe ser mayor a 0')
                 }else if(editingItem.price<=0){
-                    showToast('warn', 'Error', 'El precio debe ser mayor a 0')
+                    showToast('warn', 'Error', 'El precio debe ser mayor a $0')
                 }else{
                     const actualAnimals = animalsOnGround.find(animal => animal.id === editingItem.id)
                     //Si la cantidad que quiero vender es menor o igual a la cantidad del animalsOnGround
@@ -124,7 +124,7 @@ const Auction = ({showToast}) => {
                         }
                         fetchContext.authAxios.post(`${url.SOLD_BATCH_API}/${editingItem.id}`, data)
                         .then(response => {
-                            showToast('success','Exito','Se vendieron los animales correctamente')
+                            showToast('success','Éxito','Se vendieron los animales correctamente')
                             setDisplayDialogSell(false)
                             setEditingItem(null)
                             setRefresh(!refresh)
@@ -133,7 +133,7 @@ const Auction = ({showToast}) => {
                             showToast('error','Error',error.response.data.errorMsg)
                         })
                     }else{
-                        showToast('warn','Error','La cantidad que quiere vender no puede ser mayor a la cantidad restante')
+                        showToast('warn','Error','La cantidad que quiere vender no puede ser mayor a la cantidad restante disponible')
                     }
                 }
             }else{
@@ -145,14 +145,14 @@ const Auction = ({showToast}) => {
     const notSoldHandler = (animalOnGroundId) => {
         if(!auctionIsFinished){
             confirmDialog({
-                message: '¿Esta seguro de que desea proceder?',
+                message: '¿Está seguro que desea proceder?',
                 header: 'Marcar como no vendido',
                 icon: 'pi pi-exclamation-circle',
-                acceptLabel: 'Si',
+                acceptLabel: 'Sí',
                 accept: () => {
                     fetchContext.authAxios.patch(`${url.ANIMALS_ON_GROUND_API}/${animalOnGroundId}`, {notSold: true})
                     .then(response => {
-                        showToast('success', 'Exito', 'Animales marcados como no vendido')
+                        showToast('success', 'Éxito', 'Animales marcados como no vendido')
                         setRefresh(!refresh)
                     })
                     .catch(error => {
@@ -189,7 +189,7 @@ const Auction = ({showToast}) => {
                 const data = editingItem
                 fetchContext.authAxios.patch(`${url.ANIMALS_ON_GROUND_API}/${editingItem.id}`, data)
                 .then(response => {
-                    showToast('success', 'Exito', `Animales guardados`)
+                    showToast('success', 'Éxito', `Animales guardados`)
                     setRefresh(!refresh)
                     setDisplayDialogEdit(false)
                     setEditingItem(null)
@@ -198,7 +198,7 @@ const Auction = ({showToast}) => {
                     showToast('error', 'Error', error.response.data.errorMsg)
                 })
             }else{
-                showToast('warn', 'Cuidado', 'Algun campo esta vacio')
+                showToast('warn', 'Cuidado', 'Existen campos vacíos')
             }
         }
     }
@@ -262,7 +262,7 @@ const Auction = ({showToast}) => {
     }
     menuItems.push(
         {
-            label: 'Informacion del remate',
+            label: 'Información del remate',
             icon: 'pi pi-fw pi-info-circle',
             command: () => history.push(url.AUCTION_CRUD, 
                 {
@@ -324,7 +324,7 @@ const Auction = ({showToast}) => {
     )
 
     const itemCardList = animalsOnGround.length === 0 ?
-        <div className="text-2xl flex justify-content-center">No hay lotes aún</div>
+        <div className="text-2xl flex justify-content-center">Aún no hay lotes</div>
         :
         animalsOnGround.map(animalOnGround => (
             <AnimalsOnGroundShowCard
@@ -447,7 +447,7 @@ const Auction = ({showToast}) => {
                             </div>
                             <Button 
                                 icon="pi pi-bars"
-                                label="Menu"
+                                label="Menú"
                                 className="sm-menubar-button m-0"
                                 onClick={(event) => menu.current.toggle(event)}
                             />

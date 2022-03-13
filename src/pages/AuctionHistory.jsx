@@ -70,7 +70,7 @@ const AuctionHistory = ({showToast}) => {
     }
 
     const noAuctionYetMessage = (
-        <div className="text-2xl flex justify-content-center">No hay remates aún</div>
+        <div className="text-2xl flex justify-content-center">Sin resultados</div>
     )
 
     const auctionCardList = auctionList.length===0? noAuctionYetMessage : auctionList.map((auction) => (
@@ -122,7 +122,7 @@ const AuctionHistory = ({showToast}) => {
                         onChange={(e) => setDates(e.value)} 
                         selectionMode="range"
                         dateFormat="d/m/yy"
-                        tooltip="D/M/AAAA - D/M/AAAA (espacio, guion y otro espacio entre las fechas)"
+                        tooltip="D/M/AAAA - D/M/AAAA (espacio, guión y otro espacio entre las fechas)"
                         tooltipOptions={{position: 'top'}}
                     />    
                     <label htmlFor="calendar">Buscar por rango de fechas</label>

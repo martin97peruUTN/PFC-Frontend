@@ -73,10 +73,10 @@ const ClientCRUD = ({showToast}) => {
         }else if(provenances.length === 0){
             showToast('warn', 'Error', 'Debe ingresar al menos una procedencia')
         }else if(invalidProvenances.length > 0){
-            showToast('warn', 'Error', `Las siguientes procedencias no son validas: ${invalidProvenances}`)
+            showToast('warn', 'Error', `Las siguientes procedencias no son válidas: ${invalidProvenances}`)
         }else{
             confirmDialog({
-                message: '¿Esta seguro que desea guardar los cambios?',
+                message: '¿Está seguro que desea guardar los cambios?',
                 header: 'Guardar cliente',
                 icon: 'pi pi-exclamation-circle',
                 acceptLabel: 'Aceptar',
@@ -147,7 +147,7 @@ const ClientCRUD = ({showToast}) => {
 
     const deleteHandler = () => {
         confirmDialog({
-            message: '¿Esta seguro que desea eliminar el cliente?',
+            message: '¿Está seguro que desea eliminar el cliente?',
             header: 'Eliminar cliente',
             icon: 'pi pi-exclamation-circle',
             acceptLabel: 'Aceptar',
@@ -160,7 +160,7 @@ const ClientCRUD = ({showToast}) => {
         setLoadingAccept(true)
         fetchContext.authAxios.delete(`${url.CLIENT_API}/${clientId}`)
         .then(res => {
-            showToast('success', 'Exito', 'El cliente ha sido eliminado')
+            showToast('success', 'Éxito', 'El cliente ha sido eliminado')
             history.goBack();
         })
         .catch((error) => {
@@ -170,7 +170,7 @@ const ClientCRUD = ({showToast}) => {
 
     const deleteProvenanceHandler = (index) => {
         confirmDialog({
-            message: '¿Esta seguro que desea eliminar la procedencia?',
+            message: '¿Está seguro que desea eliminar la procedencia?',
             header: 'Eliminar procedencia',
             icon: 'pi pi-exclamation-circle',
             acceptLabel: 'Aceptar',
@@ -224,7 +224,7 @@ const ClientCRUD = ({showToast}) => {
             title={
                 <div>
                 <div className="flex justify-content-between">
-                    <>{clientId?'Informacion del cliente':'Nuevo cliente'}</>
+                    <>{clientId?'Información del cliente':'Nuevo cliente'}</>
                     {clientId?
                         <Button 
                             className="btn btn-primary big-screen" 

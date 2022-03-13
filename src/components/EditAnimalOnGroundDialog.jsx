@@ -16,7 +16,7 @@ const EditAnimalOnGroundDialog = ({acceptHandler, setDisplayDialog, displayDialo
             setFilteredCategoryList(response.data.content)
         })
         .catch(error => {
-            showToast('error','Error','No se pudo obtener la lista de categorias')
+            showToast('error','Error','No se pudo obtener la lista de categorías')
         })
     }
 
@@ -46,7 +46,7 @@ const EditAnimalOnGroundDialog = ({acceptHandler, setDisplayDialog, displayDialo
                         forceSelection 
                         onChange={(e) => setEditingItem({...editingItem, category:e.target.value})}
                     />
-                    <label htmlFor="categoryAutocompleteForm">Categoria</label>
+                    <label htmlFor="categoryAutocompleteForm">Categoría</label>
                 </span>
                 <span className="p-float-label">
                     <InputText 

@@ -87,7 +87,7 @@ const SimpleItemList = ({showToast, ...props}) => {
             if(editingItem.id){
                 fetchContext.authAxios.patch(`${urlAPI}/${editingItem.id}`, editingItem)
                 .then(response => {
-                    showToast('success', 'Exito', `${itemNameUppercase} guardada`)
+                    showToast('success', 'Éxito', `${itemNameUppercase} guardada`)
                     setRefresh(!refresh)
                     setDisplayDialog(false)
                     setEditingItem(null)
@@ -98,7 +98,7 @@ const SimpleItemList = ({showToast, ...props}) => {
             }else{
                 fetchContext.authAxios.post(urlAPI, editingItem)
                 .then(response => {
-                    showToast('success', 'Exito', `${itemNameUppercase} guardada`)
+                    showToast('success', 'Éxito', `${itemNameUppercase} guardada`)
                     setRefresh(!refresh)
                     setDisplayDialog(false)
                     setEditingItem(null)
@@ -108,7 +108,7 @@ const SimpleItemList = ({showToast, ...props}) => {
                 })
             }
         }else{
-            showToast('warn', 'Cuidado', 'El campo esta vacio!')
+            showToast('warn', 'Cuidado', 'El campo esta vacío!')
         }
         
     }
@@ -118,7 +118,7 @@ const SimpleItemList = ({showToast, ...props}) => {
         confirmDialog({
             header: 'Confirmación',
             message: `¿Está seguro que desea eliminar la ${itemNameLowercase}?`,
-            acceptLabel: 'Si',
+            acceptLabel: 'Sí',
             className: 'w-9 md:w-6',
             rejectLabel: 'No',
             acceptClassName: 'p-button-danger',

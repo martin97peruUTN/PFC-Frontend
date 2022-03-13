@@ -46,16 +46,16 @@ const Profile = ({showToast}) => {
             showToast('warn','Error','El usuario debe tener entre 6 y 30 caracteres!')
         }else{
             if(name.length === 0){
-                showToast('warn','Error','El nombre no puede ser vacio!')
+                showToast('warn','Error','El nombre no puede ser vacío!')
             }else{
                 if(name===authContext.getUserInfo().name && user===authContext.getUserInfo().username && lastname===authContext.getUserInfo().lastName){
-                    showToast('warn','Cuidado','Ningun dato fue cambiado!')
+                    showToast('warn','Cuidado','Ningún dato fue cambiado!')
                 }else{
                     confirmDialog({
-                        message: '¿Esta seguro de que desea proceder?',
-                        header: 'Actualizar informacion de usuario',
+                        message: '¿Está seguro que desea proceder?',
+                        header: 'Actualizar información de usuario',
                         icon: 'pi pi-exclamation-circle',
-                        acceptLabel: 'Si',
+                        acceptLabel: 'Sí',
                         accept: () => handleSubmit()
                     });
                 }
@@ -72,7 +72,7 @@ const Profile = ({showToast}) => {
         }).then((res) => {
             //Actualizo el token y toda la info del usuario
             authContext.setAuthState(res.data.token)
-            showToast('success','Exito','El usuario se actualizó correctamente!')
+            showToast('success','Éxito','El usuario se actualizó correctamente!')
             setLoadingAccept(false)
         }).catch((err) => {
             showToast('error','Error',err.response.data.errorMsg)

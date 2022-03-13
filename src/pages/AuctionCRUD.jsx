@@ -76,10 +76,10 @@ const AuctionCRUD = ({showToast}) => {
             showToast('warn', 'Cuidado', 'Debe completar todos los campos')
         }else{
             confirmDialog({
-                message: '¿Esta seguro de que desea proceder?',
+                message: '¿Está seguro que desea proceder?',
                 header: 'Guardar remate',
                 icon: 'pi pi-exclamation-circle',
-                acceptLabel: 'Si',
+                acceptLabel: 'Sí',
                 accept: () => handleSubmit()
             });
         }
@@ -104,7 +104,7 @@ const AuctionCRUD = ({showToast}) => {
         if(!auctionId){
             fetchContext.authAxios.post(url.AUCTION_API, body)
             .then(response => {
-                showToast('success', 'Exito', 'El remate ha sido creado')
+                showToast('success', 'Éxito', 'El remate ha sido creado')
                 history.push('/');
             })
             .catch(error => {
@@ -114,7 +114,7 @@ const AuctionCRUD = ({showToast}) => {
         }else{
             fetchContext.authAxios.patch(`${url.AUCTION_API}/${auctionId}`, body)
             .then(response => {
-                showToast('success', 'Exito', 'El remate ha sido actualizado')
+                showToast('success', 'Éxito', 'El remate ha sido actualizado')
                 history.goBack();
             })
             .catch(error => {
@@ -127,10 +127,10 @@ const AuctionCRUD = ({showToast}) => {
     //Se dispara al tocar el boton eliminar
     const deleteHandler = () => {
         confirmDialog({
-            message: '¿Esta seguro de que desea eliminar el remate?',
+            message: '¿Está seguro que desea eliminar el remate?',
             header: 'Eliminar remate',
             icon: 'pi pi-exclamation-circle',
-            acceptLabel: 'Si',
+            acceptLabel: 'Sí',
             accept: () => deleteAuction()
         })
     }
@@ -138,7 +138,7 @@ const AuctionCRUD = ({showToast}) => {
     const deleteAuction = () => {
         fetchContext.authAxios.delete(`${url.AUCTION_API}/${auctionId}`)
         .then(response => {
-            showToast('success', 'Exito', 'El remate ha sido eliminado')
+            showToast('success', 'Éxito', 'El remate ha sido eliminado')
             history.push('/');
         })
         .catch(error => {
@@ -156,7 +156,7 @@ const AuctionCRUD = ({showToast}) => {
                     onChange={e => setSenasaNumber(e.target.value)}
                     disabled={!enableEditing}
                 />
-                <label htmlFor="senasaNumber">Numero de Senasa</label>
+                <label htmlFor="senasaNumber">Número de Senasa</label>
             </span>
             <br/>
             <div className="grid">
@@ -238,7 +238,7 @@ const AuctionCRUD = ({showToast}) => {
 
     return (
         <Card
-            title={auctionId?'Informacion del remate':'Nuevo remate'}
+            title={auctionId?'Información del remate':'Nuevo remate'}
             footer={
                 <div className="flex justify-content-between">
                     <div className="flex justify-content-start">

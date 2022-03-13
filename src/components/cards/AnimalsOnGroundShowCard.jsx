@@ -55,7 +55,7 @@ const AnimalsOnGroundShowCard = (props) => {
                             <b>{`Vendidos: `}</b>{`${props.soldAmount}`}
                         </div>
                         <div className='big-screen'>
-                            <b>{`Corral: `}</b>{`${props.corralNumber}`}<b>{` - Categoria: `}</b>{`${props.category}`}
+                            <b>{`Corral: `}</b>{`${props.corralNumber}`}<b>{` - Categoría: `}</b>{`${props.category}`}
                             <br/>
                             <b>{`Vendedor: `}</b>{`${props.seller}`}
                             <br/>

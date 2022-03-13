@@ -85,7 +85,7 @@ const SellDialog = ({isCreating, acceptHandler, setDisplayDialog, displayDialog,
                         />
                         <label htmlFor="term">Plazo (opcional)</label>
                     </span>
-                    <span className="p-inputgroup-addon">dias</span>
+                    <span className="p-inputgroup-addon">días</span>
                 </div>
                 <Button 
                     className="btn btn-primary" 

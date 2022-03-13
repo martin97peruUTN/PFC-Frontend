@@ -81,14 +81,14 @@ const UserList = ({showToast}) => {
             confirmDialog({
                 header: 'Confirmación',
                 message: `¿Está seguro que desea eliminar el usuario?`,
-                acceptLabel: 'Si',
+                acceptLabel: 'Sí',
                 className: 'w-9 md:w-6',
                 rejectLabel: 'No',
                 acceptClassName: 'p-button-danger',
                 accept: () => {
                     fetchContext.authAxios.delete(`${url.USER_API}/${id}`)
                     .then(res => {
-                        showToast('success', 'Exito', 'El usuario ha sido eliminado')
+                        showToast('success', 'Éxito', 'El usuario ha sido eliminado')
                         setRefresh(!refresh)
                     })
                     .catch(err => {

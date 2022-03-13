@@ -74,7 +74,7 @@ const FinalBatches = ({showToast}) => {
     useEffect(() => {
         setLoadingStart(true)
         if(!history.location.state){
-            showToast('error', 'Error', 'No se encontro el remate')
+            showToast('error', 'Error', 'No se encontró el remate')
             history.goBack();
         }else{
             const {auctionId} = history.location.state
@@ -152,7 +152,7 @@ const FinalBatches = ({showToast}) => {
                 weight: editingItem.weight
             })
             .then(response => {
-                showToast('success','Exito','Se guardo el peso correctamente')
+                showToast('success','Éxito','Se guardó el peso correctamente')
                 setDisplayWeighDialog(false)
                 setEditingItem(null)
                 setRefresh(!refresh)
@@ -171,14 +171,14 @@ const FinalBatches = ({showToast}) => {
 
     const saveDteNumberHandler = () => {
         if(!editingItem.dteNumber){
-            showToast('error', 'Error', 'Debe ingresar un numero de DTe')
+            showToast('error', 'Error', 'Debe ingresar un número de DTe')
         }else{
             fetchContext.authAxios.patch(`${url.SOLD_BATCH_API}/${editingItem.id}`, 
             {
                 dteNumber: editingItem.dteNumber
             })
             .then(response => {
-                showToast('success','Exito','Se guardo el DTe correctamente')
+                showToast('success','Éxito','Se guardó el DTe correctamente')
                 setDisplayDteNumberDialog(false)
                 setEditingItem(null)
                 setRefresh(!refresh)
@@ -253,7 +253,7 @@ const FinalBatches = ({showToast}) => {
                 }
                 fetchContext.authAxios.patch(`${url.SOLD_BATCH_API}/${editingItem.id}`, data)
                 .then(response => {
-                    showToast('success','Exito','Se guardaron los cambios correctamente')
+                    showToast('success','Éxito','Se guardaron los cambios correctamente')
                     setDisplayEditDialog(false)
                     setEditingItem(null)
                     setRefresh(!refresh)
@@ -293,16 +293,16 @@ const FinalBatches = ({showToast}) => {
     const confirmFinishAuction = () => {
         confirmDialog({
             message: `¿Está seguro de terminar el remate? Si lo termina, se generarán lotes para los 
-                animales que no fueron vendidos y ya no podrá realizar mas cambios, salvo cargar los DTe 
-                y generar las boletas y resúmenes.`,
+                animales que no fueron vendidos y ya no podrá realizar más cambios, excepto cargar los DTe 
+                y generar las boletas o resúmenes.`,
             header: 'Terminar remate',
             icon: 'pi pi-exclamation-circle',
             className: 'w-11 md:w-7',
-            acceptLabel: 'Si',
+            acceptLabel: 'Sí',
             accept: () => {
                 fetchContext.authAxios.post(`${url.AUCTION_API}/finish/${auctionId}`)
                 .then(response => {
-                    showToast('success', 'Exito', 'Remate finalizado')
+                    showToast('success', 'Éxito', 'Remate finalizado')
                     setRefresh(!refresh)
                 })
                 .catch(error => {
@@ -315,16 +315,16 @@ const FinalBatches = ({showToast}) => {
     //Se dispara al presionar Reanudar remate
     const confirmResumeAuction = () => {
         confirmDialog({
-            message: `¿Está seguro de reanudar el remate? Si lo hace no podra acceder a los lotes 
+            message: `¿Está seguro de reanudar el remate? Si lo hace no podrá acceder a los lotes 
                 de animales no vendidos hasta que vuelva a finalizarlo.`,
             header: 'Reanudar remate',
             icon: 'pi pi-exclamation-circle',
             className: 'w-11 md:w-7',
-            acceptLabel: 'Si',
+            acceptLabel: 'Sí',
             accept: () => {
                 fetchContext.authAxios.post(`${url.AUCTION_API}/resume/${auctionId}`)
                 .then(response => {
-                    showToast('success', 'Exito', 'Se reanudó el remate')
+                    showToast('success', 'Éxito', 'Se reanudó el remate')
                     setTabViewActiveIndex(0)
                     setRefresh(!refresh)
                 })
@@ -522,7 +522,7 @@ const FinalBatches = ({showToast}) => {
                     keyfilter="num"
                     onChange={e => setEditingItem({...editingItem, dteNumber:e.target.value})}
                 />
-                <label htmlFor="dte">Numero de DTe</label>
+                <label htmlFor="dte">Número de DTe</label>
             </span>
         </Dialog>
     )
@@ -590,7 +590,7 @@ const FinalBatches = ({showToast}) => {
                             {/*Pantalla chica: menu desplegable*/}
                             <Button 
                                 icon="pi pi-bars"
-                                label="Menu"
+                                label="Menú"
                                 className="sm-menubar-button m-0 small-screen"
                                 onClick={(event) => menu.current.toggle(event)}
                             />

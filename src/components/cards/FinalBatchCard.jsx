@@ -74,7 +74,7 @@ const FinalBatchCard = (props) => {
                 key = {props.id}
                 content = {
                     <div className={"text-xl md:text-2xl"}>
-                        <b>{`Numero de lote: `}</b>{`${props.id}`}
+                        <b>{`Número de lote: `}</b>{`${props.id}`}
                         {props.buyer?//Solo los vendidos tienen comprador
                             <div className="mb-1">
                                 <b>{`Comprador: `}</b>{`${props.buyer}`}
@@ -89,7 +89,7 @@ const FinalBatchCard = (props) => {
                             <b>{`Cantidad: `}</b>{`${props.amount}`/*Siempre*/}
                         </div>
                         <div className="mb-1">
-                            <b>{`Categoria: `}</b>{`${props.category}`/*Siempre*/}
+                            <b>{`Categoría: `}</b>{`${props.category}`/*Siempre*/}
                         </div>
                         {props.price?//Solo los vendidos tienen precio
                             <div className="mb-1">
@@ -114,7 +114,7 @@ const FinalBatchCard = (props) => {
                         }
                         {props.paymentTerm?//Depende de si ya se le cargo el plazo o no
                             <div className="mb-1">
-                                <b>{`Plazo: `}</b>{`${props.paymentTerm} dias`}
+                                <b>{`Plazo: `}</b>{`${props.paymentTerm} días`}
                             </div>
                         :
                             null
