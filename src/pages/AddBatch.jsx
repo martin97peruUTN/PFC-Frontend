@@ -23,7 +23,6 @@ const AddBatch = ({showToast}) => {
 
     //uso este estado "comodin" para refrescar la pagina cuando hay un cambio
     const [refresh, setRefresh] = useState(false);
-    const [refreshDeletedAnimalsOnGround, setRefreshDeletedAnimalsOnGround] = useState(false);
 
     const [loadingAccept, setLoadingAccept] = useState(false)
     const [loadingStart, setLoadingStart] = useState(false)
@@ -75,43 +74,22 @@ const AddBatch = ({showToast}) => {
                 }
             })
             .catch(error => {
-                showToast('error', 'Error', error.response.data.errorMsg)
-                history.goBack()
+                //Cuando se elimina un AnimalsOnGround al editar el lote se pierde su id, y si era por el que entro al editar
+                //y se elimino, entonces se debe refrescar la lista de AnimalsOnGround usando el batchId
+                fetchContext.authAxios.get(`${url.AUCTION_BATCH_API}/${batchId}`)
+                .then(response => {
+                    setAnimalsOnGroundList(response.data.animalsOnGround)
+                    setLoadingStart(false)
+                })
+                .catch(error => {
+                    showToast('error', 'Error', error.response.data.errorMsg)
+                    history.goBack()
+                })
             })
         }else{
             setEnableEditing(true)
         }
     },[refresh])
-
-    useEffect(() => {
-        //auctionId debe llegar siempre, si llega animalOnGroundId es que estoy editando
-        //const {auctionId, animalOnGroundId} = history.location.state
-        setAuctionId(auctionId)
-        if(batchId){
-            setLoadingStart(true)
-            //Editando
-            fetchContext.authAxios.get(`${url.AUCTION_BATCH_API}/${batchId}`)
-            .then(response => {
-                console.log(response)
-                // setSeller(response.client)
-                // setProvenanceList(response.client.provenances)
-                // setProvenance(response.data.provenance)
-                // setCorralNumber(response.corralNumber)
-                // setDteNumber(response.dteNumber)
-                setAnimalsOnGroundList(response.data.animalsOnGround)
-                setLoadingStart(false)
-                // if(!response.data.client.provenances.some(prov => prov.id === response.data.provenance.id)){
-                //     showToast('info', 'Importante', 'La procedencia de este lote fue eliminada')
-                // }
-            })
-            .catch(error => {
-                showToast('error', 'Error', error.response.data.errorMsg)
-                history.goBack()
-            })
-        }else{
-            setEnableEditing(true)
-        }
-    },[refreshDeletedAnimalsOnGround])
 
     //>>>SEARCHS DE LOS AUTOCOMPLETES<<<
 
@@ -293,7 +271,7 @@ const AddBatch = ({showToast}) => {
                     fetchContext.authAxios.delete(`${url.ANIMALS_ON_GROUND_API}/${animalsOnGroundId}`)
                     .then(response => {
                         showToast('success', 'Éxito', `Los animales fueron eliminados`)
-                        setRefreshDeletedAnimalsOnGround(!refreshDeletedAnimalsOnGround)
+                        setRefresh(!refresh)
                     })
                     .catch(error => {
                         showToast('error', 'Error', error.response.data.errorMsg)
@@ -304,7 +282,7 @@ const AddBatch = ({showToast}) => {
                     const modifiedList = animalsOnGroundList.filter(item => item.id !== animalsOnGroundId)
                     setAnimalsOnGroundList(modifiedList)
                     showToast('success', 'Éxito', `Los animales fueron eliminados`)
-                    setRefreshDeletedAnimalsOnGround(!refreshDeletedAnimalsOnGround)
+                    setRefresh(!refresh)
                 }
             }
         });
