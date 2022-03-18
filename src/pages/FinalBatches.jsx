@@ -170,10 +170,11 @@ const FinalBatches = ({showToast}) => {
     }
 
     const saveDteNumberHandler = () => {
+        const saveUrl = `${url.SOLD_BATCH_API}${tabViewActiveIndex===0?'':'/not-sold'}/${editingItem.id}`
         if(!editingItem.dteNumber){
             showToast('error', 'Error', 'Debe ingresar un número de DTe')
         }else{
-            fetchContext.authAxios.patch(`${url.SOLD_BATCH_API}/${editingItem.id}`, 
+            fetchContext.authAxios.patch(saveUrl, 
             {
                 dteNumber: editingItem.dteNumber
             })

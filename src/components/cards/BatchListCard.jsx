@@ -9,7 +9,7 @@ import CardTwoColumns from './CardTwoColumns'
 const BatchListCard = props => {
 
     const animalsOnGroundCard = props.animalsOnGround.map(animal => (
-        <div className="text-2xl">
+        <div>
             <>{`${animal.amount} ${pluralizeSpanishWord(animal.category.name)}`}</>
             <br/>
         </div>
