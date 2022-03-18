@@ -210,7 +210,7 @@ const AddBatch = ({showToast}) => {
 
     //Se dispara al tocar el boton aceptar en el dialogo
     const saveItemHandler = () => {
-        if(editingItem && editingItem.amount && editingItem.category){
+        if(editingItem && editingItem.amount && editingItem.amount>0 && editingItem.category){
             //Si tiene id es que estoy haciendo una edicion, caso contrario, estoy creando uno nuevo
             //Si hay batchId lo mando a guardar, sino lo agrego a la lista y despues mando del batch nuevo completo
             if(editingItem.id && batchId){
@@ -252,6 +252,8 @@ const AddBatch = ({showToast}) => {
                 setDisplayDialog(false)
                 setEditingItem(null)
             }
+        }else if(editingItem.amount && editingItem.amount<=0){
+            showToast('warn', 'Cuidado', 'La cantidad de animales no puede ser 0 o menor')
         }else{
             showToast('warn', 'Cuidado', 'Existen campos esta vacíos')
         }
