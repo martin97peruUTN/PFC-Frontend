@@ -13,26 +13,160 @@ body {
     background-color: var(--light) !important;
     border-color: var(--primary) !important;
 }
+.p-splitbutton-defaultbutton{
+    background-color: var(--primary) !important;
+    border-color: var(--dark)
+}
+.p-splitbutton-defaultbutton:hover{
+    background-color: var(--light) !important;
+    border-color: var(--primary) !important;
+}
+.p-splitbutton-menubutton{
+    background-color: var(--primary) !important;
+    border-color: var(--dark)
+}
+.p-splitbutton-menubutton:hover{
+    background-color: var(--light) !important;
+    border-color: var(--primary) !important;
+}
 
 /*Menubar*/
 .p-menubar {
     background-color: var(--primary) !important;
 }
-.p-menu-list {
+.p-menubar .p-menu-list {
     background: var(--primary) !important;
 }
-.p-submenu-list {
+.p-menubar .p-submenu-list {
     background: var(--primary) !important;
 }
-.p-menuitem {
+.p-menubar .p-menuitem {
     background-color: var(--primary) !important;
 }
-.p-menuitem-text, .p-menuitem-icon, .p-submenu-icon {
+.p-menubar .p-menuitem-text, .p-menubar .p-menuitem-icon, .p-menubar .p-submenu-icon {
     color: var(--text-primary) !important;
 }
-.p-menuitem-active a {
+.p-menubar .p-menuitem-active a {
     background: var(--primary) !important;
 }
-.p-menuitem-link:hover {
+.p-menubar .p-menuitem-link:hover {
     background-color: var(--dark) !important;
+}
+/*escondo el burger button de la menubar cuando la pantalla es de celular*/
+.p-menubar-button {
+    display: none !important;
+}
+
+/*Button de menubar cuando la pantalla es de celular*/
+.sm-menubar-button {
+    background-color: var(--primary) !important;
+}
+
+/*Sidebar*/
+.p-sidebar {
+    background-color: transparent;
+    width: 12.5rem;
+    margin-top: 3.5rem;
+    box-shadow: none;
+}
+.p-sidebar .p-sidebar-content {
+    padding: 0;
+}
+.p-sidebar .p-sidebar-header {
+    display: none !important;
+}
+
+/*Skeleton*/
+.p-skeleton {
+    background-color: #d8d8d8 !important;
+}
+
+/*Hago que los toast ocupen 90% en pantallas chicas, sino se desbordan*/
+@media only screen and (max-width: 767px) {
+    .p-toast {
+        width: 90%;
+    }
+}
+
+/*orderList*/
+.order-list-item {
+    display: flex;
+    align-items: center;
+    padding: .2rem;
+    width: 100%;
+}
+
+/*"card" de SortAnimalsOnGround*/
+.sort-card {
+    background-color: var(--grey);
+    border-radius: .5rem;
+    margin-bottom: .7rem;
+    padding: .5rem;
+}
+.background-dragging {
+    background-color: var(--light) !important;
+}
+.background-not-dragging {
+    background-color: var(--grey) !important;
+}
+
+/*scroll-panel*/
+.custom-scroll-panel .p-scrollpanel-bar {
+    background-color: var(--primary) !important;
+    opacity: 0.8;
+    transition: background-color .3s;
+}
+.custom-scroll-panel .p-scrollpanel-bar:hover {
+    background-color: var(--light) !important;
+    opacity: 0.8;
+}
+.custom-scroll-panel .p-scrollpanel-bar:active {
+    background-color: var(--light) !important;
+    opacity: 0.8;
+}
+.p-datatable-header {
+    background-color: var(--light) !important;
+    color: var(--text-primary) !important;
+}
+
+.p-accordion-header-link {
+    background-color: var(--primary) !important;
+    color: var(--text-primary) !important;
+}
+
+/*Arreglo un margen que desfasa el header de las tablas de resumenes*/
+.p-datatable-scrollable-header-box {
+    margin-right: 0 !important;
+}
+
+.p-menu .menuItemDisabled .p-menuitem-link  .p-menuitem-icon {
+    color: #D0D0D0;
+}
+.p-menu .menuItemDisabled .p-menuitem-link  .p-menuitem-text {
+    color:#D0D0D0;
+}
+/*Media queries breakpoint*/
+@media only screen and (min-width: 768px) {
+    .small-screen {
+        display: none !important;
+    }
+}
+
+@media only screen and (max-width: 767px) {
+    .big-screen {
+        display: none !important;
+    }
+}
+
+/*Media queries breakpoint para la Menubar (tiene un media query en 960px el componente, por eso no podia usar los anteriores)*/
+@media only screen and (min-width: 961px) {
+    .menubar-small-screen {
+        display: none !important;
+    }
+}
+
+@media only screen and (max-width: 960px) {
+    .menubar-big-screen {
+        display: none !important;
+    }
 }
